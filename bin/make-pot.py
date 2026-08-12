@@ -54,7 +54,9 @@ def main() -> None:
         '"X-Domain: swiss-volley-connector\\n"',
         "",
     ]
-    for msg, ctx in sorted(strings):
+    # Kontextloser Eintrag hat ctx = None; ohne key() vergleicht sorted()
+    # bei gleichem msgid None mit str und wirft TypeError.
+    for msg, ctx in sorted(strings, key=lambda key: (key[0], key[1] or "")):
         if ctx:
             out.append(f'msgctxt "{esc(ctx)}"')
         out.append(f'msgid "{esc(msg)}"')
