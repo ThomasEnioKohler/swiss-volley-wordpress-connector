@@ -30,7 +30,12 @@ echo "== 3/4 Übersetzungsvorlage (.pot) =="
 python3 "$ROOT/bin/make-pot.py" "$PLUGIN_DIR"
 
 echo "== 4/4 ZIP bauen =="
-VERSION="$(grep -oP "define\( 'SVC_VERSION', '\K[0-9.]+" "$PLUGIN_DIR/swiss-volley-connector.php")"
+# sed statt grep -oP: BSD-grep (macOS) kennt kein PCRE (-P).
+VERSION="$(sed -n "s/.*define( *'SVC_VERSION', *'\([0-9.][0-9.]*\)'.*/\1/p" "$PLUGIN_DIR/swiss-volley-connector.php")"
+if [ -z "$VERSION" ]; then
+	echo "Fehler: SVC_VERSION konnte nicht aus $PLUGIN_DIR/swiss-volley-connector.php gelesen werden." >&2
+	exit 1
+fi
 mkdir -p "$DIST_DIR"
 ZIP="$DIST_DIR/swiss-volley-connector-$VERSION.zip"
 rm -f "$ZIP"
