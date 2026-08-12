@@ -1,0 +1,30 @@
+name: Release
+
+# Baut das installierbare ZIP und hängt es an den GitHub-Release,
+# sobald ein Tag der Form v0.1.7 gepusht wird.
+on:
+  push:
+    tags: [ 'v*' ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP einrichten
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Build (Lint, Tests, POT, ZIP)
+        run: bash bin/build.sh
+
+      - name: ZIP an Release anhängen
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/swiss-volley-connector-*.zip
+          generate_release_notes: true

@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '8.1', '8.2', '8.3' ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP ${{ matrix.php }} einrichten
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Syntaxcheck
+        run: |
+          find swiss-volley-connector -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+          echo "Lint OK"
+
+      - name: Tests
+        run: php -d error_reporting=E_ALL -d display_errors=1 tests/harness.php
