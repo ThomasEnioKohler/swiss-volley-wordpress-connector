@@ -73,10 +73,10 @@ class VSSV_Admin {
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 				'nonce'   => wp_create_nonce( 'vssv_admin' ),
 				'i18n'    => array(
-					'testing'  => __( 'Verbindung wird geprüft …', 'volleyball-schedules-for-swiss-volley' ),
-					'loading'  => __( 'Teams werden geladen …', 'volleyball-schedules-for-swiss-volley' ),
-					'clearing' => __( 'Cache wird geleert …', 'volleyball-schedules-for-swiss-volley' ),
-					'error'    => __( 'Es ist ein Fehler aufgetreten.', 'volleyball-schedules-for-swiss-volley' ),
+					'testing'  => __( 'Testing connection...', 'volleyball-schedules-for-swiss-volley' ),
+					'loading'  => __( 'Loading teams...', 'volleyball-schedules-for-swiss-volley' ),
+					'clearing' => __( 'Clearing cache...', 'volleyball-schedules-for-swiss-volley' ),
+					'error'    => __( 'An error occurred.', 'volleyball-schedules-for-swiss-volley' ),
 				),
 			)
 		);
@@ -183,11 +183,11 @@ class VSSV_Admin {
 	 */
 	public static function render_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Keine Berechtigung.', 'volleyball-schedules-for-swiss-volley' ) );
+			wp_die( esc_html__( 'No permission.', 'volleyball-schedules-for-swiss-volley' ) );
 		}
 
 		$tabs = array(
-			'settings' => __( 'Einstellungen', 'volleyball-schedules-for-swiss-volley' ),
+			'settings' => __( 'Settings', 'volleyball-schedules-for-swiss-volley' ),
 			'teams'    => __( 'Teams', 'volleyball-schedules-for-swiss-volley' ),
 			'log'      => __( 'Log', 'volleyball-schedules-for-swiss-volley' ),
 		);
@@ -236,86 +236,86 @@ class VSSV_Admin {
 		$has_key  = '' !== trim( (string) $settings['api_key'] );
 
 		$minute_choices = array(
-			5    => __( '5 Minuten', 'volleyball-schedules-for-swiss-volley' ),
-			15   => __( '15 Minuten', 'volleyball-schedules-for-swiss-volley' ),
-			30   => __( '30 Minuten', 'volleyball-schedules-for-swiss-volley' ),
-			60   => __( '1 Stunde', 'volleyball-schedules-for-swiss-volley' ),
-			180  => __( '3 Stunden', 'volleyball-schedules-for-swiss-volley' ),
-			360  => __( '6 Stunden', 'volleyball-schedules-for-swiss-volley' ),
-			720  => __( '12 Stunden', 'volleyball-schedules-for-swiss-volley' ),
-			1440 => __( '24 Stunden', 'volleyball-schedules-for-swiss-volley' ),
+			5    => __( '5 minutes', 'volleyball-schedules-for-swiss-volley' ),
+			15   => __( '15 minutes', 'volleyball-schedules-for-swiss-volley' ),
+			30   => __( '30 minutes', 'volleyball-schedules-for-swiss-volley' ),
+			60   => __( '1 hour', 'volleyball-schedules-for-swiss-volley' ),
+			180  => __( '3 hours', 'volleyball-schedules-for-swiss-volley' ),
+			360  => __( '6 hours', 'volleyball-schedules-for-swiss-volley' ),
+			720  => __( '12 hours', 'volleyball-schedules-for-swiss-volley' ),
+			1440 => __( '24 hours', 'volleyball-schedules-for-swiss-volley' ),
 		);
 		?>
 		<form method="post" action="options.php" class="vssv-settings-form">
 			<?php settings_fields( 'vssv_settings_group' ); ?>
 
-			<h2><?php esc_html_e( 'Swiss-Volley-API', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
+			<h2><?php esc_html_e( 'Swiss Volley API', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row">
-						<label for="vssv_api_key"><?php esc_html_e( 'API-Key / Token', 'volleyball-schedules-for-swiss-volley' ); ?></label>
+						<label for="vssv_api_key"><?php esc_html_e( 'API key / token', 'volleyball-schedules-for-swiss-volley' ); ?></label>
 					</th>
 					<td>
 						<input type="password" id="vssv_api_key" name="vssv_settings[api_key]" value="" autocomplete="new-password" class="regular-text"
-							placeholder="<?php echo $has_key ? esc_attr__( '•••••• (gespeichert – leer lassen zum Behalten)', 'volleyball-schedules-for-swiss-volley' ) : esc_attr__( 'API-Key eingeben', 'volleyball-schedules-for-swiss-volley' ); ?>" />
+							placeholder="<?php echo $has_key ? esc_attr__( '****** (saved - leave empty to keep)', 'volleyball-schedules-for-swiss-volley' ) : esc_attr__( 'Enter API key', 'volleyball-schedules-for-swiss-volley' ); ?>" />
 						<?php if ( $has_key ) : ?>
 							<label class="vssv-remove-key">
 								<input type="checkbox" name="vssv_settings[remove_api_key]" value="1" />
-								<?php esc_html_e( 'Gespeicherten Key löschen', 'volleyball-schedules-for-swiss-volley' ); ?>
+								<?php esc_html_e( 'Delete saved key', 'volleyball-schedules-for-swiss-volley' ); ?>
 							</label>
 						<?php endif; ?>
 						<p class="description">
-							<?php esc_html_e( 'Den club-gebundenen Key erhältst du im Volley Manager unter Administration → Club → Webservice/API. Der Key wird ausschliesslich serverseitig verwendet und nie im Frontend ausgegeben.', 'volleyball-schedules-for-swiss-volley' ); ?>
+							<?php esc_html_e( 'You get the club-bound key in the Volley Manager under Administration -> Club -> Webservice/API. The key is used server-side only and is never output in the frontend.', 'volleyball-schedules-for-swiss-volley' ); ?>
 						</p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row">
-						<label for="vssv_api_base_url"><?php esc_html_e( 'API-Basis-URL', 'volleyball-schedules-for-swiss-volley' ); ?></label>
+						<label for="vssv_api_base_url"><?php esc_html_e( 'API base URL', 'volleyball-schedules-for-swiss-volley' ); ?></label>
 					</th>
 					<td>
 						<input type="url" id="vssv_api_base_url" name="vssv_settings[api_base_url]" value="<?php echo esc_attr( $settings['api_base_url'] ); ?>" class="regular-text" />
-						<p class="description"><?php esc_html_e( 'Standard: https://api.volleyball.ch – nur ändern, falls Swiss Volley die URL anpasst.', 'volleyball-schedules-for-swiss-volley' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Default: https://api.volleyball.ch - change only if Swiss Volley updates the URL.', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Verbindung testen', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Test connection', 'volleyball-schedules-for-swiss-volley' ); ?></th>
 					<td>
-						<button type="button" class="button" id="vssv-test-connection"><?php esc_html_e( 'API-Verbindung testen', 'volleyball-schedules-for-swiss-volley' ); ?></button>
+						<button type="button" class="button" id="vssv-test-connection"><?php esc_html_e( 'Test API connection', 'volleyball-schedules-for-swiss-volley' ); ?></button>
 						<span id="vssv-test-result" class="vssv-inline-result" role="status" aria-live="polite"></span>
-						<p class="description"><?php esc_html_e( 'Speichere einen neuen Key zuerst, bevor du die Verbindung testest.', 'volleyball-schedules-for-swiss-volley' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Save a new key first before testing the connection.', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 					</td>
 				</tr>
 			</table>
 
-			<h2><?php esc_html_e( 'Verein und Saison', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
+			<h2><?php esc_html_e( 'Club and season', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row">
-						<label for="vssv_club_name"><?php esc_html_e( 'Verein / Club', 'volleyball-schedules-for-swiss-volley' ); ?></label>
+						<label for="vssv_club_name"><?php esc_html_e( 'Club', 'volleyball-schedules-for-swiss-volley' ); ?></label>
 					</th>
 					<td>
 						<input type="text" id="vssv_club_name" name="vssv_settings[club_name]" value="<?php echo esc_attr( $settings['club_name'] ); ?>" class="regular-text" />
-						<p class="description"><?php esc_html_e( 'Wird beim Laden der Teams automatisch erkannt (z. B. Volley Pizol).', 'volleyball-schedules-for-swiss-volley' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Automatically detected when loading the teams (e.g. Volley Pizol).', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row">
-						<label for="vssv_club_id"><?php esc_html_e( 'Club-ID', 'volleyball-schedules-for-swiss-volley' ); ?></label>
+						<label for="vssv_club_id"><?php esc_html_e( 'Club ID', 'volleyball-schedules-for-swiss-volley' ); ?></label>
 					</th>
 					<td>
 						<input type="text" id="vssv_club_id" name="vssv_settings[club_id]" value="<?php echo esc_attr( $settings['club_id'] ); ?>" class="regular-text" />
-						<p class="description"><?php esc_html_e( 'Swiss-Volley-Club-ID; wird beim Laden der Teams automatisch erkannt.', 'volleyball-schedules-for-swiss-volley' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Swiss Volley club ID; automatically detected when loading the teams.', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row">
-						<label for="vssv_season_year"><?php esc_html_e( 'Aktuelle Saison', 'volleyball-schedules-for-swiss-volley' ); ?></label>
+						<label for="vssv_season_year"><?php esc_html_e( 'Current season', 'volleyball-schedules-for-swiss-volley' ); ?></label>
 					</th>
 					<td>
 						<input type="text" id="vssv_season_year" name="vssv_settings[season_year]" value="<?php echo esc_attr( (string) $settings['season_year'] ); ?>" class="small-text" inputmode="numeric" pattern="[0-9]*" />
 						<p class="description">
-							<?php esc_html_e( 'Startjahr der Saison, z. B. 2026 für die Saison 2026/27. Leer lassen, um alle von der API gelieferten Daten anzuzeigen (empfohlen; die API liefert jeweils die aktuelle Saison). Beim Laden der Teams werden die verfügbaren Saisons angezeigt.', 'volleyball-schedules-for-swiss-volley' ); ?>
+							<?php esc_html_e( 'Start year of the season, e.g. 2026 for the 2026/27 season. Leave empty to show all data provided by the API (recommended; the API always returns the current season). Available seasons are shown when loading the teams.', 'volleyball-schedules-for-swiss-volley' ); ?>
 						</p>
 					</td>
 				</tr>
@@ -325,7 +325,7 @@ class VSSV_Admin {
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row">
-						<label for="vssv_cache_minutes"><?php esc_html_e( 'Cache-Dauer', 'volleyball-schedules-for-swiss-volley' ); ?></label>
+						<label for="vssv_cache_minutes"><?php esc_html_e( 'Cache duration', 'volleyball-schedules-for-swiss-volley' ); ?></label>
 					</th>
 					<td>
 						<select id="vssv_cache_minutes" name="vssv_settings[cache_minutes]">
@@ -335,79 +335,79 @@ class VSSV_Admin {
 								</option>
 							<?php endforeach; ?>
 						</select>
-						<button type="button" class="button" id="vssv-clear-cache"><?php esc_html_e( 'Cache jetzt leeren', 'volleyball-schedules-for-swiss-volley' ); ?></button>
+						<button type="button" class="button" id="vssv-clear-cache"><?php esc_html_e( 'Clear cache now', 'volleyball-schedules-for-swiss-volley' ); ?></button>
 						<span id="vssv-cache-result" class="vssv-inline-result" role="status" aria-live="polite"></span>
-						<p class="description"><?php esc_html_e( 'Die Swiss-Volley-API wird höchstens einmal pro Cache-Dauer abgefragt (WordPress Transients).', 'volleyball-schedules-for-swiss-volley' ); ?></p>
+						<p class="description"><?php esc_html_e( 'The Swiss Volley API is queried at most once per cache duration (WordPress transients).', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 					</td>
 				</tr>
 			</table>
 
-			<h2><?php esc_html_e( 'Darstellung', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
+			<h2><?php esc_html_e( 'Display', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Eigener Verein hervorheben', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Highlight own club', 'volleyball-schedules-for-swiss-volley' ); ?></th>
 					<td>
 						<label>
 							<input type="checkbox" name="vssv_settings[highlight_own]" value="1" <?php checked( ! empty( $settings['highlight_own'] ) ); ?> />
-							<?php esc_html_e( 'Eigene Teams mit der CSS-Klasse vssv-own-team kennzeichnen', 'volleyball-schedules-for-swiss-volley' ); ?>
+							<?php esc_html_e( 'Mark own teams with the CSS class vssv-own-team', 'volleyball-schedules-for-swiss-volley' ); ?>
 						</label>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row">
-						<label for="vssv_league_display"><?php esc_html_e( 'Liga-Darstellung in Spiellisten', 'volleyball-schedules-for-swiss-volley' ); ?></label>
+						<label for="vssv_league_display"><?php esc_html_e( 'League display in game lists', 'volleyball-schedules-for-swiss-volley' ); ?></label>
 					</th>
 					<td>
 						<select id="vssv_league_display" name="vssv_settings[league_display]">
 							<option value="heading" <?php selected( (string) ( $settings['league_display'] ?? 'heading' ), 'heading' ); ?>>
-								<?php esc_html_e( 'Als Überschrift über dem Spiel (gross)', 'volleyball-schedules-for-swiss-volley' ); ?>
+								<?php esc_html_e( 'As a heading above the game (large)', 'volleyball-schedules-for-swiss-volley' ); ?>
 							</option>
 							<option value="meta" <?php selected( (string) ( $settings['league_display'] ?? 'heading' ), 'meta' ); ?>>
-								<?php esc_html_e( 'Klein in der Detailzeile (neben Spielort)', 'volleyball-schedules-for-swiss-volley' ); ?>
+								<?php esc_html_e( 'Small, in the detail row (next to venue)', 'volleyball-schedules-for-swiss-volley' ); ?>
 							</option>
 						</select>
 						<p class="description">
-							<?php esc_html_e( 'Gilt für alle Spiellisten. Pro Shortcode übersteuerbar mit league="heading", league="meta" oder league="none".', 'volleyball-schedules-for-swiss-volley' ); ?>
+							<?php esc_html_e( 'Applies to all game lists. Can be overridden per shortcode with league="heading", league="meta", or league="none".', 'volleyball-schedules-for-swiss-volley' ); ?>
 						</p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Interaktive Gruppierung', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Interactive grouping', 'volleyball-schedules-for-swiss-volley' ); ?></th>
 					<td>
 						<label>
 							<input type="checkbox" name="vssv_settings[group_switcher]" value="1" <?php checked( ! empty( $settings['group_switcher'] ) ); ?> />
-							<?php esc_html_e( 'Besuchern einen Umschalter «Chronologisch / Nach Liga / Nach Team» über den Spiellisten anzeigen', 'volleyball-schedules-for-swiss-volley' ); ?>
+							<?php esc_html_e( 'Show visitors a "Chronological / By league / By team" toggle above the game lists', 'volleyball-schedules-for-swiss-volley' ); ?>
 						</label>
 						<p class="description">
-							<?php esc_html_e( 'Erscheint nur, wenn eine Liste mehrere Ligen oder Teams enthält. Pro Shortcode übersteuerbar mit switcher="1" oder switcher="0". Ein per group_by gesetzter Standard bleibt als Startansicht erhalten.', 'volleyball-schedules-for-swiss-volley' ); ?>
+							<?php esc_html_e( 'Only appears if a list contains multiple leagues or teams. Can be overridden per shortcode with switcher="1" or switcher="0". A default set via group_by remains the starting view.', 'volleyball-schedules-for-swiss-volley' ); ?>
 						</p>
 					</td>
 				</tr>
 				<tr>
 					<th scope="row">
-						<label for="vssv_custom_css"><?php esc_html_e( 'Eigenes CSS', 'volleyball-schedules-for-swiss-volley' ); ?></label>
+						<label for="vssv_custom_css"><?php esc_html_e( 'Custom CSS', 'volleyball-schedules-for-swiss-volley' ); ?></label>
 					</th>
 					<td>
 						<textarea id="vssv_custom_css" name="vssv_settings[custom_css]" rows="8" class="large-text code" spellcheck="false"><?php echo esc_textarea( (string) $settings['custom_css'] ); ?></textarea>
-						<p class="description"><?php esc_html_e( 'Wird nach dem Standard-Stylesheet des Plugins geladen. Beispiel: .vssv-own-team { font-weight: 700; }', 'volleyball-schedules-for-swiss-volley' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Loaded after the default stylesheet of this plugin. Example: .vssv-own-team { font-weight: 700; }', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 					</td>
 				</tr>
 			</table>
 
-			<h2><?php esc_html_e( 'Fehlerdiagnose', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
+			<h2><?php esc_html_e( 'Error diagnostics', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Debug-Modus', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Debug mode', 'volleyball-schedules-for-swiss-volley' ); ?></th>
 					<td>
 						<label>
 							<input type="checkbox" name="vssv_settings[debug]" value="1" <?php checked( ! empty( $settings['debug'] ) ); ?> />
-							<?php esc_html_e( 'API-Aufrufe protokollieren (Endpunkt, HTTP-Status, Zeitpunkt, Fehlermeldung – nie der API-Key) und Administratoren detaillierte Fehlermeldungen anzeigen', 'volleyball-schedules-for-swiss-volley' ); ?>
+							<?php esc_html_e( 'Log API calls (endpoint, HTTP status, time, error message - never the API key) and show administrators detailed error messages', 'volleyball-schedules-for-swiss-volley' ); ?>
 						</label>
 					</td>
 				</tr>
 			</table>
 
-			<?php submit_button( __( 'Einstellungen speichern', 'volleyball-schedules-for-swiss-volley' ) ); ?>
+			<?php submit_button( __( 'Save settings', 'volleyball-schedules-for-swiss-volley' ) ); ?>
 		</form>
 		<?php
 	}
@@ -420,23 +420,23 @@ class VSSV_Admin {
 		$settings = wp_parse_args( get_option( 'vssv_settings', array() ), VSSV_Plugin::default_settings() );
 		?>
 		<div class="vssv-teams-tab">
-			<h2><?php esc_html_e( 'Teams aus Swiss Volley laden', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
+			<h2><?php esc_html_e( 'Load teams from Swiss Volley', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
 			<p>
-				<?php esc_html_e( 'Lädt Verein und Mannschaften automatisch aus den Swiss-Volley-Daten. Bestehende Aliase, eigene Teamnamen und Liga-Bezeichnungen sowie die Auswahl für vereinsweite Ansichten bleiben erhalten.', 'volleyball-schedules-for-swiss-volley' ); ?>
+				<?php esc_html_e( 'Automatically loads the club and teams from the Swiss Volley data. Existing aliases, custom team names, league names, and the selection for club-wide views are preserved.', 'volleyball-schedules-for-swiss-volley' ); ?>
 			</p>
 			<p>
-				<button type="button" class="button button-primary" id="vssv-load-teams"><?php esc_html_e( 'Verein und Teams jetzt laden', 'volleyball-schedules-for-swiss-volley' ); ?></button>
+				<button type="button" class="button button-primary" id="vssv-load-teams"><?php esc_html_e( 'Load club and teams now', 'volleyball-schedules-for-swiss-volley' ); ?></button>
 				<span id="vssv-load-result" class="vssv-inline-result" role="status" aria-live="polite"></span>
 			</p>
 
 			<?php if ( empty( $teams ) ) : ?>
-				<p class="vssv-empty-admin"><?php esc_html_e( 'Noch keine Teams geladen. Hinterlege zuerst den API-Key in den Einstellungen und klicke dann auf «Verein und Teams jetzt laden».', 'volleyball-schedules-for-swiss-volley' ); ?></p>
+				<p class="vssv-empty-admin"><?php esc_html_e( 'No teams loaded yet. First enter the API key in the settings, then click "Load club and teams now".', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 			<?php else : ?>
 				<h2>
 					<?php
 					if ( '' !== (string) $settings['club_name'] ) {
 						/* translators: %s: Vereinsname */
-						printf( esc_html__( 'Teams von %s', 'volleyball-schedules-for-swiss-volley' ), esc_html( (string) $settings['club_name'] ) );
+						printf( esc_html__( 'Teams of %s', 'volleyball-schedules-for-swiss-volley' ), esc_html( (string) $settings['club_name'] ) );
 					} else {
 						esc_html_e( 'Teams', 'volleyball-schedules-for-swiss-volley' );
 					}
@@ -450,14 +450,14 @@ class VSSV_Admin {
 						<thead>
 							<tr>
 								<th><?php esc_html_e( 'Team', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-								<th><?php esc_html_e( 'Eigener Teamname', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-								<th><?php esc_html_e( 'Liga', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-								<th><?php esc_html_e( 'Eigene Liga-Bezeichnung', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-								<th><?php esc_html_e( 'Saison', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-								<th><?php esc_html_e( 'Team-ID', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-								<th><?php esc_html_e( 'Alias für Shortcodes', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-								<th><?php esc_html_e( 'Team-Link', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-								<th><?php esc_html_e( 'In vereinsweiten Ansichten', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+								<th><?php esc_html_e( 'Custom team name', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+								<th><?php esc_html_e( 'League', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+								<th><?php esc_html_e( 'Custom league name', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+								<th><?php esc_html_e( 'Season', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+								<th><?php esc_html_e( 'Team ID', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+								<th><?php esc_html_e( 'Alias for shortcodes', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+								<th><?php esc_html_e( 'Team link', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+								<th><?php esc_html_e( 'In club-wide views', 'volleyball-schedules-for-swiss-volley' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -465,19 +465,19 @@ class VSSV_Admin {
 								<tr>
 									<td><strong><?php echo esc_html( (string) ( $team['caption'] ?? '' ) ); ?></strong></td>
 									<td>
-										<input type="text" name="name_label[<?php echo esc_attr( (string) $tid ); ?>]" value="<?php echo esc_attr( (string) ( $team['name_label'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'z. B. Herren 1', 'volleyball-schedules-for-swiss-volley' ); ?>" />
+										<input type="text" name="name_label[<?php echo esc_attr( (string) $tid ); ?>]" value="<?php echo esc_attr( (string) ( $team['name_label'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'e.g. Herren 1', 'volleyball-schedules-for-swiss-volley' ); ?>" />
 									</td>
 									<td><?php echo esc_html( (string) ( $team['league'] ?? '' ) ); ?></td>
 									<td>
-										<input type="text" name="league_label[<?php echo esc_attr( (string) $tid ); ?>]" value="<?php echo esc_attr( (string) ( $team['league_label'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'z. B. Herren 2. Liga', 'volleyball-schedules-for-swiss-volley' ); ?>" />
+										<input type="text" name="league_label[<?php echo esc_attr( (string) $tid ); ?>]" value="<?php echo esc_attr( (string) ( $team['league_label'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'e.g. Herren 2. Liga', 'volleyball-schedules-for-swiss-volley' ); ?>" />
 									</td>
 									<td><?php echo esc_html( (string) ( $team['season'] ?? '' ) ); ?></td>
 									<td><code><?php echo esc_html( (string) $tid ); ?></code></td>
 									<td>
-										<input type="text" name="alias[<?php echo esc_attr( (string) $tid ); ?>]" value="<?php echo esc_attr( (string) ( $team['alias'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'z. B. herren-1', 'volleyball-schedules-for-swiss-volley' ); ?>" />
+										<input type="text" name="alias[<?php echo esc_attr( (string) $tid ); ?>]" value="<?php echo esc_attr( (string) ( $team['alias'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'e.g. herren-1', 'volleyball-schedules-for-swiss-volley' ); ?>" />
 									</td>
 									<td>
-										<input type="url" class="vssv-url-input" name="page_url[<?php echo esc_attr( (string) $tid ); ?>]" value="<?php echo esc_attr( (string) ( $team['page_url'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'z. B. https://www.volleypizol.org/herren-1/', 'volleyball-schedules-for-swiss-volley' ); ?>" />
+										<input type="url" class="vssv-url-input" name="page_url[<?php echo esc_attr( (string) $tid ); ?>]" value="<?php echo esc_attr( (string) ( $team['page_url'] ?? '' ) ); ?>" placeholder="<?php esc_attr_e( 'e.g. https://www.volleypizol.org/herren-1/', 'volleyball-schedules-for-swiss-volley' ); ?>" />
 									</td>
 									<td class="vssv-col-check">
 										<input type="checkbox" name="in_club[<?php echo esc_attr( (string) $tid ); ?>]" value="1" <?php checked( ! empty( $team['in_club'] ) ); ?> />
@@ -488,14 +488,14 @@ class VSSV_Admin {
 					</table>
 
 					<p class="description">
-						<?php esc_html_e( 'Eigener Teamname und eigene Liga-Bezeichnung ersetzen in allen Anzeigen (Spiele, Resultate, Rangliste) die Werte von Swiss Volley – z. B. «Volley Pizol Herren 1» → «Herren 1» oder «H2L» → «Herren 2. Liga». Leere Felder verwenden weiterhin den Swiss-Volley-Wert. Gegnernamen bleiben unverändert; Cup-Spiele behalten den offiziellen Wettbewerbsnamen. Team-Link: ist eine URL hinterlegt (z. B. die Teamseite), wird der Teamname in allen Anzeigen verlinkt.', 'volleyball-schedules-for-swiss-volley' ); ?>
+						<?php esc_html_e( 'Custom team name and custom league name replace the Swiss Volley values in all displays (games, results, standings) - e.g. "Volley Pizol Herren 1" -> "Herren 1" or "H2L" -> "Herren 2. Liga". Empty fields continue to use the Swiss Volley value. Opponent names remain unchanged; cup games keep the official competition name. Team link: if a URL is set (e.g. the team page), the team name is linked in all displays.', 'volleyball-schedules-for-swiss-volley' ); ?>
 					</p>
 
-					<?php submit_button( __( 'Teams speichern', 'volleyball-schedules-for-swiss-volley' ) ); ?>
+					<?php submit_button( __( 'Save teams', 'volleyball-schedules-for-swiss-volley' ) ); ?>
 				</form>
 
-				<h2><?php esc_html_e( 'Shortcode-Beispiele', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
-				<p><?php esc_html_e( 'Team-Parameter akzeptiert die Team-ID oder den Alias:', 'volleyball-schedules-for-swiss-volley' ); ?></p>
+				<h2><?php esc_html_e( 'Shortcode examples', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
+				<p><?php esc_html_e( 'The team parameter accepts the team ID or the alias:', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 				<ul class="vssv-shortcode-examples">
 					<li><code>[swissvolley_team team="herren-1"]</code></li>
 					<li><code>[swissvolley_games team="12345" limit="10"]</code></li>
@@ -516,26 +516,26 @@ class VSSV_Admin {
 		$entries = VSSV_Logger::entries();
 		?>
 		<div class="vssv-log-tab">
-			<h2><?php esc_html_e( 'API-Log', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
+			<h2><?php esc_html_e( 'API log', 'volleyball-schedules-for-swiss-volley' ); ?></h2>
 			<?php if ( ! VSSV_Logger::enabled() ) : ?>
-				<p><?php esc_html_e( 'Der Debug-Modus ist deaktiviert. Aktiviere ihn in den Einstellungen, um API-Aufrufe zu protokollieren.', 'volleyball-schedules-for-swiss-volley' ); ?></p>
+				<p><?php esc_html_e( 'Debug mode is disabled. Enable it in the settings to log API calls.', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 			<?php endif; ?>
 
 			<p>
-				<button type="button" class="button" id="vssv-clear-log"><?php esc_html_e( 'Log leeren', 'volleyball-schedules-for-swiss-volley' ); ?></button>
+				<button type="button" class="button" id="vssv-clear-log"><?php esc_html_e( 'Clear log', 'volleyball-schedules-for-swiss-volley' ); ?></button>
 				<span id="vssv-log-result" class="vssv-inline-result" role="status" aria-live="polite"></span>
 			</p>
 
 			<?php if ( empty( $entries ) ) : ?>
-				<p class="vssv-empty-admin"><?php esc_html_e( 'Keine Log-Einträge vorhanden.', 'volleyball-schedules-for-swiss-volley' ); ?></p>
+				<p class="vssv-empty-admin"><?php esc_html_e( 'No log entries available.', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 			<?php else : ?>
 				<table class="widefat striped">
 					<thead>
 						<tr>
-							<th><?php esc_html_e( 'Zeitpunkt', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-							<th><?php esc_html_e( 'Endpunkt', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-							<th><?php esc_html_e( 'HTTP-Status', 'volleyball-schedules-for-swiss-volley' ); ?></th>
-							<th><?php esc_html_e( 'Meldung', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+							<th><?php esc_html_e( 'Time', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+							<th><?php esc_html_e( 'Endpoint', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+							<th><?php esc_html_e( 'HTTP status', 'volleyball-schedules-for-swiss-volley' ); ?></th>
+							<th><?php esc_html_e( 'Message', 'volleyball-schedules-for-swiss-volley' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -563,7 +563,7 @@ class VSSV_Admin {
 	 */
 	public static function handle_save_teams(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Keine Berechtigung.', 'volleyball-schedules-for-swiss-volley' ) );
+			wp_die( esc_html__( 'No permission.', 'volleyball-schedules-for-swiss-volley' ) );
 		}
 		check_admin_referer( 'vssv_save_teams' );
 
@@ -619,7 +619,7 @@ class VSSV_Admin {
 	 */
 	private static function verify_ajax(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( array( 'message' => __( 'Keine Berechtigung.', 'volleyball-schedules-for-swiss-volley' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'No permission.', 'volleyball-schedules-for-swiss-volley' ) ), 403 );
 		}
 		check_ajax_referer( 'vssv_admin', 'nonce' );
 	}
@@ -641,7 +641,7 @@ class VSSV_Admin {
 		if ( ! empty( $result['club_name'] ) ) {
 			$message .= ' ' . sprintf(
 				/* translators: 1: Vereinsname, 2: Club-ID */
-				__( 'Erkannter Verein: %1$s (Club-ID %2$s).', 'volleyball-schedules-for-swiss-volley' ),
+				__( 'Detected club: %1$s (club ID %2$s).', 'volleyball-schedules-for-swiss-volley' ),
 				$result['club_name'],
 				$result['club_id']
 			);
@@ -668,7 +668,7 @@ class VSSV_Admin {
 		$club = VSSV_Data::detect_own_club( $raw );
 		if ( ! $club ) {
 			wp_send_json_error(
-				array( 'message' => __( 'In den Swiss-Volley-Daten konnte kein Verein erkannt werden. Enthält die aktuelle Saison bereits Spiele?', 'volleyball-schedules-for-swiss-volley' ) )
+				array( 'message' => __( 'No club could be detected in the Swiss Volley data. Does the current season already contain games?', 'volleyball-schedules-for-swiss-volley' ) )
 			);
 		}
 
@@ -687,7 +687,7 @@ class VSSV_Admin {
 			array(
 				'message' => sprintf(
 					/* translators: 1: Vereinsname, 2: Anzahl Teams, 3: verfügbare Saisons */
-					__( 'Verein «%1$s» erkannt, %2$d Teams geladen. Verfügbare Saisons: %3$s. Die Seite wird neu geladen …', 'volleyball-schedules-for-swiss-volley' ),
+					__( 'Club "%1$s" detected, %2$d teams loaded. Available seasons: %3$s. Reloading the page...', 'volleyball-schedules-for-swiss-volley' ),
 					$club['name'],
 					count( $teams ),
 					$seasons ? implode( ', ', $seasons ) : '–'
@@ -703,7 +703,7 @@ class VSSV_Admin {
 	public static function ajax_clear_cache(): void {
 		self::verify_ajax();
 		VSSV_Cache::clear_all();
-		wp_send_json_success( array( 'message' => __( 'Der Cache wurde geleert. Beim nächsten Seitenaufruf werden frische Daten geladen.', 'volleyball-schedules-for-swiss-volley' ) ) );
+		wp_send_json_success( array( 'message' => __( 'The cache has been cleared. Fresh data will be loaded on the next page view.', 'volleyball-schedules-for-swiss-volley' ) ) );
 	}
 
 	/**
@@ -714,7 +714,7 @@ class VSSV_Admin {
 		VSSV_Logger::clear();
 		wp_send_json_success(
 			array(
-				'message' => __( 'Das Log wurde geleert.', 'volleyball-schedules-for-swiss-volley' ),
+				'message' => __( 'The log has been cleared.', 'volleyball-schedules-for-swiss-volley' ),
 				'reload'  => true,
 			)
 		);

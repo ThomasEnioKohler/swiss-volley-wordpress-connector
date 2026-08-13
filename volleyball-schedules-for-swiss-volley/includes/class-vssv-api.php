@@ -84,7 +84,7 @@ class VSSV_API {
 		if ( ! $this->has_key() ) {
 			return new WP_Error(
 				'vssv_no_key',
-				__( 'Es ist kein Swiss-Volley-API-Key hinterlegt.', 'volleyball-schedules-for-swiss-volley' )
+				__( 'No Swiss Volley API key is set.', 'volleyball-schedules-for-swiss-volley' )
 			);
 		}
 
@@ -111,7 +111,7 @@ class VSSV_API {
 			VSSV_Logger::log( $path, '-', $response->get_error_message(), 'error' );
 			return new WP_Error(
 				'vssv_http_error',
-				__( 'Die Swiss-Volley-API ist momentan nicht erreichbar.', 'volleyball-schedules-for-swiss-volley' )
+				__( 'The Swiss Volley API is currently unreachable.', 'volleyball-schedules-for-swiss-volley' )
 			);
 		}
 
@@ -122,7 +122,7 @@ class VSSV_API {
 			VSSV_Logger::log( $path, $code, 'Authentifizierung fehlgeschlagen.', 'error' );
 			return new WP_Error(
 				'vssv_auth_error',
-				__( 'Authentifizierung fehlgeschlagen. Bitte den API-Key prüfen (Volley Manager: Administration → Club → Webservice/API).', 'volleyball-schedules-for-swiss-volley' )
+				__( 'Authentication failed. Please check the API key (Volley Manager: Administration -> Club -> Webservice/API).', 'volleyball-schedules-for-swiss-volley' )
 			);
 		}
 
@@ -132,7 +132,7 @@ class VSSV_API {
 				'vssv_bad_status',
 				sprintf(
 					/* translators: %d: HTTP-Statuscode */
-					__( 'Die Swiss-Volley-API hat einen unerwarteten Status geliefert (HTTP %d).', 'volleyball-schedules-for-swiss-volley' ),
+					__( 'The Swiss Volley API returned an unexpected status (HTTP %d).', 'volleyball-schedules-for-swiss-volley' ),
 					$code
 				)
 			);
@@ -143,7 +143,7 @@ class VSSV_API {
 			VSSV_Logger::log( $path, $code, 'Antwort war kein gültiges JSON-Array.', 'error' );
 			return new WP_Error(
 				'vssv_bad_json',
-				__( 'Die Antwort der Swiss-Volley-API konnte nicht verarbeitet werden.', 'volleyball-schedules-for-swiss-volley' )
+				__( 'The response from the Swiss Volley API could not be processed.', 'volleyball-schedules-for-swiss-volley' )
 			);
 		}
 
@@ -191,7 +191,7 @@ class VSSV_API {
 			'game_count' => count( $games ),
 			'message'    => sprintf(
 				/* translators: %d: Anzahl Spiele */
-				__( 'Verbindung erfolgreich. Die API hat %d Spiele geliefert.', 'volleyball-schedules-for-swiss-volley' ),
+				__( 'Connection successful. The API returned %d games.', 'volleyball-schedules-for-swiss-volley' ),
 				count( $games )
 			),
 		);

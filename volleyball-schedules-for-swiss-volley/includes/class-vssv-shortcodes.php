@@ -45,7 +45,7 @@ class VSSV_Shortcodes {
 
 		if ( 0 === $team_id ) {
 			return '<p class="vssv-notice vssv-notice-error">'
-				. esc_html__( 'Volleyball Schedules for Swiss Volley: Das angegebene Team wurde nicht gefunden. Bitte Team-ID oder Alias prüfen.', 'volleyball-schedules-for-swiss-volley' )
+				. esc_html__( 'Volleyball Schedules for Swiss Volley: The specified team was not found. Please check the team ID or alias.', 'volleyball-schedules-for-swiss-volley' )
 				. '</p>';
 		}
 		return $team_id;
@@ -170,8 +170,8 @@ class VSSV_Shortcodes {
 		}
 
 		$empty = ( 'upcoming' === $scope )
-			? __( 'Zurzeit sind keine kommenden Spiele angesetzt.', 'volleyball-schedules-for-swiss-volley' )
-			: __( 'Zurzeit sind keine Spiele vorhanden.', 'volleyball-schedules-for-swiss-volley' );
+			? __( 'No upcoming games are currently scheduled.', 'volleyball-schedules-for-swiss-volley' )
+			: __( 'No games are currently available.', 'volleyball-schedules-for-swiss-volley' );
 
 		return VSSV_Renderer::render_games( $games, $empty, self::render_opts( $atts ) );
 	}
@@ -207,7 +207,7 @@ class VSSV_Shortcodes {
 			return VSSV_Renderer::render_error( $games );
 		}
 
-		return VSSV_Renderer::render_games( $games, __( 'Zurzeit liegen noch keine Resultate vor.', 'volleyball-schedules-for-swiss-volley' ), self::render_opts( $atts ) );
+		return VSSV_Renderer::render_games( $games, __( 'No results are available yet.', 'volleyball-schedules-for-swiss-volley' ), self::render_opts( $atts ) );
 	}
 
 	/**
@@ -267,17 +267,17 @@ class VSSV_Shortcodes {
 
 		$html = '<div class="vssv-team-view">';
 
-		$html .= VSSV_Renderer::render_heading( __( 'Nächste Spiele', 'volleyball-schedules-for-swiss-volley' ) );
+		$html .= VSSV_Renderer::render_heading( __( 'Upcoming games', 'volleyball-schedules-for-swiss-volley' ) );
 		$html .= is_wp_error( $upcoming )
 			? VSSV_Renderer::render_error( $upcoming )
-			: VSSV_Renderer::render_games( $upcoming, __( 'Zurzeit sind keine kommenden Spiele angesetzt.', 'volleyball-schedules-for-swiss-volley' ) );
+			: VSSV_Renderer::render_games( $upcoming, __( 'No upcoming games are currently scheduled.', 'volleyball-schedules-for-swiss-volley' ) );
 
-		$html .= VSSV_Renderer::render_heading( __( 'Letzte Resultate', 'volleyball-schedules-for-swiss-volley' ) );
+		$html .= VSSV_Renderer::render_heading( __( 'Latest results', 'volleyball-schedules-for-swiss-volley' ) );
 		$html .= is_wp_error( $played )
 			? VSSV_Renderer::render_error( $played )
-			: VSSV_Renderer::render_games( $played, __( 'Zurzeit liegen noch keine Resultate vor.', 'volleyball-schedules-for-swiss-volley' ) );
+			: VSSV_Renderer::render_games( $played, __( 'No results are available yet.', 'volleyball-schedules-for-swiss-volley' ) );
 
-		$html .= VSSV_Renderer::render_heading( __( 'Rangliste', 'volleyball-schedules-for-swiss-volley' ) );
+		$html .= VSSV_Renderer::render_heading( __( 'Standings', 'volleyball-schedules-for-swiss-volley' ) );
 		$html .= is_wp_error( $ranking )
 			? VSSV_Renderer::render_error( $ranking )
 			: VSSV_Renderer::render_ranking( $ranking, $team_id );
@@ -310,7 +310,7 @@ class VSSV_Shortcodes {
 			return VSSV_Renderer::render_error( $games );
 		}
 
-		return VSSV_Renderer::render_games( $games, __( 'Zurzeit sind keine kommenden Spiele angesetzt.', 'volleyball-schedules-for-swiss-volley' ), self::render_opts( $atts ) );
+		return VSSV_Renderer::render_games( $games, __( 'No upcoming games are currently scheduled.', 'volleyball-schedules-for-swiss-volley' ), self::render_opts( $atts ) );
 	}
 
 	/**
@@ -337,6 +337,6 @@ class VSSV_Shortcodes {
 			return VSSV_Renderer::render_error( $games );
 		}
 
-		return VSSV_Renderer::render_games( $games, __( 'Zurzeit liegen noch keine Resultate vor.', 'volleyball-schedules-for-swiss-volley' ), self::render_opts( $atts ) );
+		return VSSV_Renderer::render_games( $games, __( 'No results are available yet.', 'volleyball-schedules-for-swiss-volley' ), self::render_opts( $atts ) );
 	}
 }

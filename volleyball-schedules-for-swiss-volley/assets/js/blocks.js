@@ -110,8 +110,8 @@
 		} );
 	}
 
-	registerVssvBlock( 'games', __( 'Swiss Volley – Spiele', 'volleyball-schedules-for-swiss-volley' ), 'calendar-alt', true );
-	registerVssvBlock( 'results', __( 'Swiss Volley – Resultate', 'volleyball-schedules-for-swiss-volley' ), 'editor-ol', true );
-	registerVssvBlock( 'ranking', __( 'Swiss Volley – Rangliste', 'volleyball-schedules-for-swiss-volley' ), 'list-view', false );
-	registerVssvBlock( 'team', __( 'Swiss Volley – Team', 'volleyball-schedules-for-swiss-volley' ), 'groups', true );
+	registerVssvBlock( 'games', __( 'Swiss Volley - Games', 'volleyball-schedules-for-swiss-volley' ), 'calendar-alt', true );
+	registerVssvBlock( 'results', __( 'Swiss Volley - Results', 'volleyball-schedules-for-swiss-volley' ), 'editor-ol', true );
+	registerVssvBlock( 'ranking', __( 'Swiss Volley - Standings', 'volleyball-schedules-for-swiss-volley' ), 'list-view', false );
+	registerVssvBlock( 'team', __( 'Swiss Volley - Team', 'volleyball-schedules-for-swiss-volley' ), 'groups', true );
 } )( window.wp );

@@ -44,7 +44,7 @@ class VSSV_Plugin {
 	 * Constructor: Hooks registrieren.
 	 */
 	private function __construct() {
-		load_plugin_textdomain( 'volleyball-schedules-for-swiss-volley', false, dirname( plugin_basename( VSSV_PLUGIN_FILE ) ) . '/languages' );
+		add_action( 'init', array( __CLASS__, 'load_textdomain' ) );
 
 		VSSV_Shortcodes::register();
 		VSSV_Blocks::register();
@@ -55,6 +55,20 @@ class VSSV_Plugin {
 		if ( is_admin() && class_exists( 'VSSV_Admin' ) ) {
 			VSSV_Admin::register();
 		}
+	}
+
+	/**
+	 * Übersetzungen laden.
+	 *
+	 * Muss an 'init' hängen: Seit WordPress 6.7 gilt ein früherer Aufruf
+	 * als zu früh und löst _doing_it_wrong aus.
+	 */
+	public static function load_textdomain(): void {
+		load_plugin_textdomain(
+			'volleyball-schedules-for-swiss-volley',
+			false,
+			dirname( plugin_basename( VSSV_PLUGIN_FILE ) ) . '/languages'
+		);
 	}
 
 	/**

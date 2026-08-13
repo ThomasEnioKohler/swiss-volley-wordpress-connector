@@ -97,7 +97,7 @@ class VSSV_Renderer {
 			return '';
 		}
 		return '<p class="vssv-notice vssv-notice-stale">'
-			. esc_html__( 'Die Spieldaten konnten momentan nicht aktualisiert werden. Angezeigt wird der letzte bekannte Stand.', 'volleyball-schedules-for-swiss-volley' )
+			. esc_html__( 'The game data could not be updated at this time. Showing the last known state.', 'volleyball-schedules-for-swiss-volley' )
 			. '</p>';
 	}
 
@@ -110,12 +110,12 @@ class VSSV_Renderer {
 	 */
 	public static function render_error( WP_Error $error ): string {
 		$html = '<p class="vssv-notice vssv-notice-error">'
-			. esc_html__( 'Die Spieldaten konnten momentan nicht geladen werden.', 'volleyball-schedules-for-swiss-volley' )
+			. esc_html__( 'The game data could not be loaded at this time.', 'volleyball-schedules-for-swiss-volley' )
 			. '</p>';
 
 		if ( VSSV_Logger::enabled() && current_user_can( 'manage_options' ) ) {
 			$html .= '<p class="vssv-notice vssv-notice-debug">'
-				. esc_html__( 'Debug (nur für Administratoren sichtbar):', 'volleyball-schedules-for-swiss-volley' ) . ' '
+				. esc_html__( 'Debug (visible to administrators only):', 'volleyball-schedules-for-swiss-volley' ) . ' '
 				. esc_html( $error->get_error_message() )
 				. '</p>';
 		}
@@ -181,13 +181,13 @@ class VSSV_Renderer {
 				$html  = self::stale_notice();
 				$html .= '<div class="vssv-switchable" data-vssv-initial="' . esc_attr( $initial ) . '">';
 
-				$html .= '<div class="vssv-switcher" role="group" aria-label="' . esc_attr__( 'Spiele gruppieren', 'volleyball-schedules-for-swiss-volley' ) . '">';
-				$html .= '<button type="button" class="vssv-switch" data-vssv-group="none">' . esc_html__( 'Chronologisch', 'volleyball-schedules-for-swiss-volley' ) . '</button>';
+				$html .= '<div class="vssv-switcher" role="group" aria-label="' . esc_attr__( 'Group games', 'volleyball-schedules-for-swiss-volley' ) . '">';
+				$html .= '<button type="button" class="vssv-switch" data-vssv-group="none">' . esc_html__( 'Chronological', 'volleyball-schedules-for-swiss-volley' ) . '</button>';
 				if ( $has_league ) {
-					$html .= '<button type="button" class="vssv-switch" data-vssv-group="league">' . esc_html__( 'Nach Liga', 'volleyball-schedules-for-swiss-volley' ) . '</button>';
+					$html .= '<button type="button" class="vssv-switch" data-vssv-group="league">' . esc_html__( 'By league', 'volleyball-schedules-for-swiss-volley' ) . '</button>';
 				}
 				if ( $has_team ) {
-					$html .= '<button type="button" class="vssv-switch" data-vssv-group="team">' . esc_html__( 'Nach Team', 'volleyball-schedules-for-swiss-volley' ) . '</button>';
+					$html .= '<button type="button" class="vssv-switch" data-vssv-group="team">' . esc_html__( 'By team', 'volleyball-schedules-for-swiss-volley' ) . '</button>';
 				}
 				$html .= '</div>';
 
@@ -209,11 +209,11 @@ class VSSV_Renderer {
 						? (int) $g['home_team_id']
 						: ( in_array( (int) $g['away_team_id'], $own_ids, true ) ? (int) $g['away_team_id'] : 0 );
 					$key   = 'team-' . $own_tid;
-					$label = $own_tid ? VSSV_Teams::display_name( $own_tid ) : __( 'Weitere Spiele', 'volleyball-schedules-for-swiss-volley' );
+					$label = $own_tid ? VSSV_Teams::display_name( $own_tid ) : __( 'More games', 'volleyball-schedules-for-swiss-volley' );
 				} else {
 					$label = (string) $g['league'];
 					if ( '' === $label ) {
-						$label = __( 'Weitere Spiele', 'volleyball-schedules-for-swiss-volley' );
+						$label = __( 'More games', 'volleyball-schedules-for-swiss-volley' );
 					}
 					$key = 'league-' . $label;
 				}
@@ -295,7 +295,7 @@ class VSSV_Renderer {
 		$html = '';
 
 		if ( empty( $games ) ) {
-			$empty = $empty ? $empty : __( 'Zurzeit sind keine Spiele vorhanden.', 'volleyball-schedules-for-swiss-volley' );
+			$empty = $empty ? $empty : __( 'No games are currently available.', 'volleyball-schedules-for-swiss-volley' );
 			return $html . '<p class="vssv-empty">' . esc_html( $empty ) . '</p>';
 		}
 
@@ -393,7 +393,7 @@ class VSSV_Renderer {
 		$html = self::stale_notice();
 
 		if ( empty( $groups ) ) {
-			return $html . '<p class="vssv-empty">' . esc_html__( 'Zurzeit ist keine Rangliste verfügbar.', 'volleyball-schedules-for-swiss-volley' ) . '</p>';
+			return $html . '<p class="vssv-empty">' . esc_html__( 'No standings are currently available.', 'volleyball-schedules-for-swiss-volley' ) . '</p>';
 		}
 
 		$settings  = get_option( 'vssv_settings', array() );
@@ -404,13 +404,13 @@ class VSSV_Renderer {
 			$html .= '<div class="vssv-ranking-wrap">';
 			$html .= '<table class="vssv-ranking">';
 			$html .= '<thead><tr>';
-			$html .= '<th scope="col" class="vssv-col-rank">' . esc_html_x( 'Rang', 'Ranglisten-Spalte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-rank">' . esc_html_x( 'Rank', 'Ranglisten-Spalte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
 			$html .= '<th scope="col" class="vssv-col-team">' . esc_html__( 'Team', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
-			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'Sp', 'Abkürzung Spiele', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
-			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'S', 'Abkürzung Siege', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
-			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'N', 'Abkürzung Niederlagen', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
-			$html .= '<th scope="col" class="vssv-col-num vssv-col-sets">' . esc_html_x( 'Sätze', 'Ranglisten-Spalte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
-			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'Pkt', 'Abkürzung Punkte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'P', 'Abkürzung Spiele', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'W', 'Abkürzung Siege', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'L', 'Abkürzung Niederlagen', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num vssv-col-sets">' . esc_html_x( 'Sets', 'Ranglisten-Spalte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'Pts', 'Abkürzung Punkte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
 			$html .= '</tr></thead><tbody>';
 
 			foreach ( $group['rows'] as $row ) {

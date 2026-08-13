@@ -51,5 +51,8 @@ jobs:
       - name: Tests der Build-Pipeline
         run: bash tests/test-build.sh
 
+      - name: i18n-Prüfungen
+        run: bash tests/test-i18n.sh
+
       - name: Build (Lint, Tests, POT, ZIP)
         run: bash bin/build.sh

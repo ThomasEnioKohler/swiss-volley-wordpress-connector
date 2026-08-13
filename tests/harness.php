@@ -53,6 +53,7 @@ function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function esc_attr__( $s, $d = null ) { return htmlspecialchars( $s, ENT_QUOTES ); }
 function wp_register_script( $h, $src, $deps = array(), $v = false, $footer = false ) {}
 function wp_enqueue_script( $h ) {}
+function wp_set_script_translations( $h, $d = null, $p = null ) {}
 function wp_register_style( $h, $src, $deps = array(), $v = false ) {}
 function wp_enqueue_style( $h ) {}
 function wp_add_inline_style( $h, $css ) {}
@@ -250,7 +251,7 @@ check( '04 Volley Pizol gefunden (Club-Erkennung)', ! is_wp_error( $r ) && 'VP1'
 reset_state( array( 'api_key' => 'WRONG' ) );
 $GLOBALS['http_mock'] = fn( $url, $args ) => array( 'code' => 401, 'body' => '' );
 $r = ( new VSSV_API() )->test_connection();
-check( '02 API-Key falsch: verständliche Fehlermeldung, kein Key im Text', is_wp_error( $r ) && str_contains( $r->get_error_message(), 'Authentifizierung' ) && ! str_contains( $r->get_error_message(), 'WRONG' ) );
+check( '02 API-Key falsch: verständliche Fehlermeldung, kein Key im Text', is_wp_error( $r ) && str_contains( $r->get_error_message(), 'Authentication' ) && ! str_contains( $r->get_error_message(), 'WRONG' ) );
 
 // 3. API nicht erreichbar (ohne Stale) → sauberer Fehler.
 reset_state();
@@ -258,7 +259,7 @@ $GLOBALS['http_mock'] = fn() => new WP_Error( 'timeout', 'cURL timeout' );
 $games = VSSV_Data::games_for_team( 101, 'upcoming', 5 );
 check( '03a API nicht erreichbar ohne Fallback: WP_Error statt Absturz', is_wp_error( $games ) );
 $html = VSSV_Renderer::render_error( $games );
-check( '03b Besucher-Fehlermeldung ohne technische Details', str_contains( $html, 'momentan nicht geladen' ) && ! str_contains( $html, 'cURL' ) );
+check( '03b Besucher-Fehlermeldung ohne technische Details', str_contains( $html, 'could not be loaded' ) && ! str_contains( $html, 'cURL' ) );
 
 // 3c. API nicht erreichbar MIT Stale-Daten → letzter Stand + Hinweis.
 reset_state(); mock_ok();
@@ -269,7 +270,7 @@ $GLOBALS['http_mock'] = fn() => new WP_Error( 'down', 'down' );
 $games = VSSV_Data::games_for_team( 101, 'upcoming', 5 );
 check( '03c Stale-Fallback liefert zuletzt bekannte Daten', is_array( $games ) && count( $games ) === 2 && VSSV_Data::served_stale() );
 $html = VSSV_Renderer::render_games( $games );
-check( '03d Hinweis «konnten momentan nicht aktualisiert werden»', str_contains( $html, 'momentan nicht aktualisiert' ) );
+check( '03d Hinweis «konnten momentan nicht aktualisiert werden»', str_contains( $html, 'could not be updated' ) );
 
 // 5. Club nicht gefunden (leere API-Antwort).
 check( '05 Club nicht gefunden bei leeren Daten', null === VSSV_Data::detect_own_club( array() ) );
@@ -351,7 +352,7 @@ $stored = VSSV_Teams::all(); $stored[101]['alias'] = 'herren-1'; VSSV_Teams::sav
 $GLOBALS['wp_options']['vssv_settings']['club_id'] = 'VP1';
 
 $html = VSSV_Shortcodes::team( array( 'team' => 'herren-1', 'limit' => 5 ) );
-check( 'S1 Alias-Auflösung + kombinierte Teamansicht', str_contains( $html, 'vssv-team-view' ) && str_contains( $html, 'chste Spiele' ) && str_contains( $html, 'vssv-ranking' ) );
+check( 'S1 Alias-Auflösung + kombinierte Teamansicht', str_contains( $html, 'vssv-team-view' ) && str_contains( $html, 'Upcoming games' ) && str_contains( $html, 'vssv-ranking' ) );
 check( 'S2 Eigenes Team mit vssv-own-team hervorgehoben', str_contains( $html, 'vssv-own-team' ) );
 
 $html = VSSV_Shortcodes::club_games( array( 'limit' => 10 ) );
@@ -361,7 +362,7 @@ $html = VSSV_Shortcodes::club_results( array( 'limit' => 10 ) );
 check( 'S4 Vereinsweite Resultate (3 Spiele, absteigend)', 3 === substr_count( $html, '<article' ) && str_contains( $html, 'vssv-result-sets' ) );
 
 $html = VSSV_Shortcodes::games( array( 'team' => 'gibts-nicht' ) );
-check( 'S5 Unbekanntes Team: verständliche Meldung', str_contains( $html, 'nicht gefunden' ) );
+check( 'S5 Unbekanntes Team: verständliche Meldung', str_contains( $html, 'not found' ) );
 
 // Team-Filter für Club-Ansichten.
 $stored = VSSV_Teams::all(); $stored[201]['in_club'] = false; VSSV_Teams::save( $stored );

@@ -48,6 +48,12 @@ class VSSV_Blocks {
 			true
 		);
 
+		wp_set_script_translations(
+			'vssv-blocks',
+			'volleyball-schedules-for-swiss-volley',
+			VSSV_PLUGIN_DIR . 'languages'
+		);
+
 		// Teamliste für das Dropdown im Editor.
 		$teams = array();
 		foreach ( VSSV_Teams::all() as $tid => $team ) {
@@ -80,7 +86,7 @@ class VSSV_Blocks {
 			'swiss-volley/games',
 			array(
 				'api_version'     => 3,
-				'title'           => __( 'Swiss Volley – Spiele', 'volleyball-schedules-for-swiss-volley' ),
+				'title'           => __( 'Swiss Volley - Games', 'volleyball-schedules-for-swiss-volley' ),
 				'editor_script'   => 'vssv-blocks',
 				'attributes'      => $team_attributes,
 				'render_callback' => static function ( $attributes ) {
@@ -99,7 +105,7 @@ class VSSV_Blocks {
 			'swiss-volley/results',
 			array(
 				'api_version'     => 3,
-				'title'           => __( 'Swiss Volley – Resultate', 'volleyball-schedules-for-swiss-volley' ),
+				'title'           => __( 'Swiss Volley - Results', 'volleyball-schedules-for-swiss-volley' ),
 				'editor_script'   => 'vssv-blocks',
 				'attributes'      => $team_attributes,
 				'render_callback' => static function ( $attributes ) {
@@ -117,7 +123,7 @@ class VSSV_Blocks {
 			'swiss-volley/ranking',
 			array(
 				'api_version'     => 3,
-				'title'           => __( 'Swiss Volley – Rangliste', 'volleyball-schedules-for-swiss-volley' ),
+				'title'           => __( 'Swiss Volley - Standings', 'volleyball-schedules-for-swiss-volley' ),
 				'editor_script'   => 'vssv-blocks',
 				'attributes'      => array(
 					'team' => array(
@@ -137,7 +143,7 @@ class VSSV_Blocks {
 			'swiss-volley/team',
 			array(
 				'api_version'     => 3,
-				'title'           => __( 'Swiss Volley – Team', 'volleyball-schedules-for-swiss-volley' ),
+				'title'           => __( 'Swiss Volley - Team', 'volleyball-schedules-for-swiss-volley' ),
 				'editor_script'   => 'vssv-blocks',
 				'attributes'      => $team_attributes,
 				'render_callback' => static function ( $attributes ) {
