@@ -42,6 +42,7 @@ generate() {
 			next
 		}
 		version == "" { next }          # Kopfteil der CHANGELOG.md überspringen
+		/^$/ { next }                   # Leerzeilen innerhalb eines Abschnitts erlaubt
 		/^### / { category = substr($0, 5); next }
 		/^- / {
 			text = substr($0, 3)
@@ -51,6 +52,10 @@ generate() {
 				printf "* %s: %s\n", category, text
 			}
 			next
+		}
+		{
+			printf "Fehler: Nicht verstandene Zeile in CHANGELOG.md (Version %s): %s\n", version, $0 > "/dev/stderr"
+			exit 1
 		}
 	' "$CHANGELOG"
 }

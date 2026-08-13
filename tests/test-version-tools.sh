@@ -76,15 +76,30 @@ assert_stdout() {
 # --- sync-readme-changelog.sh ---------------------------------------------
 
 test_sync_roundtrip() {
-	local dir referenz erzeugt
+	local dir referenz erzeugt rc
 	dir="$(fixture)"
 	referenz="$dir/referenz.txt"
 	erzeugt="$dir/erzeugt.txt"
 
-	# Die Sektion, wie sie vor der Migration in readme.txt stand.
+	# Die Sektion, wie sie vor der Migration in readme.txt stand — MUSS vor
+	# dem Verfälschen gesichert werden, sonst würde die Referenz mit
+	# verfälscht.
 	sed -n '/^== Changelog ==/,$p' "$dir/swiss-volley-connector/readme.txt" > "$referenz"
 
+	# readme.txt jetzt gezielt verfälschen: nur ein echter Schreibvorgang
+	# des Generators kann die Datei wieder auf den Originalstand bringen.
+	# Bricht der Generator ab (oder schreibt er gar nicht), bleibt die
+	# Verfälschung stehen und der folgende diff schlägt zu Recht fehl.
+	printf '\n* Verfaelscht fuer den Test\n' >> "$dir/swiss-volley-connector/readme.txt"
+
 	bash "$dir/bin/sync-readme-changelog.sh" > /dev/null
+	rc=$?
+	if [ "$rc" -ne 0 ]; then
+		fail "sync erzeugt die Changelog-Sektion byteweise identisch" \
+			"Generator brach mit Exit $rc ab"
+		return
+	fi
+
 	sed -n '/^== Changelog ==/,$p' "$dir/swiss-volley-connector/readme.txt" > "$erzeugt"
 
 	if diff -u "$referenz" "$erzeugt" > "$dir/diff.txt"; then
@@ -110,9 +125,32 @@ test_sync_check_erkennt_handedit() {
 		bash "$dir/bin/sync-readme-changelog.sh" --check
 }
 
+test_sync_meldet_unverstandene_zeile() {
+	local dir ausgabe rc
+	dir="$(fixture)"
+
+	# Fortsetzungszeile eines umbrochenen Aufzählungspunkts einfügen — sie
+	# beginnt weder mit "### " noch mit "- " und darf nicht wortlos wegfallen.
+	awk '{ print } /Interaktive Gruppierung/ && !getroffen {
+		print "  (Fortsetzungszeile ohne Bindestrich)"; getroffen = 1
+	}' "$dir/CHANGELOG.md" > "$dir/CHANGELOG.md.tmp"
+	mv "$dir/CHANGELOG.md.tmp" "$dir/CHANGELOG.md"
+
+	ausgabe="$(bash "$dir/bin/sync-readme-changelog.sh" 2>&1 1>/dev/null)"
+	rc=$?
+
+	if [ "$rc" -eq 1 ] && printf '%s' "$ausgabe" | grep -qF -- 'Fortsetzungszeile ohne Bindestrich'; then
+		pass "sync meldet eine nicht verstandene Zeile im Versionsabschnitt und bricht ab"
+	else
+		fail "sync meldet eine nicht verstandene Zeile im Versionsabschnitt und bricht ab" \
+			"Exit $rc, Ausgabe: $ausgabe"
+	fi
+}
+
 test_sync_roundtrip
 test_sync_check_ok
 test_sync_check_erkennt_handedit
+test_sync_meldet_unverstandene_zeile
 
 # --- version.sh ------------------------------------------------------------
 
@@ -190,7 +228,28 @@ test_version_doppelter_changelog_abschnitt() {
 		bash "$dir/bin/version.sh"
 }
 
+test_version_header_mehrdeutig() {
+	local dir ausgabe rc
+	dir="$(fixture)"
+	# Eine zweite " * Version:"-Zeile einfügen, statt eine bestehende zu
+	# überschreiben — die Quelle liefert dann zwei Treffer.
+	awk '{ print } /^ \* Version: +0\.1\.7 *$/ { print " * Version:           0.1.7" }' \
+		"$dir/swiss-volley-connector/swiss-volley-connector.php" > "$dir/tmp.php"
+	mv "$dir/tmp.php" "$dir/swiss-volley-connector/swiss-volley-connector.php"
+
+	ausgabe="$(bash "$dir/bin/version.sh" 2>&1 1>/dev/null)"
+	rc=$?
+
+	if [ "$rc" -eq 1 ] && printf '%s' "$ausgabe" | grep -qF -- 'mehrdeutig'; then
+		pass "version.sh erkennt einen mehrdeutigen Treffer und weist ihn als solchen aus"
+	else
+		fail "version.sh erkennt einen mehrdeutigen Treffer und weist ihn als solchen aus" \
+			"Exit $rc, Ausgabe: $ausgabe"
+	fi
+}
+
 test_version_gleichstand
+test_version_header_mehrdeutig
 test_version_drift_header
 test_version_drift_konstante
 test_version_drift_stable_tag
@@ -317,11 +376,23 @@ test_notes_ohne_argument() {
 		bash "$dir/bin/release-notes.sh"
 }
 
+test_notes_nur_kategorie_ohne_eintrag() {
+	local dir
+	dir="$(fixture)"
+	# Abschnitt besteht nur aus einer Kategorie-Überschrift, kein "- "-Eintrag.
+	awk '/^## \[0\.1\.6\]/ && !g { print "## [9.8.7]"; print ""; print "### Neu"; print ""; g = 1 } { print }' \
+		"$dir/CHANGELOG.md" > "$dir/CHANGELOG.md.tmp"
+	mv "$dir/CHANGELOG.md.tmp" "$dir/CHANGELOG.md"
+	assert_exit "release-notes.sh scheitert bei einem Abschnitt nur mit Kategorie-Überschrift" 1 \
+		bash "$dir/bin/release-notes.sh" 9.8.7
+}
+
 test_notes_liefert_abschnitt
 test_notes_endet_vor_naechster_version
 test_notes_fehlender_abschnitt
 test_notes_platzhalter
 test_notes_ohne_argument
+test_notes_nur_kategorie_ohne_eintrag
 
 # --- Ergebnis --------------------------------------------------------------
 

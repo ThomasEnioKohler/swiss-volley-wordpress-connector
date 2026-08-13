@@ -47,6 +47,11 @@ rm -f "$ZIP"
 
 echo "== 5/5 ZIP prüfen =="
 unzip -l "$ZIP" | tail -1
+if ! unzip -p "$ZIP" swiss-volley-connector/swiss-volley-connector.php \
+	| grep -q "define( 'SVC_VERSION', '$VERSION' );"; then
+	echo "Fehler: ZIP enthält swiss-volley-connector.php nicht mit SVC_VERSION $VERSION." >&2
+	exit 1
+fi
 
 echo
 echo "Fertig: $ZIP"

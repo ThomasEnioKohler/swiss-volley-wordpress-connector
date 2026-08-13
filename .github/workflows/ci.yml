@@ -34,6 +34,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: PHP einrichten
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
       - name: Versionskonsistenz
         run: bash bin/version.sh
 
@@ -42,3 +47,9 @@ jobs:
 
       - name: Tests der Versions-Werkzeuge
         run: bash tests/test-version-tools.sh
+
+      - name: Tests der Build-Pipeline
+        run: bash tests/test-build.sh
+
+      - name: Build (Lint, Tests, POT, ZIP)
+        run: bash bin/build.sh

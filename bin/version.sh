@@ -28,19 +28,49 @@ elif [ -n "${1:-}" ]; then
 	exit 1
 fi
 
+# Zählt die Treffer (Zeilen) einer möglicherweise leeren Mehrzeilen-Zeichenkette.
+anzahl_treffer() {
+	local wert="$1"
+	if [ -z "$wert" ]; then
+		printf '0'
+	else
+		printf '%s\n' "$wert" | wc -l | tr -d ' \t'
+	fi
+}
+
 # Gibt den Wert aus, wenn genau eine Zeile gefunden wurde, sonst nichts.
 genau_eine() {
 	local wert="$1"
-	if [ -z "$wert" ] || [ "$wert" != "${wert%$'\n'*}" ]; then
+	if [ "$(anzahl_treffer "$wert")" != "1" ]; then
 		return 0
 	fi
 	printf '%s' "$wert"
 }
 
-v_header="$(genau_eine "$(sed -nE 's/^ \* Version: +([0-9]+\.[0-9]+\.[0-9]+) *$/\1/p' "$PLUGIN")")"
-v_konstante="$(genau_eine "$(sed -nE "s/^define\( 'SVC_VERSION', '([0-9]+\.[0-9]+\.[0-9]+)' \);.*$/\1/p" "$PLUGIN")")"
-v_stable="$(genau_eine "$(sed -nE 's/^Stable tag: +([0-9]+\.[0-9]+\.[0-9]+) *$/\1/p' "$README")")"
+v_header_roh="$(sed -nE 's/^ \* Version: +([0-9]+\.[0-9]+\.[0-9]+) *$/\1/p' "$PLUGIN")"
+v_konstante_roh="$(sed -nE "s/^define\( 'SVC_VERSION', '([0-9]+\.[0-9]+\.[0-9]+)' \);.*$/\1/p" "$PLUGIN")"
+v_stable_roh="$(sed -nE 's/^Stable tag: +([0-9]+\.[0-9]+\.[0-9]+) *$/\1/p' "$README")"
+
+v_header="$(genau_eine "$v_header_roh")"
+v_konstante="$(genau_eine "$v_konstante_roh")"
+v_stable="$(genau_eine "$v_stable_roh")"
 v_changelog="$(sed -nE 's/^## \[([0-9]+\.[0-9]+\.[0-9]+)\].*$/\1/p' "$CHANGELOG" | head -1)"
+
+# Diagnosetext für die Tabelle: unterscheidet "nicht gefunden" (0 Treffer)
+# von "mehrdeutig" (mehr als 1 Treffer) statt beides gleich zu behandeln.
+diagnose() { # <wert> <roh>
+	local wert="$1" roh="$2" n
+	if [ -n "$wert" ]; then
+		printf '%s' "$wert"
+		return 0
+	fi
+	n="$(anzahl_treffer "$roh")"
+	if [ "$n" -eq 0 ]; then
+		printf '(nicht gefunden)'
+	else
+		printf '(mehrdeutig: %s Treffer)' "$n"
+	fi
+}
 
 # Doppelte Versionsabschnitte fallen sonst nicht auf: release-notes.sh
 # nähme nur den ersten, und der Generator schriebe zwei identische
@@ -53,9 +83,9 @@ fi
 
 tabelle() {
 	printf '  %-16s %-52s %s\n' "Quelle" "Datei" "Wert" >&2
-	printf '  %-16s %-52s %s\n' "Plugin-Header" "swiss-volley-connector/swiss-volley-connector.php" "${v_header:-(nicht gefunden)}" >&2
-	printf '  %-16s %-52s %s\n' "SVC_VERSION" "swiss-volley-connector/swiss-volley-connector.php" "${v_konstante:-(nicht gefunden)}" >&2
-	printf '  %-16s %-52s %s\n' "Stable tag" "swiss-volley-connector/readme.txt" "${v_stable:-(nicht gefunden)}" >&2
+	printf '  %-16s %-52s %s\n' "Plugin-Header" "swiss-volley-connector/swiss-volley-connector.php" "$(diagnose "$v_header" "$v_header_roh")" >&2
+	printf '  %-16s %-52s %s\n' "SVC_VERSION" "swiss-volley-connector/swiss-volley-connector.php" "$(diagnose "$v_konstante" "$v_konstante_roh")" >&2
+	printf '  %-16s %-52s %s\n' "Stable tag" "swiss-volley-connector/readme.txt" "$(diagnose "$v_stable" "$v_stable_roh")" >&2
 	printf '  %-16s %-52s %s\n' "CHANGELOG.md" "CHANGELOG.md" "${v_changelog:-(nicht gefunden)}" >&2
 	if [ -n "$EXPECT" ]; then
 		printf '  %-16s %-52s %s\n' "Erwartet (Tag)" "-" "$EXPECT" >&2

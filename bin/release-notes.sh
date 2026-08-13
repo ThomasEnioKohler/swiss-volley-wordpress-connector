@@ -30,6 +30,11 @@ if [ -z "$inhalt" ]; then
 	exit 1
 fi
 
+if ! printf '%s' "$inhalt" | grep -qE -- '^- '; then
+	echo "Fehler: Der Abschnitt '## [$VERSION]' in CHANGELOG.md enthält keinen einzigen Eintrag (keine Zeile mit '- ')." >&2
+	exit 1
+fi
+
 if printf '%s' "$inhalt" | grep -qF -- "$PLATZHALTER"; then
 	echo "Fehler: Der Abschnitt '## [$VERSION]' enthält noch den Platzhalter." >&2
 	echo "Trage die Änderungen in CHANGELOG.md ein, bevor du releast." >&2
