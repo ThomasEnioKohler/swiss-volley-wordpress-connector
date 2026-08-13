@@ -94,7 +94,7 @@ Das Plugin übernimmt die **Reihenfolge unverändert** (keine eigene Berechnung)
 
 ## Mapping API → interne Struktur
 
-`SVC_Data::normalize_game()` überführt jedes Spiel in:
+`VSSV_Data::normalize_game()` überführt jedes Spiel in:
 
 | Intern          | Quelle                                                        |
 | --------------- | ------------------------------------------------------------- |
@@ -116,9 +116,9 @@ Das Plugin übernimmt die **Reihenfolge unverändert** (keine eigene Berechnung)
 
 Die API kennt **keine Endpunkte zum Auflisten von Clubs, Teams oder Saisons** – der Key ist club-gebunden. Das Plugin leitet deshalb ab:
 
-* **Eigener Verein:** In jedem gelieferten Spiel ist mindestens ein eigenes Team beteiligt. Die `clubId` mit der höchsten Abdeckung über alle Spiele ist der eigene Verein (`SVC_Data::detect_own_club()`).
-* **Teams:** Alle Teams mit dieser `clubId` aus den Spieldaten (`SVC_Data::derive_teams()`), inkl. Liga, Saison und Gruppen-IDs. Nichts ist hart codiert.
-* **Saisons:** Alle in den Daten vorkommenden `league.season`-Werte (`SVC_Data::list_seasons()`).
+* **Eigener Verein:** In jedem gelieferten Spiel ist mindestens ein eigenes Team beteiligt. Die `clubId` mit der höchsten Abdeckung über alle Spiele ist der eigene Verein (`VSSV_Data::detect_own_club()`).
+* **Teams:** Alle Teams mit dieser `clubId` aus den Spieldaten (`VSSV_Data::derive_teams()`), inkl. Liga, Saison und Gruppen-IDs. Nichts ist hart codiert.
+* **Saisons:** Alle in den Daten vorkommenden `league.season`-Werte (`VSSV_Data::list_seasons()`).
 
 ## Bekannte Einschränkungen der aktuellen API
 

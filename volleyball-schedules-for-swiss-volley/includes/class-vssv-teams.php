@@ -3,7 +3,7 @@
  * Teamkonfiguration: Speicherung der aus Swiss Volley geladenen Teams,
  * Aliase und Auswahl für vereinsweite Ansichten.
  *
- * Struktur der Option 'svc_teams' (Team-ID => Daten):
+ * Struktur der Option 'vssv_teams' (Team-ID => Daten):
  * [
  *   12345 => [
  *     'team_id'   => 12345,
@@ -20,7 +20,7 @@
  *   ],
  * ]
  *
- * @package SwissVolleyConnector
+ * @package VolleyballSchedulesForSwissVolley
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -28,11 +28,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class SVC_Teams
+ * Class VSSV_Teams
  */
-class SVC_Teams {
+class VSSV_Teams {
 
-	const OPTION_KEY = 'svc_teams';
+	const OPTION_KEY = 'vssv_teams';
 
 	/**
 	 * Alle konfigurierten Teams.
@@ -57,7 +57,7 @@ class SVC_Teams {
 	 * Aus der API abgeleitete Teams mit bestehender Konfiguration
 	 * zusammenführen (Aliase und Auswahl bleiben erhalten).
 	 *
-	 * @param array<int,array<string,mixed>> $derived Von SVC_Data::derive_teams gelieferte Teams.
+	 * @param array<int,array<string,mixed>> $derived Von VSSV_Data::derive_teams gelieferte Teams.
 	 * @return array<int,array<string,mixed>>
 	 */
 	public static function merge_derived( array $derived ): array {

@@ -8,7 +8,7 @@
  * Datum/Uhrzeit werden über wp_date() in der in WordPress konfigurierten
  * Zeitzone ausgegeben (keine feste UTC+1/UTC+2-Logik).
  *
- * @package SwissVolleyConnector
+ * @package VolleyballSchedulesForSwissVolley
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,12 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class SVC_Renderer
+ * Class VSSV_Renderer
  */
-class SVC_Renderer {
+class VSSV_Renderer {
 
 	/**
-	 * Datumsformat (über Filter 'svc_date_format' anpassbar).
+	 * Datumsformat (über Filter 'vssv_date_format' anpassbar).
 	 *
 	 * @return string
 	 */
@@ -31,11 +31,11 @@ class SVC_Renderer {
 		 *
 		 * @param string $format PHP-Datumsformat.
 		 */
-		return (string) apply_filters( 'svc_date_format', 'D, d.m.Y' );
+		return (string) apply_filters( 'vssv_date_format', 'D, d.m.Y' );
 	}
 
 	/**
-	 * Zeitformat (über Filter 'svc_time_format' anpassbar,
+	 * Zeitformat (über Filter 'vssv_time_format' anpassbar,
 	 * Standard aus den WordPress-Einstellungen).
 	 *
 	 * @return string
@@ -47,7 +47,7 @@ class SVC_Renderer {
 		 *
 		 * @param string $format PHP-Zeitformat.
 		 */
-		return (string) apply_filters( 'svc_time_format', $wp_format ? $wp_format : 'H:i' );
+		return (string) apply_filters( 'vssv_time_format', $wp_format ? $wp_format : 'H:i' );
 	}
 
 	/**
@@ -68,15 +68,15 @@ class SVC_Renderer {
 	 * @return string
 	 */
 	private static function team_name_html( string $name, int $team_id, string $classes ): string {
-		$url = $team_id ? SVC_Teams::page_url( $team_id ) : '';
+		$url = $team_id ? VSSV_Teams::page_url( $team_id ) : '';
 		if ( '' !== $url ) {
-			return '<a class="' . esc_attr( $classes . ' svc-team-link' ) . '" href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
+			return '<a class="' . esc_attr( $classes . ' vssv-team-link' ) . '" href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
 		}
 		return '<span class="' . esc_attr( $classes ) . '">' . esc_html( $name ) . '</span>';
 	}
 
 	private static function is_own( array $game, string $side ): bool {
-		$settings = get_option( 'svc_settings', array() );
+		$settings = get_option( 'vssv_settings', array() );
 		if ( empty( $settings['highlight_own'] ) ) {
 			return false;
 		}
@@ -93,11 +93,11 @@ class SVC_Renderer {
 	 * @return string
 	 */
 	private static function stale_notice(): string {
-		if ( ! SVC_Data::served_stale() ) {
+		if ( ! VSSV_Data::served_stale() ) {
 			return '';
 		}
-		return '<p class="svc-notice svc-notice-stale">'
-			. esc_html__( 'Die Spieldaten konnten momentan nicht aktualisiert werden. Angezeigt wird der letzte bekannte Stand.', 'swiss-volley-connector' )
+		return '<p class="vssv-notice vssv-notice-stale">'
+			. esc_html__( 'Die Spieldaten konnten momentan nicht aktualisiert werden. Angezeigt wird der letzte bekannte Stand.', 'volleyball-schedules-for-swiss-volley' )
 			. '</p>';
 	}
 
@@ -109,13 +109,13 @@ class SVC_Renderer {
 	 * @return string
 	 */
 	public static function render_error( WP_Error $error ): string {
-		$html = '<p class="svc-notice svc-notice-error">'
-			. esc_html__( 'Die Spieldaten konnten momentan nicht geladen werden.', 'swiss-volley-connector' )
+		$html = '<p class="vssv-notice vssv-notice-error">'
+			. esc_html__( 'Die Spieldaten konnten momentan nicht geladen werden.', 'volleyball-schedules-for-swiss-volley' )
 			. '</p>';
 
-		if ( SVC_Logger::enabled() && current_user_can( 'manage_options' ) ) {
-			$html .= '<p class="svc-notice svc-notice-debug">'
-				. esc_html__( 'Debug (nur für Administratoren sichtbar):', 'swiss-volley-connector' ) . ' '
+		if ( VSSV_Logger::enabled() && current_user_can( 'manage_options' ) ) {
+			$html .= '<p class="vssv-notice vssv-notice-debug">'
+				. esc_html__( 'Debug (nur für Administratoren sichtbar):', 'volleyball-schedules-for-swiss-volley' ) . ' '
 				. esc_html( $error->get_error_message() )
 				. '</p>';
 		}
@@ -152,7 +152,7 @@ class SVC_Renderer {
 		// Interaktiver Umschalter für Besucher: flache Liste mit Daten-
 		// Attributen ausgeben; das Frontend-Skript gruppiert clientseitig.
 		if ( ! empty( $opts['switcher'] ) && ! empty( $games ) ) {
-			$own_ids     = SVC_Teams::known_team_ids();
+			$own_ids     = VSSV_Teams::known_team_ids();
 			$league_dims = array();
 			$team_dims   = array();
 			foreach ( $games as $g ) {
@@ -171,7 +171,7 @@ class SVC_Renderer {
 
 			// Nur sinnvoll, wenn es überhaupt etwas zu gruppieren gibt.
 			if ( $has_league || $has_team ) {
-				SVC_Plugin::mark_switcher_needed();
+				VSSV_Plugin::mark_switcher_needed();
 
 				$initial = $group_by;
 				if ( ( 'league' === $initial && ! $has_league ) || ( 'team' === $initial && ! $has_team ) ) {
@@ -179,15 +179,15 @@ class SVC_Renderer {
 				}
 
 				$html  = self::stale_notice();
-				$html .= '<div class="svc-switchable" data-svc-initial="' . esc_attr( $initial ) . '">';
+				$html .= '<div class="vssv-switchable" data-vssv-initial="' . esc_attr( $initial ) . '">';
 
-				$html .= '<div class="svc-switcher" role="group" aria-label="' . esc_attr__( 'Spiele gruppieren', 'swiss-volley-connector' ) . '">';
-				$html .= '<button type="button" class="svc-switch" data-svc-group="none">' . esc_html__( 'Chronologisch', 'swiss-volley-connector' ) . '</button>';
+				$html .= '<div class="vssv-switcher" role="group" aria-label="' . esc_attr__( 'Spiele gruppieren', 'volleyball-schedules-for-swiss-volley' ) . '">';
+				$html .= '<button type="button" class="vssv-switch" data-vssv-group="none">' . esc_html__( 'Chronologisch', 'volleyball-schedules-for-swiss-volley' ) . '</button>';
 				if ( $has_league ) {
-					$html .= '<button type="button" class="svc-switch" data-svc-group="league">' . esc_html__( 'Nach Liga', 'swiss-volley-connector' ) . '</button>';
+					$html .= '<button type="button" class="vssv-switch" data-vssv-group="league">' . esc_html__( 'Nach Liga', 'volleyball-schedules-for-swiss-volley' ) . '</button>';
 				}
 				if ( $has_team ) {
-					$html .= '<button type="button" class="svc-switch" data-svc-group="team">' . esc_html__( 'Nach Team', 'swiss-volley-connector' ) . '</button>';
+					$html .= '<button type="button" class="vssv-switch" data-vssv-group="team">' . esc_html__( 'Nach Team', 'volleyball-schedules-for-swiss-volley' ) . '</button>';
 				}
 				$html .= '</div>';
 
@@ -200,7 +200,7 @@ class SVC_Renderer {
 		// Gruppierte Ausgabe: Gruppen in der Reihenfolge ihres ersten Spiels
 		// (Sortierung der Spiele bleibt unverändert), je Gruppe eine Überschrift.
 		if ( 'none' !== $group_by && ! empty( $games ) ) {
-			$own_ids = SVC_Teams::known_team_ids();
+			$own_ids = VSSV_Teams::known_team_ids();
 			$groups  = array();
 
 			foreach ( $games as $g ) {
@@ -209,11 +209,11 @@ class SVC_Renderer {
 						? (int) $g['home_team_id']
 						: ( in_array( (int) $g['away_team_id'], $own_ids, true ) ? (int) $g['away_team_id'] : 0 );
 					$key   = 'team-' . $own_tid;
-					$label = $own_tid ? SVC_Teams::display_name( $own_tid ) : __( 'Weitere Spiele', 'swiss-volley-connector' );
+					$label = $own_tid ? VSSV_Teams::display_name( $own_tid ) : __( 'Weitere Spiele', 'volleyball-schedules-for-swiss-volley' );
 				} else {
 					$label = (string) $g['league'];
 					if ( '' === $label ) {
-						$label = __( 'Weitere Spiele', 'swiss-volley-connector' );
+						$label = __( 'Weitere Spiele', 'volleyball-schedules-for-swiss-volley' );
 					}
 					$key = 'league-' . $label;
 				}
@@ -232,7 +232,7 @@ class SVC_Renderer {
 			 *
 			 * @param string $tag Erlaubt: h1–h6, div, span.
 			 */
-			$group_tag = apply_filters( 'svc_group_heading_tag', 'h3' );
+			$group_tag = apply_filters( 'vssv_group_heading_tag', 'h3' );
 			if ( ! in_array( $group_tag, array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span' ), true ) ) {
 				$group_tag = 'h3';
 			}
@@ -245,10 +245,10 @@ class SVC_Renderer {
 				$inner_opts['league'] = 'none';
 			}
 
-			$html = self::stale_notice() . '<div class="svc-game-groups">';
+			$html = self::stale_notice() . '<div class="vssv-game-groups">';
 			foreach ( $groups as $group ) {
-				$html .= '<section class="svc-game-group">';
-				$html .= '<' . $group_tag . ' class="svc-group-heading">' . esc_html( $group['label'] ) . '</' . $group_tag . '>';
+				$html .= '<section class="vssv-game-group">';
+				$html .= '<' . $group_tag . ' class="vssv-group-heading">' . esc_html( $group['label'] ) . '</' . $group_tag . '>';
 				$html .= self::render_games_plain( $group['games'], $inner_opts );
 				$html .= '</section>';
 			}
@@ -287,7 +287,7 @@ class SVC_Renderer {
 		 *
 		 * @param string $tag Erlaubt: h1–h6, div, span.
 		 */
-		$heading_tag = apply_filters( 'svc_game_league_heading_tag', 'h3' );
+		$heading_tag = apply_filters( 'vssv_game_league_heading_tag', 'h3' );
 		if ( ! in_array( $heading_tag, array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span' ), true ) ) {
 			$heading_tag = 'h3';
 		}
@@ -295,17 +295,17 @@ class SVC_Renderer {
 		$html = '';
 
 		if ( empty( $games ) ) {
-			$empty = $empty ? $empty : __( 'Zurzeit sind keine Spiele vorhanden.', 'swiss-volley-connector' );
-			return $html . '<p class="svc-empty">' . esc_html( $empty ) . '</p>';
+			$empty = $empty ? $empty : __( 'Zurzeit sind keine Spiele vorhanden.', 'volleyball-schedules-for-swiss-volley' );
+			return $html . '<p class="vssv-empty">' . esc_html( $empty ) . '</p>';
 		}
 
-		$html .= '<div class="svc-games">';
+		$html .= '<div class="vssv-games">';
 
 		foreach ( $games as $g ) {
 			$played = ( 'played' === $g['status'] );
 
-			$home_classes = 'svc-team svc-team-home' . ( self::is_own( $g, 'home' ) ? ' svc-own-team' : '' );
-			$away_classes = 'svc-team svc-team-away' . ( self::is_own( $g, 'away' ) ? ' svc-own-team' : '' );
+			$home_classes = 'vssv-team vssv-team-home' . ( self::is_own( $g, 'home' ) ? ' vssv-own-team' : '' );
+			$away_classes = 'vssv-team vssv-team-away' . ( self::is_own( $g, 'away' ) ? ' vssv-own-team' : '' );
 
 			$date_label = '';
 			$time_label = '';
@@ -324,54 +324,54 @@ class SVC_Renderer {
 
 			$attrs = '';
 			if ( $data_attrs ) {
-				$own_ids = SVC_Teams::known_team_ids();
+				$own_ids = VSSV_Teams::known_team_ids();
 				$own_tid = in_array( (int) $g['home_team_id'], $own_ids, true )
 					? (int) $g['home_team_id']
 					: ( in_array( (int) $g['away_team_id'], $own_ids, true ) ? (int) $g['away_team_id'] : 0 );
-				$attrs  = ' data-svc-league="' . esc_attr( (string) $g['league'] ) . '"';
-				$attrs .= ' data-svc-team="' . esc_attr( $own_tid ? SVC_Teams::display_name( $own_tid ) : '' ) . '"';
+				$attrs  = ' data-vssv-league="' . esc_attr( (string) $g['league'] ) . '"';
+				$attrs .= ' data-vssv-team="' . esc_attr( $own_tid ? VSSV_Teams::display_name( $own_tid ) : '' ) . '"';
 			}
 
-			$html .= '<article class="svc-game svc-game-' . esc_attr( $g['status'] ) . '"' . $attrs . '>';
+			$html .= '<article class="vssv-game vssv-game-' . esc_attr( $g['status'] ) . '"' . $attrs . '>';
 
 			if ( 'heading' === $league_display && $g['league'] ) {
-				$html .= '<' . $heading_tag . ' class="svc-game-league">' . esc_html( $g['league'] ) . '</' . $heading_tag . '>';
+				$html .= '<' . $heading_tag . ' class="vssv-game-league">' . esc_html( $g['league'] ) . '</' . $heading_tag . '>';
 			}
 
-			$html .= '<div class="svc-when">';
-			$html .= '<span class="svc-date">' . esc_html( $date_label ) . '</span>';
+			$html .= '<div class="vssv-when">';
+			$html .= '<span class="vssv-date">' . esc_html( $date_label ) . '</span>';
 			if ( $time_label ) {
-				$html .= '<span class="svc-time">' . esc_html( $time_label ) . '</span>';
+				$html .= '<span class="vssv-time">' . esc_html( $time_label ) . '</span>';
 			}
 			$html .= '</div>';
 
-			$html .= '<div class="svc-matchup">';
+			$html .= '<div class="vssv-matchup">';
 			$html .= self::team_name_html( $g['home_team'], (int) $g['home_team_id'], $home_classes );
-			$html .= '<span class="svc-vs" aria-hidden="true">' . esc_html_x( 'vs.', 'Trennung Heimteam/Auswärtsteam', 'swiss-volley-connector' ) . '</span>';
+			$html .= '<span class="vssv-vs" aria-hidden="true">' . esc_html_x( 'vs.', 'Trennung Heimteam/Auswärtsteam', 'volleyball-schedules-for-swiss-volley' ) . '</span>';
 			$html .= self::team_name_html( $g['away_team'], (int) $g['away_team_id'], $away_classes );
 			$html .= '</div>';
 
 			if ( $played && null !== $g['home_sets'] ) {
-				$html .= '<div class="svc-result">';
-				$html .= '<span class="svc-result-sets">' . esc_html( $g['home_sets'] . ' : ' . $g['away_sets'] ) . '</span>';
+				$html .= '<div class="vssv-result">';
+				$html .= '<span class="vssv-result-sets">' . esc_html( $g['home_sets'] . ' : ' . $g['away_sets'] ) . '</span>';
 				if ( ! empty( $g['set_results'] ) ) {
 					$sets = array();
 					foreach ( $g['set_results'] as $set ) {
 						$sets[] = $set['home'] . ':' . $set['away'];
 					}
-					$html .= '<span class="svc-result-detail">' . esc_html( implode( ' · ', $sets ) ) . '</span>';
+					$html .= '<span class="vssv-result-detail">' . esc_html( implode( ' · ', $sets ) ) . '</span>';
 				}
 				$html .= '</div>';
 			} else {
-				$html .= '<div class="svc-result svc-result-pending" aria-hidden="true">–</div>';
+				$html .= '<div class="vssv-result vssv-result-pending" aria-hidden="true">–</div>';
 			}
 
-			$html .= '<div class="svc-meta">';
+			$html .= '<div class="vssv-meta">';
 			if ( $venue ) {
-				$html .= '<span class="svc-location">' . esc_html( $venue ) . '</span>';
+				$html .= '<span class="vssv-location">' . esc_html( $venue ) . '</span>';
 			}
 			if ( 'meta' === $league_display && $g['league'] ) {
-				$html .= '<span class="svc-league">' . esc_html( $g['league'] ) . '</span>';
+				$html .= '<span class="vssv-league">' . esc_html( $g['league'] ) . '</span>';
 			}
 			$html .= '</div>';
 
@@ -385,7 +385,7 @@ class SVC_Renderer {
 	/**
 	 * Rangliste(n) rendern.
 	 *
-	 * @param array $groups Gruppen aus SVC_Data::ranking_for_team().
+	 * @param array $groups Gruppen aus VSSV_Data::ranking_for_team().
 	 * @param int   $team_id Team-ID (für Hervorhebung der eigenen Zeile).
 	 * @return string
 	 */
@@ -393,48 +393,48 @@ class SVC_Renderer {
 		$html = self::stale_notice();
 
 		if ( empty( $groups ) ) {
-			return $html . '<p class="svc-empty">' . esc_html__( 'Zurzeit ist keine Rangliste verfügbar.', 'swiss-volley-connector' ) . '</p>';
+			return $html . '<p class="vssv-empty">' . esc_html__( 'Zurzeit ist keine Rangliste verfügbar.', 'volleyball-schedules-for-swiss-volley' ) . '</p>';
 		}
 
-		$settings  = get_option( 'svc_settings', array() );
+		$settings  = get_option( 'vssv_settings', array() );
 		$highlight = ! empty( $settings['highlight_own'] );
-		$own_ids   = $highlight ? SVC_Teams::known_team_ids() : array();
+		$own_ids   = $highlight ? VSSV_Teams::known_team_ids() : array();
 
 		foreach ( $groups as $group ) {
-			$html .= '<div class="svc-ranking-wrap">';
-			$html .= '<table class="svc-ranking">';
+			$html .= '<div class="vssv-ranking-wrap">';
+			$html .= '<table class="vssv-ranking">';
 			$html .= '<thead><tr>';
-			$html .= '<th scope="col" class="svc-col-rank">' . esc_html_x( 'Rang', 'Ranglisten-Spalte', 'swiss-volley-connector' ) . '</th>';
-			$html .= '<th scope="col" class="svc-col-team">' . esc_html__( 'Team', 'swiss-volley-connector' ) . '</th>';
-			$html .= '<th scope="col" class="svc-col-num">' . esc_html_x( 'Sp', 'Abkürzung Spiele', 'swiss-volley-connector' ) . '</th>';
-			$html .= '<th scope="col" class="svc-col-num">' . esc_html_x( 'S', 'Abkürzung Siege', 'swiss-volley-connector' ) . '</th>';
-			$html .= '<th scope="col" class="svc-col-num">' . esc_html_x( 'N', 'Abkürzung Niederlagen', 'swiss-volley-connector' ) . '</th>';
-			$html .= '<th scope="col" class="svc-col-num svc-col-sets">' . esc_html_x( 'Sätze', 'Ranglisten-Spalte', 'swiss-volley-connector' ) . '</th>';
-			$html .= '<th scope="col" class="svc-col-num">' . esc_html_x( 'Pkt', 'Abkürzung Punkte', 'swiss-volley-connector' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-rank">' . esc_html_x( 'Rang', 'Ranglisten-Spalte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-team">' . esc_html__( 'Team', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'Sp', 'Abkürzung Spiele', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'S', 'Abkürzung Siege', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'N', 'Abkürzung Niederlagen', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num vssv-col-sets">' . esc_html_x( 'Sätze', 'Ranglisten-Spalte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'Pkt', 'Abkürzung Punkte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
 			$html .= '</tr></thead><tbody>';
 
 			foreach ( $group['rows'] as $row ) {
 				$is_this_team = ( $team_id && $row['team_id'] === $team_id );
 				$is_own_club  = $highlight && in_array( $row['team_id'], $own_ids, true );
 
-				$classes = 'svc-ranking-row';
+				$classes = 'vssv-ranking-row';
 				if ( $is_this_team || $is_own_club ) {
-					$classes .= ' svc-own-team';
+					$classes .= ' vssv-own-team';
 				}
 
 				$html .= '<tr class="' . esc_attr( $classes ) . '">';
-				$html .= '<td class="svc-col-rank">' . esc_html( (string) $row['rank'] ) . '</td>';
-				$row_url = SVC_Teams::page_url( (int) $row['team_id'] );
+				$html .= '<td class="vssv-col-rank">' . esc_html( (string) $row['rank'] ) . '</td>';
+				$row_url = VSSV_Teams::page_url( (int) $row['team_id'] );
 				if ( '' !== $row_url ) {
-					$html .= '<td class="svc-col-team"><a class="svc-team-link" href="' . esc_url( $row_url ) . '">' . esc_html( $row['team'] ) . '</a></td>';
+					$html .= '<td class="vssv-col-team"><a class="vssv-team-link" href="' . esc_url( $row_url ) . '">' . esc_html( $row['team'] ) . '</a></td>';
 				} else {
-					$html .= '<td class="svc-col-team">' . esc_html( $row['team'] ) . '</td>';
+					$html .= '<td class="vssv-col-team">' . esc_html( $row['team'] ) . '</td>';
 				}
-				$html .= '<td class="svc-col-num">' . esc_html( (string) $row['games'] ) . '</td>';
-				$html .= '<td class="svc-col-num">' . esc_html( (string) $row['wins'] ) . '</td>';
-				$html .= '<td class="svc-col-num">' . esc_html( (string) $row['defeats'] ) . '</td>';
-				$html .= '<td class="svc-col-num svc-col-sets">' . esc_html( $row['sets_won'] . ':' . $row['sets_lost'] ) . '</td>';
-				$html .= '<td class="svc-col-num svc-col-points">' . esc_html( (string) $row['points'] ) . '</td>';
+				$html .= '<td class="vssv-col-num">' . esc_html( (string) $row['games'] ) . '</td>';
+				$html .= '<td class="vssv-col-num">' . esc_html( (string) $row['wins'] ) . '</td>';
+				$html .= '<td class="vssv-col-num">' . esc_html( (string) $row['defeats'] ) . '</td>';
+				$html .= '<td class="vssv-col-num vssv-col-sets">' . esc_html( $row['sets_won'] . ':' . $row['sets_lost'] ) . '</td>';
+				$html .= '<td class="vssv-col-num vssv-col-points">' . esc_html( (string) $row['points'] ) . '</td>';
 				$html .= '</tr>';
 			}
 
@@ -452,6 +452,6 @@ class SVC_Renderer {
 	 * @return string
 	 */
 	public static function render_heading( string $title ): string {
-		return '<h3 class="svc-heading">' . esc_html( $title ) . '</h3>';
+		return '<h3 class="vssv-heading">' . esc_html( $title ) . '</h3>';
 	}
 }

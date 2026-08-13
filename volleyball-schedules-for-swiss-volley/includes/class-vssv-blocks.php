@@ -13,7 +13,7 @@
  * über dieselben Render-Pfade wie die Shortcodes. Shortcodes funktionieren
  * unabhängig davon immer.
  *
- * @package SwissVolleyConnector
+ * @package VolleyballSchedulesForSwissVolley
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,9 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class SVC_Blocks
+ * Class VSSV_Blocks
  */
-class SVC_Blocks {
+class VSSV_Blocks {
 
 	/**
 	 * Blöcke und Editor-Assets registrieren.
@@ -41,17 +41,17 @@ class SVC_Blocks {
 		}
 
 		wp_register_script(
-			'svc-blocks',
-			SVC_PLUGIN_URL . 'assets/js/blocks.js',
+			'vssv-blocks',
+			VSSV_PLUGIN_URL . 'assets/js/blocks.js',
 			array( 'wp-blocks', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-server-side-render', 'wp-i18n' ),
-			SVC_VERSION,
+			VSSV_VERSION,
 			true
 		);
 
 		// Teamliste für das Dropdown im Editor.
 		$teams = array();
-		foreach ( SVC_Teams::all() as $tid => $team ) {
-			$label = SVC_Teams::display_name( (int) $tid );
+		foreach ( VSSV_Teams::all() as $tid => $team ) {
+			$label = VSSV_Teams::display_name( (int) $tid );
 			if ( '' === $label ) {
 				$label = (string) $tid;
 			}
@@ -63,7 +63,7 @@ class SVC_Blocks {
 				'label' => $label,
 			);
 		}
-		wp_localize_script( 'svc-blocks', 'svcBlocksData', array( 'teams' => $teams ) );
+		wp_localize_script( 'vssv-blocks', 'vssvBlocksData', array( 'teams' => $teams ) );
 
 		$team_attributes = array(
 			'team'  => array(
@@ -80,11 +80,11 @@ class SVC_Blocks {
 			'swiss-volley/games',
 			array(
 				'api_version'     => 3,
-				'title'           => __( 'Swiss Volley – Spiele', 'swiss-volley-connector' ),
-				'editor_script'   => 'svc-blocks',
+				'title'           => __( 'Swiss Volley – Spiele', 'volleyball-schedules-for-swiss-volley' ),
+				'editor_script'   => 'vssv-blocks',
 				'attributes'      => $team_attributes,
 				'render_callback' => static function ( $attributes ) {
-					return SVC_Shortcodes::games(
+					return VSSV_Shortcodes::games(
 						array(
 							'team'  => (string) ( $attributes['team'] ?? '' ),
 							'limit' => (int) ( $attributes['limit'] ?? 5 ),
@@ -99,11 +99,11 @@ class SVC_Blocks {
 			'swiss-volley/results',
 			array(
 				'api_version'     => 3,
-				'title'           => __( 'Swiss Volley – Resultate', 'swiss-volley-connector' ),
-				'editor_script'   => 'svc-blocks',
+				'title'           => __( 'Swiss Volley – Resultate', 'volleyball-schedules-for-swiss-volley' ),
+				'editor_script'   => 'vssv-blocks',
 				'attributes'      => $team_attributes,
 				'render_callback' => static function ( $attributes ) {
-					return SVC_Shortcodes::results(
+					return VSSV_Shortcodes::results(
 						array(
 							'team'  => (string) ( $attributes['team'] ?? '' ),
 							'limit' => (int) ( $attributes['limit'] ?? 5 ),
@@ -117,8 +117,8 @@ class SVC_Blocks {
 			'swiss-volley/ranking',
 			array(
 				'api_version'     => 3,
-				'title'           => __( 'Swiss Volley – Rangliste', 'swiss-volley-connector' ),
-				'editor_script'   => 'svc-blocks',
+				'title'           => __( 'Swiss Volley – Rangliste', 'volleyball-schedules-for-swiss-volley' ),
+				'editor_script'   => 'vssv-blocks',
 				'attributes'      => array(
 					'team' => array(
 						'type'    => 'string',
@@ -126,7 +126,7 @@ class SVC_Blocks {
 					),
 				),
 				'render_callback' => static function ( $attributes ) {
-					return SVC_Shortcodes::ranking(
+					return VSSV_Shortcodes::ranking(
 						array( 'team' => (string) ( $attributes['team'] ?? '' ) )
 					);
 				},
@@ -137,11 +137,11 @@ class SVC_Blocks {
 			'swiss-volley/team',
 			array(
 				'api_version'     => 3,
-				'title'           => __( 'Swiss Volley – Team', 'swiss-volley-connector' ),
-				'editor_script'   => 'svc-blocks',
+				'title'           => __( 'Swiss Volley – Team', 'volleyball-schedules-for-swiss-volley' ),
+				'editor_script'   => 'vssv-blocks',
 				'attributes'      => $team_attributes,
 				'render_callback' => static function ( $attributes ) {
-					return SVC_Shortcodes::team(
+					return VSSV_Shortcodes::team(
 						array(
 							'team'  => (string) ( $attributes['team'] ?? '' ),
 							'limit' => (int) ( $attributes['limit'] ?? 5 ),

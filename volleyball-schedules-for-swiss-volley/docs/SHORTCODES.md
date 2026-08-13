@@ -2,7 +2,7 @@
 
 Der Parameter `team` akzeptiert überall die **Swiss-Volley-Team-ID** oder den im Backend vergebenen **Alias** (Swiss Volley → Teams). Aliase machen Shortcodes robust gegen ID-Änderungen und lesbar, z. B. `herren-1`.
 
-Team- und Liganamen stammen aus den Swiss-Volley-Daten. Sind unter **Swiss Volley → Teams** ein «Eigener Teamname» oder eine «Eigene Liga-Bezeichnung» hinterlegt, werden stattdessen diese verwendet – in allen Anzeigen inkl. Rangliste. Gegnernamen bleiben unverändert; Cup-Spiele behalten den offiziellen Wettbewerbsnamen. Ist zusätzlich ein «Team-Link» hinterlegt, wird der Teamname in Spiellisten und Rangliste zur Teamseite verlinkt (CSS-Klasse `svc-team-link`).
+Team- und Liganamen stammen aus den Swiss-Volley-Daten. Sind unter **Swiss Volley → Teams** ein «Eigener Teamname» oder eine «Eigene Liga-Bezeichnung» hinterlegt, werden stattdessen diese verwendet – in allen Anzeigen inkl. Rangliste. Gegnernamen bleiben unverändert; Cup-Spiele behalten den offiziellen Wettbewerbsnamen. Ist zusätzlich ein «Team-Link» hinterlegt, wird der Teamname in Spiellisten und Rangliste zur Teamseite verlinkt (CSS-Klasse `vssv-team-link`).
 
 Alle Ausgaben sind responsive: auf dem Desktop tabellenartige Zeilen (Datum · Zeit · Heimteam · Auswärtsteam · Resultat), auf Mobilgeräten übersichtliche Karten.
 
@@ -52,7 +52,7 @@ Sortierung: absteigend nach Datum/Uhrzeit (neuestes Resultat zuoberst). Satzresu
 | -------- | -------- | ---------------------------------- |
 | `team`   | –        | Team-ID oder Alias (erforderlich) |
 
-Zeigt die offizielle Swiss-Volley-Rangliste der Gruppe(n) des Teams – Reihenfolge unverändert von Swiss Volley, keine eigene Berechnung. Die eigene Zeile wird mit `svc-own-team` gekennzeichnet (wenn Hervorhebung aktiv).
+Zeigt die offizielle Swiss-Volley-Rangliste der Gruppe(n) des Teams – Reihenfolge unverändert von Swiss Volley, keine eigene Berechnung. Die eigene Zeile wird mit `vssv-own-team` gekennzeichnet (wenn Hervorhebung aktiv).
 
 ## [swissvolley_team] – kombinierte Teamansicht
 
@@ -109,20 +109,20 @@ Zusätzlich zu den Shortcodes (die immer funktionieren) stehen vier Blöcke bere
 
 ## CSS-Klassen (Auswahl)
 
-`svc-games`, `svc-game`, `svc-game-upcoming`, `svc-game-played`, `svc-when`, `svc-date`, `svc-time`, `svc-matchup`, `svc-team`, `svc-team-home`, `svc-team-away`, `svc-vs`, `svc-own-team`, `svc-result`, `svc-result-sets`, `svc-result-detail`, `svc-meta`, `svc-location`, `svc-league`, `svc-game-league`, `svc-game-group`, `svc-group-heading`, `svc-switcher`, `svc-switch`, `svc-ranking`, `svc-ranking-row`, `svc-heading`, `svc-empty`, `svc-notice`.
+`vssv-games`, `vssv-game`, `vssv-game-upcoming`, `vssv-game-played`, `vssv-when`, `vssv-date`, `vssv-time`, `vssv-matchup`, `vssv-team`, `vssv-team-home`, `vssv-team-away`, `vssv-vs`, `vssv-own-team`, `vssv-result`, `vssv-result-sets`, `vssv-result-detail`, `vssv-meta`, `vssv-location`, `vssv-league`, `vssv-game-league`, `vssv-game-group`, `vssv-group-heading`, `vssv-switcher`, `vssv-switch`, `vssv-ranking`, `vssv-ranking-row`, `vssv-heading`, `vssv-empty`, `vssv-notice`.
 
 Eigene Anpassungen: Feld «Eigenes CSS» unter Swiss Volley → Einstellungen. Das Plugin verwendet keine `!important`-Regeln, Theme-CSS greift daher problemlos.
 
 Datum-/Zeitformat lassen sich per Filter anpassen:
 
 ```php
-add_filter( 'svc_date_format', fn() => 'j. F Y' );
-add_filter( 'svc_time_format', fn() => 'H:i' );
+add_filter( 'vssv_date_format', fn() => 'j. F Y' );
+add_filter( 'vssv_time_format', fn() => 'H:i' );
 ```
 
-Das HTML-Tag der Liga-Überschrift (Standard `h3`, CSS-Klasse `svc-game-league`) kann angepasst werden:
+Das HTML-Tag der Liga-Überschrift (Standard `h3`, CSS-Klasse `vssv-game-league`) kann angepasst werden:
 
 ```php
-add_filter( 'svc_game_league_heading_tag', fn() => 'h4' );
-add_filter( 'svc_group_heading_tag', fn() => 'h4' ); // Überschrift gruppierter Listen
+add_filter( 'vssv_game_league_heading_tag', fn() => 'h4' );
+add_filter( 'vssv_group_heading_tag', fn() => 'h4' ); // Überschrift gruppierter Listen
 ```

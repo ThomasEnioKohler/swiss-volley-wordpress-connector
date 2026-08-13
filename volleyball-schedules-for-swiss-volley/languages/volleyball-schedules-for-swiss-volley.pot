@@ -1,12 +1,12 @@
-# Swiss Volley Connector.
+# Volleyball Schedules for Swiss Volley.
 msgid ""
 msgstr ""
-"Project-Id-Version: Swiss Volley Connector 1.0.0\n"
+"Project-Id-Version: Volleyball Schedules for Swiss Volley 1.0.0\n"
 "POT-Creation-Date: 2026-08-13\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Domain: swiss-volley-connector\n"
+"X-Domain: volleyball-schedules-for-swiss-volley\n"
 
 msgid "1 Stunde"
 msgstr ""
@@ -125,7 +125,7 @@ msgstr ""
 msgid "Eigene Liga-Bezeichnung"
 msgstr ""
 
-msgid "Eigene Teams mit der CSS-Klasse svc-own-team kennzeichnen"
+msgid "Eigene Teams mit der CSS-Klasse vssv-own-team kennzeichnen"
 msgstr ""
 
 msgid "Eigener Teamname"
@@ -268,12 +268,6 @@ msgstr ""
 msgid "Swiss Volley"
 msgstr ""
 
-msgid "Swiss Volley Connector"
-msgstr ""
-
-msgid "Swiss Volley Connector: Das angegebene Team wurde nicht gefunden. Bitte Team-ID oder Alias prüfen."
-msgstr ""
-
 msgid "Swiss Volley – Rangliste"
 msgstr ""
 
@@ -344,13 +338,19 @@ msgstr ""
 msgid "Verein «%1$s» erkannt, %2$d Teams geladen. Verfügbare Saisons: %3$s. Die Seite wird neu geladen …"
 msgstr ""
 
+msgid "Volleyball Schedules for Swiss Volley"
+msgstr ""
+
+msgid "Volleyball Schedules for Swiss Volley: Das angegebene Team wurde nicht gefunden. Bitte Team-ID oder Alias prüfen."
+msgstr ""
+
 msgid "Weitere Spiele"
 msgstr ""
 
 msgid "Wird beim Laden der Teams automatisch erkannt (z. B. Volley Pizol)."
 msgstr ""
 
-msgid "Wird nach dem Standard-Stylesheet des Plugins geladen. Beispiel: .svc-own-team { font-weight: 700; }"
+msgid "Wird nach dem Standard-Stylesheet des Plugins geladen. Beispiel: .vssv-own-team { font-weight: 700; }"
 msgstr ""
 
 msgid "Zeitpunkt"

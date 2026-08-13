@@ -9,7 +9,7 @@
  * [swissvolley_club_games limit="10"]
  * [swissvolley_club_results limit="10"]
  *
- * @package SwissVolleyConnector
+ * @package VolleyballSchedulesForSwissVolley
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,9 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class SVC_Shortcodes
+ * Class VSSV_Shortcodes
  */
-class SVC_Shortcodes {
+class VSSV_Shortcodes {
 
 	/**
 	 * Shortcodes registrieren.
@@ -41,11 +41,11 @@ class SVC_Shortcodes {
 	 */
 	private static function resolve_team( array $atts ) {
 		$identifier = isset( $atts['team'] ) ? (string) $atts['team'] : '';
-		$team_id    = SVC_Teams::resolve( $identifier );
+		$team_id    = VSSV_Teams::resolve( $identifier );
 
 		if ( 0 === $team_id ) {
-			return '<p class="svc-notice svc-notice-error">'
-				. esc_html__( 'Swiss Volley Connector: Das angegebene Team wurde nicht gefunden. Bitte Team-ID oder Alias prüfen.', 'swiss-volley-connector' )
+			return '<p class="vssv-notice vssv-notice-error">'
+				. esc_html__( 'Volleyball Schedules for Swiss Volley: Das angegebene Team wurde nicht gefunden. Bitte Team-ID oder Alias prüfen.', 'volleyball-schedules-for-swiss-volley' )
 				. '</p>';
 		}
 		return $team_id;
@@ -72,7 +72,7 @@ class SVC_Shortcodes {
 		}
 
 		// Globaler Standard aus den Einstellungen (Swiss Volley → Einstellungen).
-		$settings = wp_parse_args( get_option( 'svc_settings', array() ), SVC_Plugin::default_settings() );
+		$settings = wp_parse_args( get_option( 'vssv_settings', array() ), VSSV_Plugin::default_settings() );
 		return in_array( $settings['league_display'], array( 'meta', 'heading' ), true ) ? $settings['league_display'] : 'heading';
 	}
 
@@ -124,7 +124,7 @@ class SVC_Shortcodes {
 			return false;
 		}
 
-		$settings = wp_parse_args( get_option( 'svc_settings', array() ), SVC_Plugin::default_settings() );
+		$settings = wp_parse_args( get_option( 'vssv_settings', array() ), VSSV_Plugin::default_settings() );
 		return ! empty( $settings['group_switcher'] );
 	}
 
@@ -143,7 +143,7 @@ class SVC_Shortcodes {
 	 * @return string
 	 */
 	public static function games( $atts ): string {
-		SVC_Plugin::mark_assets_needed();
+		VSSV_Plugin::mark_assets_needed();
 		$atts = shortcode_atts(
 			array(
 				'team'     => '',
@@ -163,17 +163,17 @@ class SVC_Shortcodes {
 		}
 
 		$scope = in_array( $atts['scope'], array( 'upcoming', 'played', 'all' ), true ) ? $atts['scope'] : 'upcoming';
-		$games = SVC_Data::games_for_team( $team_id, $scope, self::limit( $atts['limit'] ) );
+		$games = VSSV_Data::games_for_team( $team_id, $scope, self::limit( $atts['limit'] ) );
 
 		if ( is_wp_error( $games ) ) {
-			return SVC_Renderer::render_error( $games );
+			return VSSV_Renderer::render_error( $games );
 		}
 
 		$empty = ( 'upcoming' === $scope )
-			? __( 'Zurzeit sind keine kommenden Spiele angesetzt.', 'swiss-volley-connector' )
-			: __( 'Zurzeit sind keine Spiele vorhanden.', 'swiss-volley-connector' );
+			? __( 'Zurzeit sind keine kommenden Spiele angesetzt.', 'volleyball-schedules-for-swiss-volley' )
+			: __( 'Zurzeit sind keine Spiele vorhanden.', 'volleyball-schedules-for-swiss-volley' );
 
-		return SVC_Renderer::render_games( $games, $empty, self::render_opts( $atts ) );
+		return VSSV_Renderer::render_games( $games, $empty, self::render_opts( $atts ) );
 	}
 
 	/**
@@ -183,7 +183,7 @@ class SVC_Shortcodes {
 	 * @return string
 	 */
 	public static function results( $atts ): string {
-		SVC_Plugin::mark_assets_needed();
+		VSSV_Plugin::mark_assets_needed();
 		$atts = shortcode_atts(
 			array(
 				'team'     => '',
@@ -201,13 +201,13 @@ class SVC_Shortcodes {
 			return $team_id;
 		}
 
-		$games = SVC_Data::games_for_team( $team_id, 'played', self::limit( $atts['limit'] ) );
+		$games = VSSV_Data::games_for_team( $team_id, 'played', self::limit( $atts['limit'] ) );
 
 		if ( is_wp_error( $games ) ) {
-			return SVC_Renderer::render_error( $games );
+			return VSSV_Renderer::render_error( $games );
 		}
 
-		return SVC_Renderer::render_games( $games, __( 'Zurzeit liegen noch keine Resultate vor.', 'swiss-volley-connector' ), self::render_opts( $atts ) );
+		return VSSV_Renderer::render_games( $games, __( 'Zurzeit liegen noch keine Resultate vor.', 'volleyball-schedules-for-swiss-volley' ), self::render_opts( $atts ) );
 	}
 
 	/**
@@ -217,7 +217,7 @@ class SVC_Shortcodes {
 	 * @return string
 	 */
 	public static function ranking( $atts ): string {
-		SVC_Plugin::mark_assets_needed();
+		VSSV_Plugin::mark_assets_needed();
 		$atts = shortcode_atts(
 			array( 'team' => '' ),
 			$atts,
@@ -229,12 +229,12 @@ class SVC_Shortcodes {
 			return $team_id;
 		}
 
-		$groups = SVC_Data::ranking_for_team( $team_id );
+		$groups = VSSV_Data::ranking_for_team( $team_id );
 		if ( is_wp_error( $groups ) ) {
-			return SVC_Renderer::render_error( $groups );
+			return VSSV_Renderer::render_error( $groups );
 		}
 
-		return SVC_Renderer::render_ranking( $groups, $team_id );
+		return VSSV_Renderer::render_ranking( $groups, $team_id );
 	}
 
 	/**
@@ -244,7 +244,7 @@ class SVC_Shortcodes {
 	 * @return string
 	 */
 	public static function team( $atts ): string {
-		SVC_Plugin::mark_assets_needed();
+		VSSV_Plugin::mark_assets_needed();
 		$atts = shortcode_atts(
 			array(
 				'team'  => '',
@@ -261,26 +261,26 @@ class SVC_Shortcodes {
 
 		$limit = self::limit( $atts['limit'] );
 
-		$upcoming = SVC_Data::games_for_team( $team_id, 'upcoming', $limit );
-		$played   = SVC_Data::games_for_team( $team_id, 'played', $limit );
-		$ranking  = SVC_Data::ranking_for_team( $team_id );
+		$upcoming = VSSV_Data::games_for_team( $team_id, 'upcoming', $limit );
+		$played   = VSSV_Data::games_for_team( $team_id, 'played', $limit );
+		$ranking  = VSSV_Data::ranking_for_team( $team_id );
 
-		$html = '<div class="svc-team-view">';
+		$html = '<div class="vssv-team-view">';
 
-		$html .= SVC_Renderer::render_heading( __( 'Nächste Spiele', 'swiss-volley-connector' ) );
+		$html .= VSSV_Renderer::render_heading( __( 'Nächste Spiele', 'volleyball-schedules-for-swiss-volley' ) );
 		$html .= is_wp_error( $upcoming )
-			? SVC_Renderer::render_error( $upcoming )
-			: SVC_Renderer::render_games( $upcoming, __( 'Zurzeit sind keine kommenden Spiele angesetzt.', 'swiss-volley-connector' ) );
+			? VSSV_Renderer::render_error( $upcoming )
+			: VSSV_Renderer::render_games( $upcoming, __( 'Zurzeit sind keine kommenden Spiele angesetzt.', 'volleyball-schedules-for-swiss-volley' ) );
 
-		$html .= SVC_Renderer::render_heading( __( 'Letzte Resultate', 'swiss-volley-connector' ) );
+		$html .= VSSV_Renderer::render_heading( __( 'Letzte Resultate', 'volleyball-schedules-for-swiss-volley' ) );
 		$html .= is_wp_error( $played )
-			? SVC_Renderer::render_error( $played )
-			: SVC_Renderer::render_games( $played, __( 'Zurzeit liegen noch keine Resultate vor.', 'swiss-volley-connector' ) );
+			? VSSV_Renderer::render_error( $played )
+			: VSSV_Renderer::render_games( $played, __( 'Zurzeit liegen noch keine Resultate vor.', 'volleyball-schedules-for-swiss-volley' ) );
 
-		$html .= SVC_Renderer::render_heading( __( 'Rangliste', 'swiss-volley-connector' ) );
+		$html .= VSSV_Renderer::render_heading( __( 'Rangliste', 'volleyball-schedules-for-swiss-volley' ) );
 		$html .= is_wp_error( $ranking )
-			? SVC_Renderer::render_error( $ranking )
-			: SVC_Renderer::render_ranking( $ranking, $team_id );
+			? VSSV_Renderer::render_error( $ranking )
+			: VSSV_Renderer::render_ranking( $ranking, $team_id );
 
 		$html .= '</div>';
 		return $html;
@@ -293,7 +293,7 @@ class SVC_Shortcodes {
 	 * @return string
 	 */
 	public static function club_games( $atts ): string {
-		SVC_Plugin::mark_assets_needed();
+		VSSV_Plugin::mark_assets_needed();
 		$atts = shortcode_atts(
 			array(
 				'limit'    => 10,
@@ -305,12 +305,12 @@ class SVC_Shortcodes {
 			'swissvolley_club_games'
 		);
 
-		$games = SVC_Data::games_for_club( 'upcoming', self::limit( $atts['limit'], 10 ) );
+		$games = VSSV_Data::games_for_club( 'upcoming', self::limit( $atts['limit'], 10 ) );
 		if ( is_wp_error( $games ) ) {
-			return SVC_Renderer::render_error( $games );
+			return VSSV_Renderer::render_error( $games );
 		}
 
-		return SVC_Renderer::render_games( $games, __( 'Zurzeit sind keine kommenden Spiele angesetzt.', 'swiss-volley-connector' ), self::render_opts( $atts ) );
+		return VSSV_Renderer::render_games( $games, __( 'Zurzeit sind keine kommenden Spiele angesetzt.', 'volleyball-schedules-for-swiss-volley' ), self::render_opts( $atts ) );
 	}
 
 	/**
@@ -320,7 +320,7 @@ class SVC_Shortcodes {
 	 * @return string
 	 */
 	public static function club_results( $atts ): string {
-		SVC_Plugin::mark_assets_needed();
+		VSSV_Plugin::mark_assets_needed();
 		$atts = shortcode_atts(
 			array(
 				'limit'    => 10,
@@ -332,11 +332,11 @@ class SVC_Shortcodes {
 			'swissvolley_club_results'
 		);
 
-		$games = SVC_Data::games_for_club( 'played', self::limit( $atts['limit'], 10 ) );
+		$games = VSSV_Data::games_for_club( 'played', self::limit( $atts['limit'], 10 ) );
 		if ( is_wp_error( $games ) ) {
-			return SVC_Renderer::render_error( $games );
+			return VSSV_Renderer::render_error( $games );
 		}
 
-		return SVC_Renderer::render_games( $games, __( 'Zurzeit liegen noch keine Resultate vor.', 'swiss-volley-connector' ), self::render_opts( $atts ) );
+		return VSSV_Renderer::render_games( $games, __( 'Zurzeit liegen noch keine Resultate vor.', 'volleyball-schedules-for-swiss-volley' ), self::render_opts( $atts ) );
 	}
 }

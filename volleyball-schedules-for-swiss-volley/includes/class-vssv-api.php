@@ -19,9 +19,9 @@
  *
  * Die API kennt KEINE Endpunkte zum Auflisten von Clubs, Teams oder Saisons:
  * Der Key ist club-gebunden; Verein, Teams und Saisons werden aus den
- * Spieldaten abgeleitet (siehe SVC_Data). Details: docs/API.md.
+ * Spieldaten abgeleitet (siehe VSSV_Data). Details: docs/API.md.
  *
- * @package SwissVolleyConnector
+ * @package VolleyballSchedulesForSwissVolley
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,9 +29,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class SVC_API
+ * Class VSSV_API
  */
-class SVC_API {
+class VSSV_API {
 
 	const DEFAULT_BASE_URL = 'https://api.volleyball.ch';
 	const TIMEOUT          = 15;
@@ -57,7 +57,7 @@ class SVC_API {
 	 * @param string|null $base_url Basis-URL; null = aus Einstellungen.
 	 */
 	public function __construct( ?string $api_key = null, ?string $base_url = null ) {
-		$settings = get_option( 'svc_settings', array() );
+		$settings = get_option( 'vssv_settings', array() );
 
 		$this->api_key  = ( null !== $api_key ) ? $api_key : (string) ( $settings['api_key'] ?? '' );
 		$base           = ( null !== $base_url ) ? $base_url : (string) ( $settings['api_base_url'] ?? self::DEFAULT_BASE_URL );
@@ -83,8 +83,8 @@ class SVC_API {
 	public function get( string $path, array $args = array() ) {
 		if ( ! $this->has_key() ) {
 			return new WP_Error(
-				'svc_no_key',
-				__( 'Es ist kein Swiss-Volley-API-Key hinterlegt.', 'swiss-volley-connector' )
+				'vssv_no_key',
+				__( 'Es ist kein Swiss-Volley-API-Key hinterlegt.', 'volleyball-schedules-for-swiss-volley' )
 			);
 		}
 
@@ -103,15 +103,15 @@ class SVC_API {
 					'Authorization' => $this->api_key,
 					'Accept'        => 'application/json',
 				),
-				'user-agent'  => 'swiss-volley-connector/' . SVC_VERSION . '; ' . home_url( '/' ),
+				'user-agent'  => 'volleyball-schedules-for-swiss-volley/' . VSSV_VERSION . '; ' . home_url( '/' ),
 			)
 		);
 
 		if ( is_wp_error( $response ) ) {
-			SVC_Logger::log( $path, '-', $response->get_error_message(), 'error' );
+			VSSV_Logger::log( $path, '-', $response->get_error_message(), 'error' );
 			return new WP_Error(
-				'svc_http_error',
-				__( 'Die Swiss-Volley-API ist momentan nicht erreichbar.', 'swiss-volley-connector' )
+				'vssv_http_error',
+				__( 'Die Swiss-Volley-API ist momentan nicht erreichbar.', 'volleyball-schedules-for-swiss-volley' )
 			);
 		}
 
@@ -119,20 +119,20 @@ class SVC_API {
 		$body = wp_remote_retrieve_body( $response );
 
 		if ( 401 === $code || 403 === $code ) {
-			SVC_Logger::log( $path, $code, 'Authentifizierung fehlgeschlagen.', 'error' );
+			VSSV_Logger::log( $path, $code, 'Authentifizierung fehlgeschlagen.', 'error' );
 			return new WP_Error(
-				'svc_auth_error',
-				__( 'Authentifizierung fehlgeschlagen. Bitte den API-Key prüfen (Volley Manager: Administration → Club → Webservice/API).', 'swiss-volley-connector' )
+				'vssv_auth_error',
+				__( 'Authentifizierung fehlgeschlagen. Bitte den API-Key prüfen (Volley Manager: Administration → Club → Webservice/API).', 'volleyball-schedules-for-swiss-volley' )
 			);
 		}
 
 		if ( $code < 200 || $code >= 300 ) {
-			SVC_Logger::log( $path, $code, 'Unerwarteter HTTP-Status.', 'error' );
+			VSSV_Logger::log( $path, $code, 'Unerwarteter HTTP-Status.', 'error' );
 			return new WP_Error(
-				'svc_bad_status',
+				'vssv_bad_status',
 				sprintf(
 					/* translators: %d: HTTP-Statuscode */
-					__( 'Die Swiss-Volley-API hat einen unerwarteten Status geliefert (HTTP %d).', 'swiss-volley-connector' ),
+					__( 'Die Swiss-Volley-API hat einen unerwarteten Status geliefert (HTTP %d).', 'volleyball-schedules-for-swiss-volley' ),
 					$code
 				)
 			);
@@ -140,14 +140,14 @@ class SVC_API {
 
 		$data = json_decode( $body, true );
 		if ( ! is_array( $data ) ) {
-			SVC_Logger::log( $path, $code, 'Antwort war kein gültiges JSON-Array.', 'error' );
+			VSSV_Logger::log( $path, $code, 'Antwort war kein gültiges JSON-Array.', 'error' );
 			return new WP_Error(
-				'svc_bad_json',
-				__( 'Die Antwort der Swiss-Volley-API konnte nicht verarbeitet werden.', 'swiss-volley-connector' )
+				'vssv_bad_json',
+				__( 'Die Antwort der Swiss-Volley-API konnte nicht verarbeitet werden.', 'volleyball-schedules-for-swiss-volley' )
 			);
 		}
 
-		SVC_Logger::log( $path, $code, 'OK (' . count( $data ) . ' Einträge).' );
+		VSSV_Logger::log( $path, $code, 'OK (' . count( $data ) . ' Einträge).' );
 
 		return $data;
 	}
@@ -191,12 +191,12 @@ class SVC_API {
 			'game_count' => count( $games ),
 			'message'    => sprintf(
 				/* translators: %d: Anzahl Spiele */
-				__( 'Verbindung erfolgreich. Die API hat %d Spiele geliefert.', 'swiss-volley-connector' ),
+				__( 'Verbindung erfolgreich. Die API hat %d Spiele geliefert.', 'volleyball-schedules-for-swiss-volley' ),
 				count( $games )
 			),
 		);
 
-		$club = SVC_Data::detect_own_club( $games );
+		$club = VSSV_Data::detect_own_club( $games );
 		if ( $club ) {
 			$result['club_id']   = $club['id'];
 			$result['club_name'] = $club['name'];

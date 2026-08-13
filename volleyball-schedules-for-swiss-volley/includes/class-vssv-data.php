@@ -35,7 +35,7 @@
  *   'is_cup'        => bool,
  * ]
  *
- * @package SwissVolleyConnector
+ * @package VolleyballSchedulesForSwissVolley
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -43,9 +43,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class SVC_Data
+ * Class VSSV_Data
  */
-class SVC_Data {
+class VSSV_Data {
 
 	/**
 	 * Zwischenspeicher pro Request.
@@ -67,7 +67,7 @@ class SVC_Data {
 	 * @return int
 	 */
 	private static function cache_ttl(): int {
-		$settings = get_option( 'svc_settings', array() );
+		$settings = get_option( 'vssv_settings', array() );
 		$minutes  = (int) ( $settings['cache_minutes'] ?? 30 );
 		$allowed  = array( 5, 15, 30, 60, 180, 360, 720, 1440 );
 		if ( ! in_array( $minutes, $allowed, true ) ) {
@@ -96,23 +96,23 @@ class SVC_Data {
 			return self::$runtime[ $key ];
 		}
 
-		$cached = SVC_Cache::get( $key );
+		$cached = VSSV_Cache::get( $key );
 		if ( false !== $cached && is_array( $cached ) ) {
 			self::$runtime[ $key ] = $cached;
 			return $cached;
 		}
 
-		$api  = new SVC_API();
+		$api  = new VSSV_API();
 		$data = ( 'rankings' === $key ) ? $api->get_rankings() : $api->get_games();
 
 		if ( ! is_wp_error( $data ) ) {
-			SVC_Cache::set( $key, $data, self::cache_ttl() );
+			VSSV_Cache::set( $key, $data, self::cache_ttl() );
 			self::$runtime[ $key ] = $data;
 			return $data;
 		}
 
 		// API nicht erreichbar: zuletzt erfolgreich geladene Daten verwenden.
-		$stale = SVC_Cache::get_stale( $key );
+		$stale = VSSV_Cache::get_stale( $key );
 		if ( null !== $stale && is_array( $stale['data'] ) ) {
 			self::$served_stale    = true;
 			self::$runtime[ $key ] = $stale['data'];
@@ -277,7 +277,7 @@ class SVC_Data {
 			return self::$runtime['games_normalized'];
 		}
 
-		$settings    = get_option( 'svc_settings', array() );
+		$settings    = get_option( 'vssv_settings', array() );
 		$season_year = isset( $settings['season_year'] ) && '' !== (string) $settings['season_year']
 			? (int) $settings['season_year']
 			: null;
@@ -543,7 +543,7 @@ class SVC_Data {
 			return $games;
 		}
 
-		$team_ids = SVC_Teams::enabled_team_ids();
+		$team_ids = VSSV_Teams::enabled_team_ids();
 		$now      = time();
 		$filtered = array();
 		$seen     = array();
@@ -591,11 +591,11 @@ class SVC_Data {
 	 */
 	private static function apply_league_labels( array $games ): array {
 		foreach ( $games as &$g ) {
-			$home_name = SVC_Teams::name_label( (int) $g['home_team_id'] );
+			$home_name = VSSV_Teams::name_label( (int) $g['home_team_id'] );
 			if ( '' !== $home_name ) {
 				$g['home_team'] = $home_name;
 			}
-			$away_name = SVC_Teams::name_label( (int) $g['away_team_id'] );
+			$away_name = VSSV_Teams::name_label( (int) $g['away_team_id'] );
 			if ( '' !== $away_name ) {
 				$g['away_team'] = $away_name;
 			}
@@ -604,9 +604,9 @@ class SVC_Data {
 				continue;
 			}
 
-			$label = SVC_Teams::league_label( (int) $g['home_team_id'] );
+			$label = VSSV_Teams::league_label( (int) $g['home_team_id'] );
 			if ( '' === $label ) {
-				$label = SVC_Teams::league_label( (int) $g['away_team_id'] );
+				$label = VSSV_Teams::league_label( (int) $g['away_team_id'] );
 			}
 			if ( '' !== $label ) {
 				$g['league'] = $label;
@@ -687,7 +687,7 @@ class SVC_Data {
 
 			// Eigener Teamname (falls hinterlegt) statt API-Name.
 			$tid  = (int) ( $r['teamId'] ?? 0 );
-			$name = $tid ? SVC_Teams::name_label( $tid ) : '';
+			$name = $tid ? VSSV_Teams::name_label( $tid ) : '';
 
 			$out[] = array(
 				'rank'      => (int) ( $r['rank'] ?? 0 ),

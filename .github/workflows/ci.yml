@@ -21,7 +21,7 @@ jobs:
 
       - name: Syntaxcheck
         run: |
-          find swiss-volley-connector -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+          find volleyball-schedules-for-swiss-volley -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
           echo "Lint OK"
 
       - name: Tests

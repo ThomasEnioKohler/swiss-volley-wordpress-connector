@@ -37,7 +37,7 @@ jobs:
       - name: Release veröffentlichen
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/swiss-volley-connector-*.zip
+          files: dist/volleyball-schedules-for-swiss-volley-*.zip
           fail_on_unmatched_files: true
           body_path: release-notes.md
           prerelease: ${{ startsWith(env.VERSION, '0.') }}

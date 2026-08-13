@@ -1,5 +1,5 @@
 /**
- * Swiss Volley Connector – Admin-Skript.
+ * Volleyball Schedules for Swiss Volley – Admin-Skript.
  *
  * Vanilla JS, keine externen Abhängigkeiten. Kommuniziert über admin-ajax.php
  * (Nonce-geschützt). Es werden keine Secrets an den Browser übertragen.
@@ -7,11 +7,11 @@
 ( function () {
 	'use strict';
 
-	if ( typeof window.svcAdmin === 'undefined' ) {
+	if ( typeof window.vssvAdmin === 'undefined' ) {
 		return;
 	}
 
-	var cfg = window.svcAdmin;
+	var cfg = window.vssvAdmin;
 
 	/**
 	 * AJAX-POST an admin-ajax.php.
@@ -51,14 +51,14 @@
 
 		button.addEventListener( 'click', function () {
 			button.disabled = true;
-			result.className = 'svc-inline-result';
+			result.className = 'vssv-inline-result';
 			result.textContent = busyLabel;
 
 			post( action )
 				.then( function ( json ) {
 					var ok = !! ( json && json.success );
 					var data = ( json && json.data ) || {};
-					result.className = 'svc-inline-result ' + ( ok ? 'svc-ok' : 'svc-fail' );
+					result.className = 'vssv-inline-result ' + ( ok ? 'vssv-ok' : 'vssv-fail' );
 					result.textContent = data.message || ( ok ? 'OK' : cfg.i18n.error );
 
 					if ( ok && data.reload ) {
@@ -68,7 +68,7 @@
 					}
 				} )
 				.catch( function () {
-					result.className = 'svc-inline-result svc-fail';
+					result.className = 'vssv-inline-result vssv-fail';
 					result.textContent = cfg.i18n.error;
 				} )
 				.finally( function () {
@@ -77,8 +77,8 @@
 		} );
 	}
 
-	wire( 'svc-test-connection', 'svc-test-result', 'svc_test_connection', cfg.i18n.testing );
-	wire( 'svc-load-teams', 'svc-load-result', 'svc_load_teams', cfg.i18n.loading );
-	wire( 'svc-clear-cache', 'svc-cache-result', 'svc_clear_cache', cfg.i18n.clearing );
-	wire( 'svc-clear-log', 'svc-log-result', 'svc_clear_log', cfg.i18n.clearing );
+	wire( 'vssv-test-connection', 'vssv-test-result', 'vssv_test_connection', cfg.i18n.testing );
+	wire( 'vssv-load-teams', 'vssv-load-result', 'vssv_load_teams', cfg.i18n.loading );
+	wire( 'vssv-clear-cache', 'vssv-cache-result', 'vssv_clear_cache', cfg.i18n.clearing );
+	wire( 'vssv-clear-log', 'vssv-log-result', 'vssv_clear_log', cfg.i18n.clearing );
 } )();

@@ -1,51 +1,51 @@
 /**
- * Swiss Volley Connector – Admin-Styles.
+ * Volleyball Schedules for Swiss Volley – Admin-Styles.
  */
 
-.svc-inline-result {
+.vssv-inline-result {
 	display: inline-block;
 	margin-left: 0.75em;
 	font-weight: 500;
 }
 
-.svc-inline-result.svc-ok {
+.vssv-inline-result.vssv-ok {
 	color: #00711b;
 }
 
-.svc-inline-result.svc-fail {
+.vssv-inline-result.vssv-fail {
 	color: #b32d2e;
 }
 
-.svc-remove-key {
+.vssv-remove-key {
 	display: inline-block;
 	margin-left: 0.75em;
 }
 
-.svc-teams-table input[type="text"] {
+.vssv-teams-table input[type="text"] {
 	width: 14em;
 	max-width: 100%;
 }
 
-.svc-teams-table .svc-col-check {
+.vssv-teams-table .vssv-col-check {
 	text-align: center;
 }
 
-.svc-shortcode-examples code {
+.vssv-shortcode-examples code {
 	font-size: 13px;
 }
 
-.svc-log-error td {
+.vssv-log-error td {
 	color: #b32d2e;
 }
 
-.svc-empty-admin {
+.vssv-empty-admin {
 	padding: 1em;
 	background: #f6f7f7;
 	border: 1px solid #dcdcde;
 	border-radius: 4px;
 	max-width: 48em;
 }
-.svc-teams-table input.svc-url-input {
+.vssv-teams-table input.vssv-url-input {
 	width: 20em;
 	max-width: 100%;
 }

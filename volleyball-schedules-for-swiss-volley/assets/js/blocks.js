@@ -1,5 +1,5 @@
 /**
- * Swiss Volley Connector – Gutenberg-Blöcke.
+ * Volleyball Schedules for Swiss Volley – Gutenberg-Blöcke.
  *
  * Ohne Build-Pipeline (kein JSX): nutzt die globalen wp.*-Pakete.
  * Vier dynamische Blöcke mit Team-Dropdown; die Vorschau erfolgt
@@ -22,9 +22,9 @@
 	var Placeholder = wp.components.Placeholder;
 	var ServerSideRender = wp.serverSideRender;
 
-	var teams = ( window.svcBlocksData && window.svcBlocksData.teams ) || [];
+	var teams = ( window.vssvBlocksData && window.vssvBlocksData.teams ) || [];
 
-	var teamOptions = [ { value: '', label: __( '– Team wählen –', 'swiss-volley-connector' ) } ].concat( teams );
+	var teamOptions = [ { value: '', label: __( '– Team wählen –', 'volleyball-schedules-for-swiss-volley' ) } ].concat( teams );
 
 	/**
 	 * Block registrieren.
@@ -34,7 +34,7 @@
 	 * @param {string}  icon     Dashicon.
 	 * @param {boolean} hasLimit Limit-Regler anzeigen.
 	 */
-	function registerSvcBlock( name, title, icon, hasLimit ) {
+	function registerVssvBlock( name, title, icon, hasLimit ) {
 		var attributes = {
 			team: { type: 'string', default: '' }
 		};
@@ -53,7 +53,7 @@
 				var controls = [
 					el( SelectControl, {
 						key: 'team',
-						label: __( 'Team', 'swiss-volley-connector' ),
+						label: __( 'Team', 'volleyball-schedules-for-swiss-volley' ),
 						value: props.attributes.team,
 						options: teamOptions,
 						onChange: function ( value ) {
@@ -66,7 +66,7 @@
 					controls.push(
 						el( RangeControl, {
 							key: 'limit',
-							label: __( 'Anzahl Spiele', 'swiss-volley-connector' ),
+							label: __( 'Anzahl Spiele', 'volleyball-schedules-for-swiss-volley' ),
 							min: 1,
 							max: 30,
 							value: props.attributes.limit,
@@ -83,8 +83,8 @@
 						icon: icon,
 						label: title,
 						instructions: teams.length
-							? __( 'Bitte in den Block-Einstellungen ein Team wählen.', 'swiss-volley-connector' )
-							: __( 'Noch keine Teams konfiguriert. Teams zuerst unter Swiss Volley → Teams laden.', 'swiss-volley-connector' )
+							? __( 'Bitte in den Block-Einstellungen ein Team wählen.', 'volleyball-schedules-for-swiss-volley' )
+							: __( 'Noch keine Teams konfiguriert. Teams zuerst unter Swiss Volley → Teams laden.', 'volleyball-schedules-for-swiss-volley' )
 					} );
 				} else {
 					preview = el( ServerSideRender, {
@@ -97,7 +97,7 @@
 					'div',
 					wp.blockEditor.useBlockProps ? wp.blockEditor.useBlockProps() : {},
 					el( InspectorControls, { key: 'inspector' },
-						el( PanelBody, { title: __( 'Swiss Volley', 'swiss-volley-connector' ) }, controls )
+						el( PanelBody, { title: __( 'Swiss Volley', 'volleyball-schedules-for-swiss-volley' ) }, controls )
 					),
 					preview
 				);
@@ -110,8 +110,8 @@
 		} );
 	}
 
-	registerSvcBlock( 'games', __( 'Swiss Volley – Spiele', 'swiss-volley-connector' ), 'calendar-alt', true );
-	registerSvcBlock( 'results', __( 'Swiss Volley – Resultate', 'swiss-volley-connector' ), 'editor-ol', true );
-	registerSvcBlock( 'ranking', __( 'Swiss Volley – Rangliste', 'swiss-volley-connector' ), 'list-view', false );
-	registerSvcBlock( 'team', __( 'Swiss Volley – Team', 'swiss-volley-connector' ), 'groups', true );
+	registerVssvBlock( 'games', __( 'Swiss Volley – Spiele', 'volleyball-schedules-for-swiss-volley' ), 'calendar-alt', true );
+	registerVssvBlock( 'results', __( 'Swiss Volley – Resultate', 'volleyball-schedules-for-swiss-volley' ), 'editor-ol', true );
+	registerVssvBlock( 'ranking', __( 'Swiss Volley – Rangliste', 'volleyball-schedules-for-swiss-volley' ), 'list-view', false );
+	registerVssvBlock( 'team', __( 'Swiss Volley – Team', 'volleyball-schedules-for-swiss-volley' ), 'groups', true );
 } )( window.wp );

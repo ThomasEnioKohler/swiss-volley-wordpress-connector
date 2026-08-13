@@ -37,7 +37,7 @@ fixture() {
 	cp "$ROOT"/bin/*.py "$dir/bin/"
 	cp "$ROOT/CHANGELOG.md" "$dir/CHANGELOG.md"
 	cp "$ROOT/tests/harness.php" "$dir/tests/harness.php"
-	cp -R "$ROOT/swiss-volley-connector" "$dir/swiss-volley-connector"
+	cp -R "$ROOT/volleyball-schedules-for-swiss-volley" "$dir/volleyball-schedules-for-swiss-volley"
 	printf '%s' "$dir"
 }
 
@@ -60,7 +60,7 @@ test_build_erfolgreich() {
 	fi
 
 	version="$(bash "$dir/bin/version.sh")"
-	zip="$dir/dist/swiss-volley-connector-$version.zip"
+	zip="$dir/dist/volleyball-schedules-for-swiss-volley-$version.zip"
 	if [ -f "$zip" ]; then
 		pass "build.sh läuft mit Exit 0 durch und erzeugt das ZIP"
 	else
@@ -82,7 +82,7 @@ test_build_erkennt_zip_ohne_hauptdatei() {
 	# Zeilennummer des zip-Aufrufs ermitteln, statt die Zeile per awk/regex
 	# nachzubauen — vermeidet Unterschiede in der Escape-Behandlung von
 	# "-v"-Zuweisungen zwischen awk-Implementationen (BSD/GNU).
-	lineno="$(grep -n -F -- 'zip -rq "$ZIP" swiss-volley-connector' "$dir/bin/build.sh" | head -1 | cut -d: -f1)"
+	lineno="$(grep -n -F -- 'zip -rq "$ZIP" volleyball-schedules-for-swiss-volley' "$dir/bin/build.sh" | head -1 | cut -d: -f1)"
 	if [ -z "$lineno" ]; then
 		fail "build.sh erkennt ein ZIP ohne die Hauptdatei" \
 			"Zeile mit dem zip-Aufruf in build.sh nicht gefunden"
@@ -92,7 +92,7 @@ test_build_erkennt_zip_ohne_hauptdatei() {
 	# Zusätzliches -x direkt nach dieser Zeile einfügen ($'...' liefert den
 	# literalen Tab und Backslash ohne weitere Interpretation durch ein
 	# externes Werkzeug).
-	insert_line=$'\t-x \'swiss-volley-connector/swiss-volley-connector.php\' \\'
+	insert_line=$'\t-x \'volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php\' \\'
 	{
 		head -n "$lineno" "$dir/bin/build.sh"
 		printf '%s\n' "$insert_line"

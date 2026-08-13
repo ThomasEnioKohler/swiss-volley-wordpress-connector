@@ -8,7 +8,7 @@
  * Es werden NIEMALS API-Keys, Tokens, Passwörter oder andere Secrets
  * protokolliert. Der Logger erhält solche Werte gar nicht erst.
  *
- * @package SwissVolleyConnector
+ * @package VolleyballSchedulesForSwissVolley
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,11 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class SVC_Logger
+ * Class VSSV_Logger
  */
-class SVC_Logger {
+class VSSV_Logger {
 
-	const OPTION_KEY  = 'svc_log';
+	const OPTION_KEY  = 'vssv_log';
 	const MAX_ENTRIES = 100;
 
 	/**
@@ -29,7 +29,7 @@ class SVC_Logger {
 	 * @return bool
 	 */
 	public static function enabled(): bool {
-		$settings = get_option( 'svc_settings', array() );
+		$settings = get_option( 'vssv_settings', array() );
 		return ! empty( $settings['debug'] );
 	}
 

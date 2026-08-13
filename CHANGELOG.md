@@ -6,7 +6,7 @@ Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1
 die Versionierung an [Semantic Versioning](https://semver.org/lang/de/).
 
 Diese Datei ist die gepflegte Quelle. Die Sektion `== Changelog ==` in
-`swiss-volley-connector/readme.txt` wird daraus erzeugt — dort nichts von Hand
+`volleyball-schedules-for-swiss-volley/readme.txt` wird daraus erzeugt — dort nichts von Hand
 ändern, sondern `bin/sync-readme-changelog.sh` laufen lassen.
 
 ## [1.0.0] - 2026-08-13
@@ -22,7 +22,7 @@ Diese Datei ist die gepflegte Quelle. Die Sektion `== Changelog ==` in
 ## [0.1.6]
 
 ### Neu
-- Gruppierung von Spiellisten über das Attribut group_by="league" (Synonym: "liga") oder group_by="team" – für alle Spiel-Shortcodes inkl. der vereinsweiten Ansichten. Jede Gruppe erhält eine Überschrift (Liga-Bezeichnung bzw. eigener Teamname); die Reihenfolge der Gruppen folgt dem jeweils ersten Spiel, innerhalb der Gruppen bleibt die chronologische Sortierung erhalten. Bei Gruppierung nach Liga wird die Liga pro Spiel automatisch ausgeblendet (nicht doppelt); mit league="heading" oder league="meta" lässt sie sich bewusst zusätzlich anzeigen. Das Überschriften-Tag (Standard h3, Klasse svc-group-heading) ist per Filter svc_group_heading_tag anpassbar.
+- Gruppierung von Spiellisten über das Attribut group_by="league" (Synonym: "liga") oder group_by="team" – für alle Spiel-Shortcodes inkl. der vereinsweiten Ansichten. Jede Gruppe erhält eine Überschrift (Liga-Bezeichnung bzw. eigener Teamname); die Reihenfolge der Gruppen folgt dem jeweils ersten Spiel, innerhalb der Gruppen bleibt die chronologische Sortierung erhalten. Bei Gruppierung nach Liga wird die Liga pro Spiel automatisch ausgeblendet (nicht doppelt); mit league="heading" oder league="meta" lässt sie sich bewusst zusätzlich anzeigen. Das Überschriften-Tag (Standard h3, Klasse vssv-group-heading) ist per Filter vssv_group_heading_tag anpassbar.
 
 ## [0.1.5]
 
@@ -37,7 +37,7 @@ Diese Datei ist die gepflegte Quelle. Die Sektion `== Changelog ==` in
 ## [0.1.3]
 
 ### Neu
-- Liga als Überschrift über jedem Spiel. In den vereinsweiten Ansichten ([swissvolley_club_games], [swissvolley_club_results]) ist das jetzt Standard; die Liga erscheint dort nicht mehr doppelt in der Meta-Zeile. Über das neue Attribut league="meta|heading|none" lässt sich die Darstellung bei allen Spiel-Shortcodes steuern; Team-Shortcodes zeigen die Liga standardmässig weiterhin in der Meta-Zeile. Das Überschriften-Tag (Standard h3) ist per Filter svc_game_league_heading_tag anpassbar.
+- Liga als Überschrift über jedem Spiel. In den vereinsweiten Ansichten ([swissvolley_club_games], [swissvolley_club_results]) ist das jetzt Standard; die Liga erscheint dort nicht mehr doppelt in der Meta-Zeile. Über das neue Attribut league="meta|heading|none" lässt sich die Darstellung bei allen Spiel-Shortcodes steuern; Team-Shortcodes zeigen die Liga standardmässig weiterhin in der Meta-Zeile. Das Überschriften-Tag (Standard h3) ist per Filter vssv_game_league_heading_tag anpassbar.
 
 ## [0.1.2]
 

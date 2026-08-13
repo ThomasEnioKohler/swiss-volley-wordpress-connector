@@ -1,11 +1,11 @@
-# Swiss Volley Connector – Entwicklungs-Repository
+# Volleyball Schedules for Swiss Volley – Entwicklungs-Repository
 
 WordPress-Plugin für [www.volleypizol.org](https://www.volleypizol.org): zeigt Spielpläne, Resultate und Ranglisten automatisch aus der offiziellen Swiss-Volley-API. Dieses Repository enthält den Quellcode, die Testsuite und die Build-Pipeline.
 
 ## Struktur
 
 ```
-swiss-volley-connector/   Plugin-Quellcode (wird ins ZIP gepackt, ohne README.md und docs/)
+volleyball-schedules-for-swiss-volley/   Plugin-Quellcode (wird ins ZIP gepackt, ohne README.md und docs/)
 CHANGELOG.md              Gepflegte Changelog-Historie (Quelle für readme.txt)
 dist/                     Build-Ausgabe (nicht versioniert)
 
@@ -35,7 +35,7 @@ macOS/Linux mit `php` (≥ 8.1), `python3` und `zip`. Auf dem Mac: `brew install
 bin/build.sh
 ```
 
-Führt Syntaxcheck, Testsuite und POT-Generierung aus und legt das installierbare Plugin unter `dist/swiss-volley-connector-<version>.zip` ab. Nur die Tests:
+Führt Syntaxcheck, Testsuite und POT-Generierung aus und legt das installierbare Plugin unter `dist/volleyball-schedules-for-swiss-volley-<version>.zip` ab. Nur die Tests:
 
 ```bash
 php -d error_reporting=E_ALL tests/harness.php
@@ -69,9 +69,9 @@ An vier Stellen, die `bin/version.sh` gegeneinander prüft:
 
 | Stelle | Datei |
 | --- | --- |
-| `Version:` im Plugin-Header | `swiss-volley-connector/swiss-volley-connector.php` |
-| `SVC_VERSION` | dieselbe Datei |
-| `Stable tag:` | `swiss-volley-connector/readme.txt` |
+| `Version:` im Plugin-Header | `volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php` |
+| `VSSV_VERSION` | dieselbe Datei |
+| `Stable tag:` | `volleyball-schedules-for-swiss-volley/readme.txt` |
 | oberste `## [X.Y.Z]` | `CHANGELOG.md` |
 
 Weicht eine ab, brechen `bin/build.sh` und der Release-Workflow ab.
@@ -79,17 +79,17 @@ Weicht eine ab, brechen `bin/build.sh` und der Release-Workflow ab.
 ### Changelog
 
 `CHANGELOG.md` im Repo-Root ist die gepflegte Quelle. Die Sektion
-`== Changelog ==` in `swiss-volley-connector/readme.txt` wird daraus erzeugt und
+`== Changelog ==` in `volleyball-schedules-for-swiss-volley/readme.txt` wird daraus erzeugt und
 enthält die vollständige Historie — dort nichts von Hand ändern, sondern
 `bin/sync-readme-changelog.sh` laufen lassen. `bin/build.sh` prüft das mit
 `--check`.
 
 ## Dokumentation
 
-* `swiss-volley-connector/readme.txt` – Installation, Konfiguration, FAQ, Changelog
+* `volleyball-schedules-for-swiss-volley/readme.txt` – Installation, Konfiguration, FAQ, Changelog
 * `CHANGELOG.md` – gepflegte Changelog-Historie (Quelle für `readme.txt`)
-* `swiss-volley-connector/docs/API.md` – verwendete Swiss-Volley-Endpunkte, Mapping, Einschränkungen
-* `swiss-volley-connector/docs/SHORTCODES.md` – alle Shortcodes und Attribute
+* `volleyball-schedules-for-swiss-volley/docs/API.md` – verwendete Swiss-Volley-Endpunkte, Mapping, Einschränkungen
+* `volleyball-schedules-for-swiss-volley/docs/SHORTCODES.md` – alle Shortcodes und Attribute
 
 ## Lizenz
 

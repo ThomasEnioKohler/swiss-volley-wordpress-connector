@@ -1,4 +1,4 @@
-=== Swiss Volley Connector ===
+=== Volleyball Schedules for Swiss Volley ===
 Contributors: volleypizol
 Tags: volleyball, swiss volley, spielplan, resultate, rangliste
 Requires at least: 6.2
@@ -12,7 +12,7 @@ Zeigt Spielpläne, Resultate und Ranglisten automatisch aus der offiziellen Swis
 
 == Description ==
 
-Swiss Volley Connector verbindet WordPress mit der offiziellen Swiss-Volley-API (Volley Manager) und stellt automatisch dar:
+Volleyball Schedules for Swiss Volley verbindet WordPress mit der offiziellen Swiss-Volley-API (Volley Manager) und stellt automatisch dar:
 
 * Kommende Spiele (Datum, Uhrzeit, Heimteam, Auswärtsteam, Spielhalle)
 * Resultate inkl. Satzresultaten
@@ -25,7 +25,7 @@ Swiss Volley Connector verbindet WordPress mit der offiziellen Swiss-Volley-API 
 
 == Installation ==
 
-1. ZIP-Datei des gewünschten Release herunterladen: `swiss-volley-connector-<version>.zip`
+1. ZIP-Datei des gewünschten Release herunterladen: `volleyball-schedules-for-swiss-volley-<version>.zip`
 2. In WordPress: **Plugins → Plugin hinzufügen → Plugin hochladen**
 3. ZIP auswählen, installieren und aktivieren.
 
@@ -66,7 +66,7 @@ Gemäss eingestellter Cache-Dauer (Standard 30 Minuten, einstellbar 5 Minuten bi
 Die Webseite läuft normal weiter. Wenn vorhanden, werden die zuletzt erfolgreich geladenen Daten mit einem Hinweis angezeigt; andernfalls erscheint eine neutrale Meldung. Besucher sehen nie technische Fehlermeldungen.
 
 = Kann ich das Design anpassen? =
-Ja. Alle Elemente tragen eindeutige Klassen (`svc-games`, `svc-game`, `svc-team`, `svc-result`, `svc-ranking`, `svc-own-team`, `svc-date`, `svc-location` …). Kleinere Anpassungen gelingen direkt im Feld «Eigenes CSS». Das Plugin verwendet keine !important-Regeln.
+Ja. Alle Elemente tragen eindeutige Klassen (`vssv-games`, `vssv-game`, `vssv-team`, `vssv-result`, `vssv-ranking`, `vssv-own-team`, `vssv-date`, `vssv-location` …). Kleinere Anpassungen gelingen direkt im Feld «Eigenes CSS». Das Plugin verwendet keine !important-Regeln.
 
 == Datenschutz ==
 
@@ -92,7 +92,7 @@ Dieses Plugin nutzt die offizielle Swiss-Volley-API (https://api.volleyball.ch, 
 * Neu: Interaktive Gruppierung für Besucher. Über den Spiellisten erscheint ein Umschalter «Chronologisch / Nach Liga / Nach Team», mit dem Besucher die Ansicht direkt auf der Seite wechseln – ohne Neuladen und ohne zusätzliche API-Aufrufe. Aktivierbar global unter Swiss Volley → Einstellungen («Interaktive Gruppierung», standardmässig aus) oder pro Shortcode mit switcher="1" bzw. switcher="0". Der Umschalter zeigt nur sinnvolle Optionen (z. B. keinen Team-Button, wenn die Liste nur ein Team enthält) und erscheint gar nicht, wenn es nichts zu gruppieren gibt. Ein per group_by gesetzter Wert dient als Startansicht. Ohne JavaScript bleibt die chronologische Liste sichtbar.
 
 = 0.1.6 =
-* Neu: Gruppierung von Spiellisten über das Attribut group_by="league" (Synonym: "liga") oder group_by="team" – für alle Spiel-Shortcodes inkl. der vereinsweiten Ansichten. Jede Gruppe erhält eine Überschrift (Liga-Bezeichnung bzw. eigener Teamname); die Reihenfolge der Gruppen folgt dem jeweils ersten Spiel, innerhalb der Gruppen bleibt die chronologische Sortierung erhalten. Bei Gruppierung nach Liga wird die Liga pro Spiel automatisch ausgeblendet (nicht doppelt); mit league="heading" oder league="meta" lässt sie sich bewusst zusätzlich anzeigen. Das Überschriften-Tag (Standard h3, Klasse svc-group-heading) ist per Filter svc_group_heading_tag anpassbar.
+* Neu: Gruppierung von Spiellisten über das Attribut group_by="league" (Synonym: "liga") oder group_by="team" – für alle Spiel-Shortcodes inkl. der vereinsweiten Ansichten. Jede Gruppe erhält eine Überschrift (Liga-Bezeichnung bzw. eigener Teamname); die Reihenfolge der Gruppen folgt dem jeweils ersten Spiel, innerhalb der Gruppen bleibt die chronologische Sortierung erhalten. Bei Gruppierung nach Liga wird die Liga pro Spiel automatisch ausgeblendet (nicht doppelt); mit league="heading" oder league="meta" lässt sie sich bewusst zusätzlich anzeigen. Das Überschriften-Tag (Standard h3, Klasse vssv-group-heading) ist per Filter vssv_group_heading_tag anpassbar.
 
 = 0.1.5 =
 * Neu: Einstellung «Liga-Darstellung in Spiellisten» (Swiss Volley → Einstellungen): «Als Überschrift über dem Spiel (gross)» oder «Klein in der Detailzeile». Gilt als Standard für alle Spiellisten (Team- und Vereinsansichten) und ist pro Shortcode weiterhin mit league="heading|meta|none" übersteuerbar.
@@ -101,7 +101,7 @@ Dieses Plugin nutzt die offizielle Swiss-Volley-API (https://api.volleyball.ch, 
 * Neu: Spalte «Team-Link» pro Team (Swiss Volley → Teams). Ist eine URL hinterlegt (z. B. die Teamseite), wird der Teamname in allen Anzeigen verlinkt – in Spiellisten (heim wie auswärts) und in der Rangliste. Gegnerteams bleiben unverlinkt. Der Link bleibt beim Neuladen der Teams erhalten; leeres Feld = kein Link (wie bisher).
 
 = 0.1.3 =
-* Neu: Liga als Überschrift über jedem Spiel. In den vereinsweiten Ansichten ([swissvolley_club_games], [swissvolley_club_results]) ist das jetzt Standard; die Liga erscheint dort nicht mehr doppelt in der Meta-Zeile. Über das neue Attribut league="meta|heading|none" lässt sich die Darstellung bei allen Spiel-Shortcodes steuern; Team-Shortcodes zeigen die Liga standardmässig weiterhin in der Meta-Zeile. Das Überschriften-Tag (Standard h3) ist per Filter svc_game_league_heading_tag anpassbar.
+* Neu: Liga als Überschrift über jedem Spiel. In den vereinsweiten Ansichten ([swissvolley_club_games], [swissvolley_club_results]) ist das jetzt Standard; die Liga erscheint dort nicht mehr doppelt in der Meta-Zeile. Über das neue Attribut league="meta|heading|none" lässt sich die Darstellung bei allen Spiel-Shortcodes steuern; Team-Shortcodes zeigen die Liga standardmässig weiterhin in der Meta-Zeile. Das Überschriften-Tag (Standard h3) ist per Filter vssv_game_league_heading_tag anpassbar.
 
 = 0.1.2 =
 * Neu: Spalte «Eigener Teamname» pro Team (Swiss Volley → Teams). Wenn ausgefüllt, ersetzt er in allen Anzeigen (Spiele, Resultate, Rangliste, Block-Auswahl) den Swiss-Volley-Namen, z. B. «Volley Pizol Herren 1» → «Herren 1»; wenn leer, wird weiterhin der Wert von Swiss Volley angezeigt. Gegnernamen bleiben unverändert. Der Name bleibt beim Neuladen der Teams erhalten.

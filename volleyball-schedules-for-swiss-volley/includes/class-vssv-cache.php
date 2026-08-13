@@ -6,7 +6,7 @@
  * Ist die Swiss-Volley-API temporär nicht erreichbar, können so die zuletzt
  * erfolgreich geladenen Daten weiterhin angezeigt werden.
  *
- * @package SwissVolleyConnector
+ * @package VolleyballSchedulesForSwissVolley
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,12 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class SVC_Cache
+ * Class VSSV_Cache
  */
-class SVC_Cache {
+class VSSV_Cache {
 
-	const TRANSIENT_PREFIX = 'svc_cache_';
-	const STALE_PREFIX     = 'svc_stale_';
+	const TRANSIENT_PREFIX = 'vssv_cache_';
+	const STALE_PREFIX     = 'vssv_stale_';
 
 	/**
 	 * Bekannte Cache-Schlüssel (für vollständiges Leeren).

@@ -2,7 +2,7 @@
 /**
  * Zentrale Plugin-Klasse: Verdrahtung von Shortcodes, Blöcken, Assets, Admin.
  *
- * @package SwissVolleyConnector
+ * @package VolleyballSchedulesForSwissVolley
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,16 +10,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class SVC_Plugin
+ * Class VSSV_Plugin
  */
-class SVC_Plugin {
+class VSSV_Plugin {
 
 	/**
 	 * Singleton-Instanz.
 	 *
-	 * @var SVC_Plugin|null
+	 * @var VSSV_Plugin|null
 	 */
-	private static ?SVC_Plugin $instance = null;
+	private static ?VSSV_Plugin $instance = null;
 
 	/**
 	 * Wird true, sobald eine Ausgabe des Plugins auf der Seite vorkommt.
@@ -31,9 +31,9 @@ class SVC_Plugin {
 	/**
 	 * Instanz beziehen.
 	 *
-	 * @return SVC_Plugin
+	 * @return VSSV_Plugin
 	 */
-	public static function instance(): SVC_Plugin {
+	public static function instance(): VSSV_Plugin {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
@@ -44,16 +44,16 @@ class SVC_Plugin {
 	 * Constructor: Hooks registrieren.
 	 */
 	private function __construct() {
-		load_plugin_textdomain( 'swiss-volley-connector', false, dirname( plugin_basename( SVC_PLUGIN_FILE ) ) . '/languages' );
+		load_plugin_textdomain( 'volleyball-schedules-for-swiss-volley', false, dirname( plugin_basename( VSSV_PLUGIN_FILE ) ) . '/languages' );
 
-		SVC_Shortcodes::register();
-		SVC_Blocks::register();
+		VSSV_Shortcodes::register();
+		VSSV_Blocks::register();
 
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_frontend_assets' ) );
 		add_action( 'enqueue_block_editor_assets', array( __CLASS__, 'enqueue_editor_styles' ) );
 
-		if ( is_admin() && class_exists( 'SVC_Admin' ) ) {
-			SVC_Admin::register();
+		if ( is_admin() && class_exists( 'VSSV_Admin' ) ) {
+			VSSV_Admin::register();
 		}
 	}
 
@@ -65,7 +65,7 @@ class SVC_Plugin {
 	public static function default_settings(): array {
 		return array(
 			'api_key'       => '',
-			'api_base_url'  => SVC_API::DEFAULT_BASE_URL,
+			'api_base_url'  => VSSV_API::DEFAULT_BASE_URL,
 			'club_id'       => '',
 			'club_name'     => '',
 			'season_year'   => '', // leer = alle von der API gelieferten Saisons.
@@ -87,17 +87,17 @@ class SVC_Plugin {
 	 */
 	public static function register_frontend_assets(): void {
 		wp_register_style(
-			'svc-frontend',
-			SVC_PLUGIN_URL . 'assets/css/frontend.css',
+			'vssv-frontend',
+			VSSV_PLUGIN_URL . 'assets/css/frontend.css',
 			array(),
-			SVC_VERSION
+			VSSV_VERSION
 		);
 
 		wp_register_script(
-			'svc-frontend',
-			SVC_PLUGIN_URL . 'assets/js/frontend.js',
+			'vssv-frontend',
+			VSSV_PLUGIN_URL . 'assets/js/frontend.js',
 			array(),
-			SVC_VERSION,
+			VSSV_VERSION,
 			true
 		);
 	}
@@ -109,7 +109,7 @@ class SVC_Plugin {
 	public static function mark_switcher_needed(): void {
 		self::mark_assets_needed();
 		if ( ! is_admin() ) {
-			wp_enqueue_script( 'svc-frontend' );
+			wp_enqueue_script( 'vssv-frontend' );
 		}
 	}
 
@@ -118,10 +118,10 @@ class SVC_Plugin {
 	 */
 	public static function enqueue_editor_styles(): void {
 		wp_enqueue_style(
-			'svc-frontend',
-			SVC_PLUGIN_URL . 'assets/css/frontend.css',
+			'vssv-frontend',
+			VSSV_PLUGIN_URL . 'assets/css/frontend.css',
 			array(),
-			SVC_VERSION
+			VSSV_VERSION
 		);
 	}
 
@@ -137,13 +137,13 @@ class SVC_Plugin {
 		self::$assets_needed = true;
 
 		if ( ! is_admin() ) {
-			wp_enqueue_style( 'svc-frontend' );
+			wp_enqueue_style( 'vssv-frontend' );
 
 			// Eigenes CSS des Administrators anhängen (sanitisiert).
-			$settings   = get_option( 'svc_settings', array() );
+			$settings   = get_option( 'vssv_settings', array() );
 			$custom_css = isset( $settings['custom_css'] ) ? trim( (string) $settings['custom_css'] ) : '';
 			if ( '' !== $custom_css ) {
-				wp_add_inline_style( 'svc-frontend', wp_strip_all_tags( $custom_css ) );
+				wp_add_inline_style( 'vssv-frontend', wp_strip_all_tags( $custom_css ) );
 			}
 		}
 	}

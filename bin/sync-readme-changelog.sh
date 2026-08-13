@@ -10,7 +10,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CHANGELOG="$ROOT/CHANGELOG.md"
-README="$ROOT/swiss-volley-connector/readme.txt"
+README="$ROOT/volleyball-schedules-for-swiss-volley/readme.txt"
 
 CHECK=0
 if [ "${1:-}" = "--check" ]; then

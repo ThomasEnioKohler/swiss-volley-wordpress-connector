@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Erzeugt languages/swiss-volley-connector.pot aus den PHP-Quellen.
+"""Erzeugt languages/volleyball-schedules-for-swiss-volley.pot aus den PHP-Quellen.
 
 Aufruf: bin/make-pot.py <plugin-verzeichnis>
 """
@@ -8,15 +8,15 @@ import os
 import re
 import sys
 
-PLUGIN_DIR = sys.argv[1] if len(sys.argv) > 1 else "swiss-volley-connector"
+PLUGIN_DIR = sys.argv[1] if len(sys.argv) > 1 else "volleyball-schedules-for-swiss-volley"
 
 PAT = re.compile(
     r"(?:__|_e|esc_html__|esc_html_e|esc_attr__|esc_attr_e)\(\s*"
-    r"'((?:[^'\\]|\\.)*)'\s*,\s*'swiss-volley-connector'"
+    r"'((?:[^'\\]|\\.)*)'\s*,\s*'volleyball-schedules-for-swiss-volley'"
 )
 PATX = re.compile(
     r"(?:esc_html_x|_x|esc_attr_x)\(\s*'((?:[^'\\]|\\.)*)'\s*,\s*"
-    r"'((?:[^'\\]|\\.)*)'\s*,\s*'swiss-volley-connector'"
+    r"'((?:[^'\\]|\\.)*)'\s*,\s*'volleyball-schedules-for-swiss-volley'"
 )
 
 
@@ -33,8 +33,8 @@ def main() -> None:
             if not name.endswith(".php"):
                 continue
             src = open(os.path.join(root, name), encoding="utf-8").read()
-            if name == "swiss-volley-connector.php":
-                m = re.search(r"define\( 'SVC_VERSION', '([0-9.]+)'", src)
+            if name == "volleyball-schedules-for-swiss-volley.php":
+                m = re.search(r"define\( 'VSSV_VERSION', '([0-9.]+)'", src)
                 if m:
                     version = m.group(1)
             for m in PATX.finditer(src):
@@ -43,15 +43,15 @@ def main() -> None:
                 strings[(m.group(1), None)] = True
 
     out = [
-        "# Swiss Volley Connector.",
+        "# Volleyball Schedules for Swiss Volley.",
         'msgid ""',
         'msgstr ""',
-        f'"Project-Id-Version: Swiss Volley Connector {version}\\n"',
+        f'"Project-Id-Version: Volleyball Schedules for Swiss Volley {version}\\n"',
         f'"POT-Creation-Date: {datetime.date.today().isoformat()}\\n"',
         '"MIME-Version: 1.0\\n"',
         '"Content-Type: text/plain; charset=UTF-8\\n"',
         '"Content-Transfer-Encoding: 8bit\\n"',
-        '"X-Domain: swiss-volley-connector\\n"',
+        '"X-Domain: volleyball-schedules-for-swiss-volley\\n"',
         "",
     ]
     # Kontextloser Eintrag hat ctx = None; ohne key() vergleicht sorted()
@@ -63,7 +63,7 @@ def main() -> None:
         out.append('msgstr ""')
         out.append("")
 
-    dest = os.path.join(PLUGIN_DIR, "languages", "swiss-volley-connector.pot")
+    dest = os.path.join(PLUGIN_DIR, "languages", "volleyball-schedules-for-swiss-volley.pot")
     with open(dest, "w", encoding="utf-8") as handle:
         handle.write("\n".join(out))
     print(f"{len(strings)} Strings -> {dest}")

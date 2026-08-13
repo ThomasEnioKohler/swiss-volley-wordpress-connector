@@ -1,5 +1,5 @@
 /**
- * Swiss Volley Connector – Frontend-Skript.
+ * Volleyball Schedules for Swiss Volley – Frontend-Skript.
  *
  * Interaktive Gruppierung der Spiellisten (Chronologisch / Nach Liga /
  * Nach Team). Vanilla JS, ohne Abhängigkeiten; arbeitet rein clientseitig
@@ -12,21 +12,21 @@
 	/**
 	 * Einen umschaltbaren Bereich initialisieren.
 	 *
-	 * @param {HTMLElement} wrap Container .svc-switchable.
+	 * @param {HTMLElement} wrap Container .vssv-switchable.
 	 */
 	function init( wrap ) {
-		var list = wrap.querySelector( '.svc-games' );
+		var list = wrap.querySelector( '.vssv-games' );
 		if ( ! list ) {
 			return;
 		}
 
 		// Ursprüngliche (chronologische) Reihenfolge merken.
-		var cards = Array.prototype.slice.call( list.querySelectorAll( '.svc-game' ) );
+		var cards = Array.prototype.slice.call( list.querySelectorAll( '.vssv-game' ) );
 		if ( ! cards.length ) {
 			return;
 		}
 
-		var buttons = wrap.querySelectorAll( '.svc-switch' );
+		var buttons = wrap.querySelectorAll( '.vssv-switch' );
 
 		/**
 		 * Liste neu aufbauen.
@@ -35,12 +35,12 @@
 		 */
 		function apply( mode ) {
 			// Bestehende Gruppen entfernen, Ausgangsliste wiederherstellen.
-			var oldGroups = wrap.querySelector( '.svc-game-groups' );
+			var oldGroups = wrap.querySelector( '.vssv-game-groups' );
 			if ( oldGroups ) {
 				oldGroups.parentNode.removeChild( oldGroups );
 			}
 
-			wrap.classList.remove( 'svc-grouped-league', 'svc-grouped-team' );
+			wrap.classList.remove( 'vssv-grouped-league', 'vssv-grouped-team' );
 
 			if ( 'none' === mode ) {
 				cards.forEach( function ( card ) {
@@ -51,7 +51,7 @@
 				return;
 			}
 
-			var attr = 'league' === mode ? 'data-svc-league' : 'data-svc-team';
+			var attr = 'league' === mode ? 'data-vssv-league' : 'data-vssv-team';
 			var order = [];
 			var map = {};
 
@@ -65,21 +65,21 @@
 			} );
 
 			var groups = document.createElement( 'div' );
-			groups.className = 'svc-game-groups';
+			groups.className = 'vssv-game-groups';
 
 			order.forEach( function ( label ) {
 				var section = document.createElement( 'section' );
-				section.className = 'svc-game-group';
+				section.className = 'vssv-game-group';
 
 				if ( label ) {
 					var heading = document.createElement( 'h3' );
-					heading.className = 'svc-group-heading';
+					heading.className = 'vssv-group-heading';
 					heading.textContent = label;
 					section.appendChild( heading );
 				}
 
 				var inner = document.createElement( 'div' );
-				inner.className = 'svc-games';
+				inner.className = 'vssv-games';
 				map[ label ].forEach( function ( card ) {
 					inner.appendChild( card );
 				} );
@@ -89,7 +89,7 @@
 
 			list.hidden = true;
 			wrap.appendChild( groups );
-			wrap.classList.add( 'league' === mode ? 'svc-grouped-league' : 'svc-grouped-team' );
+			wrap.classList.add( 'league' === mode ? 'vssv-grouped-league' : 'vssv-grouped-team' );
 			setActive( mode );
 		}
 
@@ -100,23 +100,23 @@
 		 */
 		function setActive( mode ) {
 			Array.prototype.forEach.call( buttons, function ( button ) {
-				var active = button.getAttribute( 'data-svc-group' ) === mode;
-				button.classList.toggle( 'svc-active', active );
+				var active = button.getAttribute( 'data-vssv-group' ) === mode;
+				button.classList.toggle( 'vssv-active', active );
 				button.setAttribute( 'aria-pressed', active ? 'true' : 'false' );
 			} );
 		}
 
 		Array.prototype.forEach.call( buttons, function ( button ) {
 			button.addEventListener( 'click', function () {
-				apply( button.getAttribute( 'data-svc-group' ) || 'none' );
+				apply( button.getAttribute( 'data-vssv-group' ) || 'none' );
 			} );
 		} );
 
-		apply( wrap.getAttribute( 'data-svc-initial' ) || 'none' );
+		apply( wrap.getAttribute( 'data-vssv-initial' ) || 'none' );
 	}
 
 	function boot() {
-		Array.prototype.forEach.call( document.querySelectorAll( '.svc-switchable' ), init );
+		Array.prototype.forEach.call( document.querySelectorAll( '.vssv-switchable' ), init );
 	}
 
 	if ( 'loading' === document.readyState ) {
