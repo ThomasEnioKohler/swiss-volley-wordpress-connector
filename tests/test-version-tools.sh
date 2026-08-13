@@ -395,10 +395,8 @@ test_notes_ohne_argument() {
 test_notes_nur_kategorie_ohne_eintrag() {
 	local dir
 	dir="$(fixture)"
-	# Abschnitt besteht nur aus einer Kategorie-Überschrift, kein "- "-Eintrag.
-	awk '/^## \[0\.1\.6\]/ && !g { print "## [9.8.7]"; print ""; print "### Neu"; print ""; g = 1 } { print }' \
-		"$dir/CHANGELOG.md" > "$dir/CHANGELOG.md.tmp"
-	mv "$dir/CHANGELOG.md.tmp" "$dir/CHANGELOG.md"
+	# Append synthetic section with only a category heading, no bullet entries
+	printf '\n## [9.8.7]\n\n### Neu\n' >> "$dir/CHANGELOG.md"
 	assert_exit "release-notes.sh scheitert bei einem Abschnitt nur mit Kategorie-Überschrift" 1 \
 		bash "$dir/bin/release-notes.sh" 9.8.7
 }
