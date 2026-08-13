@@ -161,10 +161,24 @@ verbiege() { # <datei> <suchen> <ersetzen>
 	mv "$file.tmp" "$file"
 }
 
+# Liest SVC_VERSION aus der Arbeitskopie.
+#
+# Die Tests dürfen keine feste Versionsnummer enthalten: Sonst treffen die
+# Suchmuster nach dem nächsten Bump nichts mehr, es wird gar keine Drift
+# erzeugt, und die Drift-Tests prüfen stillschweigend nichts.
+ist_version() { # <fixture-verzeichnis>
+	sed -nE "s/^define\( 'SVC_VERSION', '([0-9]+\.[0-9]+\.[0-9]+)' \);.*\$/\1/p" \
+		"$1/swiss-volley-connector/swiss-volley-connector.php"
+}
+
+# Eine Version, die garantiert über jeder real vorkommenden liegt — als Ziel
+# für Bump-Tests, damit sie nicht an der aktuellen Nummer kleben.
+ZIEL_HOCH="99.0.0"
+
 test_version_gleichstand() {
 	local dir
 	dir="$(fixture)"
-	assert_stdout "version.sh druckt die Version bei Gleichstand" "0.1.7" \
+	assert_stdout "version.sh druckt die Version bei Gleichstand" "$(ist_version "$dir")" \
 		bash "$dir/bin/version.sh"
 }
 
@@ -172,7 +186,7 @@ test_version_drift_header() {
 	local dir
 	dir="$(fixture)"
 	verbiege "$dir/swiss-volley-connector/swiss-volley-connector.php" \
-		'^ \* Version: +0\.1\.7' ' * Version:           0.9.9'
+		'^ \* Version: +[0-9]+\.[0-9]+\.[0-9]+ *$' ' * Version:           0.9.9'
 	assert_exit "version.sh erkennt Drift im Plugin-Header" 1 \
 		bash "$dir/bin/version.sh"
 }
@@ -181,7 +195,7 @@ test_version_drift_konstante() {
 	local dir
 	dir="$(fixture)"
 	verbiege "$dir/swiss-volley-connector/swiss-volley-connector.php" \
-		"SVC_VERSION', '0\.1\.7'" "SVC_VERSION', '0.9.9'"
+		"SVC_VERSION', '[0-9]+\.[0-9]+\.[0-9]+'" "SVC_VERSION', '0.9.9'"
 	assert_exit "version.sh erkennt Drift bei SVC_VERSION" 1 \
 		bash "$dir/bin/version.sh"
 }
@@ -190,7 +204,7 @@ test_version_drift_stable_tag() {
 	local dir
 	dir="$(fixture)"
 	verbiege "$dir/swiss-volley-connector/readme.txt" \
-		'^Stable tag: 0\.1\.7' 'Stable tag: 0.9.9'
+		'^Stable tag: +[0-9]+\.[0-9]+\.[0-9]+ *$' 'Stable tag: 0.9.9'
 	assert_exit "version.sh erkennt Drift bei Stable tag" 1 \
 		bash "$dir/bin/version.sh"
 }
@@ -198,7 +212,9 @@ test_version_drift_stable_tag() {
 test_version_drift_changelog() {
 	local dir
 	dir="$(fixture)"
-	verbiege "$dir/CHANGELOG.md" '^## \[0\.1\.7\]' '## [0.9.9]'
+	awk '/^## \[/ && !g { print "## [0.9.9]"; g = 1; next } { print }' \
+		"$dir/CHANGELOG.md" > "$dir/CHANGELOG.md.tmp"
+	mv "$dir/CHANGELOG.md.tmp" "$dir/CHANGELOG.md"
 	assert_exit "version.sh erkennt Drift in CHANGELOG.md" 1 \
 		bash "$dir/bin/version.sh"
 }
@@ -207,23 +223,21 @@ test_version_expect_passt() {
 	local dir
 	dir="$(fixture)"
 	assert_exit "version.sh --expect akzeptiert die passende Version" 0 \
-		bash "$dir/bin/version.sh" --expect 0.1.7
+		bash "$dir/bin/version.sh" --expect "$(ist_version "$dir")"
 }
 
 test_version_expect_weicht_ab() {
 	local dir
 	dir="$(fixture)"
 	assert_exit "version.sh --expect lehnt eine abweichende Version ab" 1 \
-		bash "$dir/bin/version.sh" --expect 0.2.0
+		bash "$dir/bin/version.sh" --expect 9.9.9
 }
 
 test_version_doppelter_changelog_abschnitt() {
 	local dir
 	dir="$(fixture)"
 	# Zweiten Abschnitt mit derselben Version anlegen.
-	awk '/^## \[0\.1\.6\]/ && !g { print "## [0.1.7]"; print ""; print "- Doppelt"; print ""; g = 1 } { print }' \
-		"$dir/CHANGELOG.md" > "$dir/CHANGELOG.md.tmp"
-	mv "$dir/CHANGELOG.md.tmp" "$dir/CHANGELOG.md"
+	printf '\n## [%s]\n\n- Doppelt\n' "$(ist_version "$dir")" >> "$dir/CHANGELOG.md"
 	assert_exit "version.sh erkennt einen doppelten Versionsabschnitt" 1 \
 		bash "$dir/bin/version.sh"
 }
@@ -233,7 +247,7 @@ test_version_header_mehrdeutig() {
 	dir="$(fixture)"
 	# Eine zweite " * Version:"-Zeile einfügen, statt eine bestehende zu
 	# überschreiben — die Quelle liefert dann zwei Treffer.
-	awk '{ print } /^ \* Version: +0\.1\.7 *$/ { print " * Version:           0.1.7" }' \
+	awk '{ print } /^ \* Version: +[0-9]+\.[0-9]+\.[0-9]+ *$/ && !g { print; g = 1 }' \
 		"$dir/swiss-volley-connector/swiss-volley-connector.php" > "$dir/tmp.php"
 	mv "$dir/tmp.php" "$dir/swiss-volley-connector/swiss-volley-connector.php"
 
@@ -263,16 +277,16 @@ test_version_doppelter_changelog_abschnitt
 test_bump_schreibt_alle_stellen() {
 	local dir
 	dir="$(fixture)"
-	bash "$dir/bin/bump-version.sh" 0.2.0 > /dev/null 2>&1
-	assert_stdout "bump-version.sh hebt alle vier Quellen auf 0.2.0" "0.2.0" \
+	bash "$dir/bin/bump-version.sh" "$ZIEL_HOCH" > /dev/null 2>&1
+	assert_stdout "bump-version.sh hebt alle vier Quellen an" "$ZIEL_HOCH" \
 		bash "$dir/bin/version.sh"
 }
 
 test_bump_legt_changelog_abschnitt_an() {
 	local dir
 	dir="$(fixture)"
-	bash "$dir/bin/bump-version.sh" 0.2.0 > /dev/null 2>&1
-	if grep -qE '^## \[0\.2\.0\] - [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$' "$dir/CHANGELOG.md" \
+	bash "$dir/bin/bump-version.sh" "$ZIEL_HOCH" > /dev/null 2>&1
+	if grep -qE "^## \[$(printf '%s' "$ZIEL_HOCH" | sed 's/\./\\./g')\] - [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\$" "$dir/CHANGELOG.md" \
 		&& grep -qF -- '- TODO: Änderungen beschreiben' "$dir/CHANGELOG.md"; then
 		pass "bump-version.sh legt einen datierten CHANGELOG-Abschnitt mit Platzhalter an"
 	else
@@ -284,7 +298,7 @@ test_bump_legt_changelog_abschnitt_an() {
 test_bump_haelt_readme_synchron() {
 	local dir
 	dir="$(fixture)"
-	bash "$dir/bin/bump-version.sh" 0.2.0 > /dev/null 2>&1
+	bash "$dir/bin/bump-version.sh" "$ZIEL_HOCH" > /dev/null 2>&1
 	assert_exit "bump-version.sh hinterlässt readme.txt synchron" 0 \
 		bash "$dir/bin/sync-readme-changelog.sh" --check
 }
@@ -300,23 +314,23 @@ test_bump_lehnt_gleichstand_ab() {
 	local dir
 	dir="$(fixture)"
 	assert_exit "bump-version.sh lehnt die aktuelle Version ab" 1 \
-		bash "$dir/bin/bump-version.sh" 0.1.7
+		bash "$dir/bin/bump-version.sh" "$(ist_version "$dir")"
 }
 
 test_bump_lehnt_rueckwaerts_ab() {
 	local dir
 	dir="$(fixture)"
 	assert_exit "bump-version.sh lehnt einen Rückwärtssprung ab" 1 \
-		bash "$dir/bin/bump-version.sh" 0.1.6
+		bash "$dir/bin/bump-version.sh" 0.0.1
 }
 
 test_bump_lehnt_drift_ab() {
 	local dir
 	dir="$(fixture)"
 	verbiege "$dir/swiss-volley-connector/readme.txt" \
-		'^Stable tag: 0\.1\.7' 'Stable tag: 0.9.9'
+		'^Stable tag: +[0-9]+\.[0-9]+\.[0-9]+ *$' 'Stable tag: 0.9.9'
 	assert_exit "bump-version.sh verweigert den Bump auf driftendem Stand" 1 \
-		bash "$dir/bin/bump-version.sh" 0.2.0
+		bash "$dir/bin/bump-version.sh" "$ZIEL_HOCH"
 }
 
 test_bump_schreibt_alle_stellen
@@ -364,9 +378,9 @@ test_notes_fehlender_abschnitt() {
 test_notes_platzhalter() {
 	local dir
 	dir="$(fixture)"
-	bash "$dir/bin/bump-version.sh" 0.2.0 > /dev/null 2>&1
+	bash "$dir/bin/bump-version.sh" "$ZIEL_HOCH" > /dev/null 2>&1
 	assert_exit "release-notes.sh scheitert bei unausgefülltem Platzhalter" 1 \
-		bash "$dir/bin/release-notes.sh" 0.2.0
+		bash "$dir/bin/release-notes.sh" "$ZIEL_HOCH"
 }
 
 test_notes_ohne_argument() {
