@@ -26,3 +26,19 @@ jobs:
 
       - name: Tests
         run: php -d error_reporting=E_ALL -d display_errors=1 tests/harness.php
+
+  # Eigener Job statt Schritt in der PHP-Matrix: Die Shell-Tests hängen
+  # nicht von der PHP-Version ab und sollen nicht dreimal identisch laufen.
+  version-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Versionskonsistenz
+        run: bash bin/version.sh
+
+      - name: readme.txt gegen CHANGELOG.md prüfen
+        run: bash bin/sync-readme-changelog.sh --check
+
+      - name: Tests der Versions-Werkzeuge
+        run: bash tests/test-version-tools.sh

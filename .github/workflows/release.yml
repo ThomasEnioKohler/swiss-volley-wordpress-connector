@@ -1,6 +1,7 @@
 name: Release
 
-# Baut das installierbare ZIP und hängt es an den GitHub-Release,
+# Prüft den Tag gegen die Versionsangaben in den Dateien, baut das
+# installierbare ZIP und veröffentlicht beides als GitHub-Release,
 # sobald ein Tag der Form v0.1.7 gepusht wird.
 on:
   push:
@@ -20,11 +21,22 @@ jobs:
         with:
           php-version: '8.3'
 
+      # Läuft bewusst vor dem Build: Ein falsch gesetzter Tag soll in
+      # Sekunden scheitern, nicht nach der kompletten Testsuite.
+      - name: Tag gegen die Versionsangaben prüfen
+        run: |
+          VERSION="$(bash bin/version.sh --expect "${GITHUB_REF_NAME#v}")"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
       - name: Build (Lint, Tests, POT, ZIP)
         run: bash bin/build.sh
 
-      - name: ZIP an Release anhängen
+      - name: Release-Notes aus CHANGELOG.md
+        run: bash bin/release-notes.sh "$VERSION" > release-notes.md
+
+      - name: Release veröffentlichen
         uses: softprops/action-gh-release@v2
         with:
           files: dist/swiss-volley-connector-*.zip
-          generate_release_notes: true
+          body_path: release-notes.md
+          prerelease: ${{ startsWith(env.VERSION, '0.') }}
