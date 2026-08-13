@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Erzeugt languages/volleyball-schedules-for-swiss-volley.pot aus den PHP-Quellen.
+"""Erzeugt languages/volleyball-schedules-for-swiss-volley.pot aus den PHP- und JS-Quellen.
 
 Aufruf: bin/make-pot.py <plugin-verzeichnis>
 """
@@ -30,7 +30,7 @@ def main() -> None:
 
     for root, _dirs, files in os.walk(PLUGIN_DIR):
         for name in files:
-            if not name.endswith(".php"):
+            if not (name.endswith(".php") or name.endswith(".js")):
                 continue
             src = open(os.path.join(root, name), encoding="utf-8").read()
             if name == "volleyball-schedules-for-swiss-volley.php":

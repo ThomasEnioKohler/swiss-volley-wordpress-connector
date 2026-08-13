@@ -11,6 +11,9 @@ msgstr ""
 msgid "****** (saved - leave empty to keep)"
 msgstr "•••••• (gespeichert – leer lassen zum Behalten)"
 
+msgid "-- Select team --"
+msgstr "– Team wählen –"
+
 msgid "1 hour"
 msgstr "1 Stunde"
 
@@ -225,11 +228,17 @@ msgstr "Zurzeit liegen noch keine Resultate vor."
 msgid "No standings are currently available."
 msgstr "Zurzeit ist keine Rangliste verfügbar."
 
+msgid "No teams configured yet. Load teams under Swiss Volley -> Teams first."
+msgstr "Noch keine Teams konfiguriert. Teams zuerst unter Swiss Volley → Teams laden."
+
 msgid "No teams loaded yet. First enter the API key in the settings, then click \"Load club and teams now\"."
 msgstr "Noch keine Teams geladen. Hinterlege zuerst den API-Key in den Einstellungen und klicke dann auf «Verein und Teams jetzt laden»."
 
 msgid "No upcoming games are currently scheduled."
 msgstr "Zurzeit sind keine kommenden Spiele angesetzt."
+
+msgid "Number of games"
+msgstr "Anzahl Spiele"
 
 msgid "Only appears if a list contains multiple leagues or teams. Can be overridden per shortcode with switcher=\"1\" or switcher=\"0\". A default set via group_by remains the starting view."
 msgstr "Erscheint nur, wenn eine Liste mehrere Ligen oder Teams enthält. Pro Shortcode übersteuerbar mit switcher=\"1\" oder switcher=\"0\". Ein per group_by gesetzter Standard bleibt als Startansicht erhalten."
@@ -237,6 +246,9 @@ msgstr "Erscheint nur, wenn eine Liste mehrere Ligen oder Teams enthält. Pro Sh
 msgctxt "Abbreviation for games played"
 msgid "P"
 msgstr "Sp"
+
+msgid "Please select a team in the block settings."
+msgstr "Bitte in den Block-Einstellungen ein Team wählen."
 
 msgctxt "Abbreviation for points"
 msgid "Pts"

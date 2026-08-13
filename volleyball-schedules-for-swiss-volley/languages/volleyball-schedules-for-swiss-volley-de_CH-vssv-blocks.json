@@ -8,14 +8,17 @@
     "domain": "messages",
     "lang": "de_CH"
    },
-   "Anzahl Spiele": [
+   "-- Select team --": [
+    "– Team wählen –"
+   ],
+   "No teams configured yet. Load teams under Swiss Volley -> Teams first.": [
+    "Noch keine Teams konfiguriert. Teams zuerst unter Swiss Volley → Teams laden."
+   ],
+   "Number of games": [
     "Anzahl Spiele"
    ],
-   "Bitte in den Block-Einstellungen ein Team wählen.": [
+   "Please select a team in the block settings.": [
     "Bitte in den Block-Einstellungen ein Team wählen."
-   ],
-   "Noch keine Teams konfiguriert. Teams zuerst unter Swiss Volley → Teams laden.": [
-    "Noch keine Teams konfiguriert. Teams zuerst unter Swiss Volley → Teams laden."
    ],
    "Swiss Volley": [
     "Swiss Volley"
@@ -34,9 +37,6 @@
    ],
    "Team": [
     "Team"
-   ],
-   "– Team wählen –": [
-    "– Team wählen –"
    ]
   }
  }

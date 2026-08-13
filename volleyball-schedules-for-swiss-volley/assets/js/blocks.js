@@ -24,7 +24,7 @@
 
 	var teams = ( window.vssvBlocksData && window.vssvBlocksData.teams ) || [];
 
-	var teamOptions = [ { value: '', label: __( '– Team wählen –', 'volleyball-schedules-for-swiss-volley' ) } ].concat( teams );
+	var teamOptions = [ { value: '', label: __( '-- Select team --', 'volleyball-schedules-for-swiss-volley' ) } ].concat( teams );
 
 	/**
 	 * Block registrieren.
@@ -66,7 +66,7 @@
 					controls.push(
 						el( RangeControl, {
 							key: 'limit',
-							label: __( 'Anzahl Spiele', 'volleyball-schedules-for-swiss-volley' ),
+							label: __( 'Number of games', 'volleyball-schedules-for-swiss-volley' ),
 							min: 1,
 							max: 30,
 							value: props.attributes.limit,
@@ -83,8 +83,8 @@
 						icon: icon,
 						label: title,
 						instructions: teams.length
-							? __( 'Bitte in den Block-Einstellungen ein Team wählen.', 'volleyball-schedules-for-swiss-volley' )
-							: __( 'Noch keine Teams konfiguriert. Teams zuerst unter Swiss Volley → Teams laden.', 'volleyball-schedules-for-swiss-volley' )
+							? __( 'Please select a team in the block settings.', 'volleyball-schedules-for-swiss-volley' )
+							: __( 'No teams configured yet. Load teams under Swiss Volley -> Teams first.', 'volleyball-schedules-for-swiss-volley' )
 					} );
 				} else {
 					preview = el( ServerSideRender, {
