@@ -76,15 +76,28 @@ test_build_erfolgreich() {
 # Exit 1 abbrechen, statt ein ZIP ohne Hauptdatei stillschweigend fertig zu
 # melden.
 test_build_erkennt_zip_ohne_hauptdatei() {
-	local dir matchline insert
+	local dir lineno insert_line
 	dir="$(fixture)"
 
-	matchline='( cd "$ROOT" && zip -rq "$ZIP" swiss-volley-connector \'
-	insert="    -x 'swiss-volley-connector/swiss-volley-connector.php' \\"
-	awk -v matchline="$matchline" -v insert="$insert" '
-		{ print }
-		$0 == matchline { print insert }
-	' "$dir/bin/build.sh" > "$dir/bin/build.sh.tmp"
+	# Zeilennummer des zip-Aufrufs ermitteln, statt die Zeile per awk/regex
+	# nachzubauen — vermeidet Unterschiede in der Escape-Behandlung von
+	# "-v"-Zuweisungen zwischen awk-Implementationen (BSD/GNU).
+	lineno="$(grep -n -F -- 'zip -rq "$ZIP" swiss-volley-connector' "$dir/bin/build.sh" | head -1 | cut -d: -f1)"
+	if [ -z "$lineno" ]; then
+		fail "build.sh erkennt ein ZIP ohne die Hauptdatei" \
+			"Zeile mit dem zip-Aufruf in build.sh nicht gefunden"
+		return
+	fi
+
+	# Zusätzliches -x direkt nach dieser Zeile einfügen ($'...' liefert den
+	# literalen Tab und Backslash ohne weitere Interpretation durch ein
+	# externes Werkzeug).
+	insert_line=$'\t-x \'swiss-volley-connector/swiss-volley-connector.php\' \\'
+	{
+		head -n "$lineno" "$dir/bin/build.sh"
+		printf '%s\n' "$insert_line"
+		tail -n "+$((lineno + 1))" "$dir/bin/build.sh"
+	} > "$dir/bin/build.sh.tmp"
 	mv "$dir/bin/build.sh.tmp" "$dir/bin/build.sh"
 
 	if bash "$dir/bin/build.sh" > "$dir/build.log" 2>&1; then
