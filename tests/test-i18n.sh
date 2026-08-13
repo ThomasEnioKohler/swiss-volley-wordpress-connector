@@ -22,20 +22,24 @@ python3 "$ROOT/bin/make-pot.py" "$PLUGIN" > /dev/null
 # ASCII-Prüfung, damit auch typografische Zeichen auffliegen, die in
 # msgid nichts zu suchen haben. Die Prüfung läuft über python3 statt
 # grep -P: BSD-grep auf macOS kennt -P nicht.
+# Geprüft werden sowohl msgid- als auch msgctxt-Zeilen: msgctxt ist das
+# Kontext-Argument von _x()/esc_html_x() & Co. und damit genauso Teil der
+# Quellsprache wie msgid — ein rein deutscher Kontext ("Ranglisten-Spalte")
+# würde sonst unbemerkt ins POT und in Task 3s Kataloge durchrutschen.
 test_pot_ist_ascii() {
 	local treffer
 	treffer="$(python3 - "$POT" <<'PY'
 import sys
 pfad = sys.argv[1]
 for nr, zeile in enumerate(open(pfad, encoding='utf-8'), 1):
-    if zeile.startswith('msgid ') and not zeile.isascii():
+    if (zeile.startswith('msgid ') or zeile.startswith('msgctxt ')) and not zeile.isascii():
         print(f'{nr}: {zeile.rstrip()}')
 PY
 )"
 	if [ -z "$treffer" ]; then
-		pass "POT enthält ausschliesslich ASCII-msgid-Einträge"
+		pass "POT enthält ausschliesslich ASCII-msgid-/msgctxt-Einträge"
 	else
-		fail "POT enthält ausschliesslich ASCII-msgid-Einträge" \
+		fail "POT enthält ausschliesslich ASCII-msgid-/msgctxt-Einträge" \
 			"Nicht-ASCII in: $treffer"
 	fi
 }

@@ -347,7 +347,7 @@ class VSSV_Renderer {
 
 			$html .= '<div class="vssv-matchup">';
 			$html .= self::team_name_html( $g['home_team'], (int) $g['home_team_id'], $home_classes );
-			$html .= '<span class="vssv-vs" aria-hidden="true">' . esc_html_x( 'vs.', 'Trennung Heimteam/Auswärtsteam', 'volleyball-schedules-for-swiss-volley' ) . '</span>';
+			$html .= '<span class="vssv-vs" aria-hidden="true">' . esc_html_x( 'vs.', 'Home/away team separator', 'volleyball-schedules-for-swiss-volley' ) . '</span>';
 			$html .= self::team_name_html( $g['away_team'], (int) $g['away_team_id'], $away_classes );
 			$html .= '</div>';
 
@@ -404,13 +404,13 @@ class VSSV_Renderer {
 			$html .= '<div class="vssv-ranking-wrap">';
 			$html .= '<table class="vssv-ranking">';
 			$html .= '<thead><tr>';
-			$html .= '<th scope="col" class="vssv-col-rank">' . esc_html_x( 'Rank', 'Ranglisten-Spalte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-rank">' . esc_html_x( 'Rank', 'Standings column', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
 			$html .= '<th scope="col" class="vssv-col-team">' . esc_html__( 'Team', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
-			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'P', 'Abkürzung Spiele', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
-			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'W', 'Abkürzung Siege', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
-			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'L', 'Abkürzung Niederlagen', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
-			$html .= '<th scope="col" class="vssv-col-num vssv-col-sets">' . esc_html_x( 'Sets', 'Ranglisten-Spalte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
-			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'Pts', 'Abkürzung Punkte', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'P', 'Abbreviation for games played', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'W', 'Abbreviation for wins', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'L', 'Abbreviation for losses', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num vssv-col-sets">' . esc_html_x( 'Sets', 'Standings column', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
+			$html .= '<th scope="col" class="vssv-col-num">' . esc_html_x( 'Pts', 'Abbreviation for points', 'volleyball-schedules-for-swiss-volley' ) . '</th>';
 			$html .= '</tr></thead><tbody>';
 
 			foreach ( $group['rows'] as $row ) {

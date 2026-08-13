@@ -164,7 +164,7 @@ msgstr ""
 msgid "Interactive grouping"
 msgstr ""
 
-msgctxt "Abkürzung Niederlagen"
+msgctxt "Abbreviation for losses"
 msgid "L"
 msgstr ""
 
@@ -234,15 +234,15 @@ msgstr ""
 msgid "Only appears if a list contains multiple leagues or teams. Can be overridden per shortcode with switcher=\"1\" or switcher=\"0\". A default set via group_by remains the starting view."
 msgstr ""
 
-msgctxt "Abkürzung Spiele"
+msgctxt "Abbreviation for games played"
 msgid "P"
 msgstr ""
 
-msgctxt "Abkürzung Punkte"
+msgctxt "Abbreviation for points"
 msgid "Pts"
 msgstr ""
 
-msgctxt "Ranglisten-Spalte"
+msgctxt "Standings column"
 msgid "Rank"
 msgstr ""
 
@@ -258,7 +258,7 @@ msgstr ""
 msgid "Season"
 msgstr ""
 
-msgctxt "Ranglisten-Spalte"
+msgctxt "Standings column"
 msgid "Sets"
 msgstr ""
 
@@ -364,7 +364,7 @@ msgstr ""
 msgid "Volleyball Schedules for Swiss Volley: The specified team was not found. Please check the team ID or alias."
 msgstr ""
 
-msgctxt "Abkürzung Siege"
+msgctxt "Abbreviation for wins"
 msgid "W"
 msgstr ""
 
@@ -383,6 +383,6 @@ msgstr ""
 msgid "e.g. https://www.volleypizol.org/herren-1/"
 msgstr ""
 
-msgctxt "Trennung Heimteam/Auswärtsteam"
+msgctxt "Home/away team separator"
 msgid "vs."
 msgstr ""
