@@ -123,11 +123,14 @@ class VSSV_Shortcodes {
 	/**
 	 * Limit-Attribut absichern.
 	 *
-	 * @param mixed $value         Rohwert.
-	 * @param int   $default_limit Standard (aktuell ungenutzt, da shortcode_atts() bereits einen Default liefert).
+	 * Der Rohwert kommt in jedem Aufrufer bereits über shortcode_atts()
+	 * mit einem numerischen Default (5 bzw. 10), ein zusätzlicher
+	 * Fallback-Parameter hier wäre daher toter Code.
+	 *
+	 * @param mixed $value Rohwert.
 	 * @return int
 	 */
-	private static function limit( $value, int $default_limit = 5 ): int {
+	private static function limit( $value ): int {
 		$limit = (int) $value;
 		if ( $limit < 0 ) {
 			$limit = 0;
@@ -304,7 +307,7 @@ class VSSV_Shortcodes {
 			'swissvolley_club_games'
 		);
 
-		$games = VSSV_Data::games_for_club( 'upcoming', self::limit( $atts['limit'], 10 ) );
+		$games = VSSV_Data::games_for_club( 'upcoming', self::limit( $atts['limit'] ) );
 		if ( is_wp_error( $games ) ) {
 			return VSSV_Renderer::render_error( $games );
 		}
@@ -331,7 +334,7 @@ class VSSV_Shortcodes {
 			'swissvolley_club_results'
 		);
 
-		$games = VSSV_Data::games_for_club( 'played', self::limit( $atts['limit'], 10 ) );
+		$games = VSSV_Data::games_for_club( 'played', self::limit( $atts['limit'] ) );
 		if ( is_wp_error( $games ) ) {
 			return VSSV_Renderer::render_error( $games );
 		}
