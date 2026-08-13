@@ -13,9 +13,12 @@ Führe aus und werte aus:
 ```bash
 git status --porcelain
 git rev-parse --abbrev-ref HEAD
-git fetch --tags --quiet && git tag --list
+git fetch --tags --quiet && git tag --list --sort=-v:refname
 bash bin/version.sh
 ```
+
+`--sort=-v:refname` sortiert nach Versionsnummer, neueste zuerst. Ohne das
+sortiert git alphabetisch und stellt `v0.1.10` vor `v0.1.9`.
 
 Brich mit einer Begründung ab (keine Rückfrage), wenn:
 

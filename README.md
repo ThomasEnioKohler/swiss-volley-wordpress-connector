@@ -5,13 +5,24 @@ WordPress-Plugin für [www.volleypizol.org](https://www.volleypizol.org): zeigt 
 ## Struktur
 
 ```
-swiss-volley-connector/   Plugin-Quellcode (wird 1:1 ins ZIP gepackt)
-tests/harness.php         Testsuite mit WordPress-Mocks (82 Checks, kein WP nötig)
-bin/build.sh              Build-Pipeline: Lint → Tests → .pot → ZIP
-bin/make-pot.py           Generator für die Übersetzungsvorlage
+swiss-volley-connector/   Plugin-Quellcode (wird ins ZIP gepackt, ohne README.md und docs/)
+CHANGELOG.md              Gepflegte Changelog-Historie (Quelle für readme.txt)
 dist/                     Build-Ausgabe (nicht versioniert)
-.github/workflows/ci.yml       CI: Lint + Tests auf PHP 8.1/8.2/8.3 bei jedem Push
-.github/workflows/release.yml  Release: baut das ZIP bei einem Tag v* und hängt es an den GitHub-Release
+
+tests/harness.php             Testsuite mit WordPress-Mocks (82 Checks, kein WP nötig)
+tests/test-version-tools.sh   Tests der Versions-Werkzeuge (arbeiten auf Kopien)
+tests/test-build.sh           Tests der Build-Pipeline
+
+bin/build.sh                  Build: Versionsprüfung → Lint → Tests → .pot → ZIP → ZIP-Prüfung
+bin/version.sh                Vergleicht die vier Versionsquellen; --expect prüft gegen einen Tag
+bin/bump-version.sh           Hebt die Version an und legt den Changelog-Abschnitt an
+bin/sync-readme-changelog.sh  Erzeugt die Changelog-Sektion in readme.txt; --check prüft nur
+bin/release-notes.sh          Schneidet den Release-Body aus CHANGELOG.md
+bin/make-pot.py               Generator für die Übersetzungsvorlage
+
+.claude/commands/release.md    Slash-Command /release: führt durch den Release-Ablauf
+.github/workflows/ci.yml       CI: Lint + Tests auf PHP 8.1/8.2/8.3, Versions-Werkzeuge, Build
+.github/workflows/release.yml  Release: prüft den Tag, baut das ZIP, veröffentlicht es
 ```
 
 ## Voraussetzungen
