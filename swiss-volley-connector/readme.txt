@@ -4,7 +4,7 @@ Tags: volleyball, swiss volley, spielplan, resultate, rangliste
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 8.1
-Stable tag: 0.1.7
+Stable tag: 1.0.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,7 +25,7 @@ Swiss Volley Connector verbindet WordPress mit der offiziellen Swiss-Volley-API 
 
 == Installation ==
 
-1. ZIP-Datei herunterladen: `swiss-volley-connector-0.1.0.zip`
+1. ZIP-Datei des gewünschten Release herunterladen: `swiss-volley-connector-<version>.zip`
 2. In WordPress: **Plugins → Plugin hinzufügen → Plugin hochladen**
 3. ZIP auswählen, installieren und aktivieren.
 
@@ -84,6 +84,9 @@ Dieses Plugin nutzt die offizielle Swiss-Volley-API (https://api.volleyball.ch, 
 * Ein Swiss-Volley-API-Key (Volley Manager)
 
 == Changelog ==
+
+= 1.0.0 =
+* Geändert: Erste stabile Version. Das Plugin ist nicht mehr als «Private Beta» gekennzeichnet: Der Hinweis im Kopf der Einstellungsseite entfällt, ebenso die Beta-Vermerke in der Plugin-Beschreibung und im Readme. Funktional ändert sich nichts gegenüber 0.1.7.
 
 = 0.1.7 =
 * Neu: Interaktive Gruppierung für Besucher. Über den Spiellisten erscheint ein Umschalter «Chronologisch / Nach Liga / Nach Team», mit dem Besucher die Ansicht direkt auf der Seite wechseln – ohne Neuladen und ohne zusätzliche API-Aufrufe. Aktivierbar global unter Swiss Volley → Einstellungen («Interaktive Gruppierung», standardmässig aus) oder pro Shortcode mit switcher="1" bzw. switcher="0". Der Umschalter zeigt nur sinnvolle Optionen (z. B. keinen Team-Button, wenn die Liste nur ein Team enthält) und erscheint gar nicht, wenn es nichts zu gruppieren gibt. Ein per group_by gesetzter Wert dient als Startansicht. Ohne JavaScript bleibt die chronologische Liste sichtbar.

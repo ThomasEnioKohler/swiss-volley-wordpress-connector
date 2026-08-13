@@ -3,7 +3,7 @@
  * Plugin Name:       Swiss Volley Connector
  * Plugin URI:        https://www.volleypizol.org
  * Description:       Zeigt Spielpläne, Resultate und Ranglisten automatisch aus der offiziellen Swiss-Volley-API (Volley Manager) an.
- * Version:           0.1.7
+ * Version:           1.0.0
  * Requires at least: 6.2
  * Requires PHP:      8.1
  * Author:            Volley Pizol
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SVC_VERSION', '0.1.7' );
+define( 'SVC_VERSION', '1.0.0' );
 define( 'SVC_PLUGIN_FILE', __FILE__ );
 define( 'SVC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SVC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

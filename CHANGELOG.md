@@ -9,6 +9,11 @@ Diese Datei ist die gepflegte Quelle. Die Sektion `== Changelog ==` in
 `swiss-volley-connector/readme.txt` wird daraus erzeugt — dort nichts von Hand
 ändern, sondern `bin/sync-readme-changelog.sh` laufen lassen.
 
+## [1.0.0] - 2026-08-13
+
+### Geändert
+- Erste stabile Version. Das Plugin ist nicht mehr als «Private Beta» gekennzeichnet: Der Hinweis im Kopf der Einstellungsseite entfällt, ebenso die Beta-Vermerke in der Plugin-Beschreibung und im Readme. Funktional ändert sich nichts gegenüber 0.1.7.
+
 ## [0.1.7]
 
 ### Neu
