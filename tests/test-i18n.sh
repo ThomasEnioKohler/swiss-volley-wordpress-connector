@@ -60,8 +60,38 @@ test_textdomain_konsistent() {
 	fi
 }
 
+# Ein Katalog, der die POT nicht vollstaendig abdeckt, zeigt im Betrieb
+# eine gemischtsprachige Oberflaeche - das faellt oft erst Nutzern auf.
+test_katalog_vollstaendig() { # <locale>
+	local locale="$1"
+	local po="$PLUGIN/languages/volleyball-schedules-for-swiss-volley-$locale.po"
+	local mo="${po%.po}.mo"
+	local fehlend
+
+	if [ ! -f "$po" ]; then
+		fail "$locale ist vollständig übersetzt" "$po fehlt"
+		return
+	fi
+	if [ ! -f "$mo" ]; then
+		fail "$locale ist vollständig übersetzt" "$mo fehlt (msgfmt vergessen?)"
+		return
+	fi
+
+	# msgcmp meldet sowohl fehlende als auch leere Eintraege - genau die
+	# beiden Faelle, die im Betrieb eine gemischtsprachige Oberflaeche
+	# ergeben.
+	fehlend="$(msgcmp "$po" "$POT" 2>&1 || true)"
+	if [ -z "$fehlend" ]; then
+		pass "$locale ist vollständig übersetzt"
+	else
+		fail "$locale ist vollständig übersetzt" "$fehlend"
+	fi
+}
+
 test_pot_ist_ascii
 test_textdomain_konsistent
+test_katalog_vollstaendig de_CH
+test_katalog_vollstaendig de_DE
 
 printf '\n%d bestanden, %d fehlgeschlagen\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]
