@@ -108,8 +108,41 @@ test_build_erkennt_zip_ohne_hauptdatei() {
 	fi
 }
 
+# Das Build-Verzeichnis geht 1:1 nach SVN. Entwickler-Dateien darin
+# landen sonst in der oeffentlichen Installation.
+test_build_verzeichnis_ist_sauber() {
+	local dir build
+	dir="$(fixture)"
+
+	if ! bash "$dir/bin/build.sh" > "$dir/build.log" 2>&1; then
+		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
+			"$(tail -20 "$dir/build.log")"
+		return
+	fi
+
+	build="$dir/dist/build/volleyball-schedules-for-swiss-volley"
+	if [ ! -f "$build/volleyball-schedules-for-swiss-volley.php" ]; then
+		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
+			"Hauptdatei fehlt in $build"
+		return
+	fi
+	if [ -d "$build/docs" ] || [ -f "$build/README.md" ]; then
+		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
+			"docs/ oder README.md im Build-Verzeichnis"
+		return
+	fi
+	if ! ls "$build"/languages/*.mo > /dev/null 2>&1; then
+		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
+			"keine .mo-Dateien im Build-Verzeichnis"
+		return
+	fi
+
+	pass "build.sh erzeugt ein sauberes Build-Verzeichnis"
+}
+
 test_build_erfolgreich
 test_build_erkennt_zip_ohne_hauptdatei
+test_build_verzeichnis_ist_sauber
 
 printf '\n%d bestanden, %d fehlgeschlagen\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]
