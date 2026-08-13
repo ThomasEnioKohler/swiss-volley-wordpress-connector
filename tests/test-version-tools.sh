@@ -268,6 +268,61 @@ test_bump_lehnt_gleichstand_ab
 test_bump_lehnt_rueckwaerts_ab
 test_bump_lehnt_drift_ab
 
+# --- release-notes.sh ------------------------------------------------------
+
+test_notes_liefert_abschnitt() {
+	local dir ausgabe
+	dir="$(fixture)"
+	ausgabe="$(bash "$dir/bin/release-notes.sh" 0.1.7 2>/dev/null)"
+	if printf '%s' "$ausgabe" | grep -q '^### Neu$' \
+		&& printf '%s' "$ausgabe" | grep -q 'Interaktive Gruppierung' \
+		&& ! printf '%s' "$ausgabe" | grep -q '^## \['; then
+		pass "release-notes.sh liefert den Abschnitt ohne die Überschrift"
+	else
+		fail "release-notes.sh liefert den Abschnitt ohne die Überschrift" "$ausgabe"
+	fi
+}
+
+test_notes_endet_vor_naechster_version() {
+	local dir ausgabe
+	dir="$(fixture)"
+	ausgabe="$(bash "$dir/bin/release-notes.sh" 0.1.7 2>/dev/null)"
+	if printf '%s' "$ausgabe" | grep -q 'Gruppierung von Spiellisten'; then
+		fail "release-notes.sh endet vor der nächsten Version" \
+			"Inhalt von 0.1.6 ist mit ausgegeben worden"
+	else
+		pass "release-notes.sh endet vor der nächsten Version"
+	fi
+}
+
+test_notes_fehlender_abschnitt() {
+	local dir
+	dir="$(fixture)"
+	assert_exit "release-notes.sh scheitert bei fehlendem Abschnitt" 1 \
+		bash "$dir/bin/release-notes.sh" 9.9.9
+}
+
+test_notes_platzhalter() {
+	local dir
+	dir="$(fixture)"
+	bash "$dir/bin/bump-version.sh" 0.2.0 > /dev/null 2>&1
+	assert_exit "release-notes.sh scheitert bei unausgefülltem Platzhalter" 1 \
+		bash "$dir/bin/release-notes.sh" 0.2.0
+}
+
+test_notes_ohne_argument() {
+	local dir
+	dir="$(fixture)"
+	assert_exit "release-notes.sh scheitert ohne Versionsargument" 1 \
+		bash "$dir/bin/release-notes.sh"
+}
+
+test_notes_liefert_abschnitt
+test_notes_endet_vor_naechster_version
+test_notes_fehlender_abschnitt
+test_notes_platzhalter
+test_notes_ohne_argument
+
 # --- Ergebnis --------------------------------------------------------------
 
 printf '\n%d bestanden, %d fehlgeschlagen\n' "$PASS" "$FAIL"
