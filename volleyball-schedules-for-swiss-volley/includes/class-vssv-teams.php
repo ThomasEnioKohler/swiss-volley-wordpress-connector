@@ -67,14 +67,14 @@ class VSSV_Teams {
 		foreach ( $derived as $tid => $team ) {
 			$prev           = $existing[ $tid ] ?? array();
 			$merged[ $tid ] = array(
-				'team_id'   => (int) $tid,
-				'caption'   => (string) ( $team['caption'] ?? '' ),
-				'league'    => (string) ( $team['league'] ?? '' ),
-				'season'    => (string) ( $team['season'] ?? '' ),
-				'league_id' => (int) ( $team['league_id'] ?? 0 ),
-				'group_ids' => array_map( 'intval', (array) ( $team['group_ids'] ?? array() ) ),
-				'alias'     => (string) ( $prev['alias'] ?? '' ),
-				'in_club'   => array_key_exists( 'in_club', $prev ) ? (bool) $prev['in_club'] : true,
+				'team_id'      => (int) $tid,
+				'caption'      => (string) ( $team['caption'] ?? '' ),
+				'league'       => (string) ( $team['league'] ?? '' ),
+				'season'       => (string) ( $team['season'] ?? '' ),
+				'league_id'    => (int) ( $team['league_id'] ?? 0 ),
+				'group_ids'    => array_map( 'intval', (array) ( $team['group_ids'] ?? array() ) ),
+				'alias'        => (string) ( $prev['alias'] ?? '' ),
+				'in_club'      => array_key_exists( 'in_club', $prev ) ? (bool) $prev['in_club'] : true,
 
 				// Eigene, sprechende Bezeichnungen (bleiben beim Neuladen erhalten).
 				'league_label' => (string) ( $prev['league_label'] ?? '' ),

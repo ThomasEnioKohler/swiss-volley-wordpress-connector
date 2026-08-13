@@ -52,17 +52,9 @@ class VSSV_Shortcodes {
 	}
 
 	/**
-	 * Limit-Attribut absichern.
-	 *
-	 * @param mixed $value Rohwert.
-	 * @param int   $default Standard.
-	 * @return int
-	 */
-	/**
 	 * 'league'-Attribut validieren.
 	 *
-	 * @param mixed  $value   Attributwert.
-	 * @param string $default Standard ('meta' oder 'heading').
+	 * @param mixed $value Attributwert.
 	 * @return string 'meta' | 'heading' | 'none'
 	 */
 	private static function league_display( $value ): string {
@@ -128,7 +120,14 @@ class VSSV_Shortcodes {
 		return ! empty( $settings['group_switcher'] );
 	}
 
-	private static function limit( $value, int $default = 5 ): int {
+	/**
+	 * Limit-Attribut absichern.
+	 *
+	 * @param mixed $value         Rohwert.
+	 * @param int   $default_limit Standard (aktuell ungenutzt, da shortcode_atts() bereits einen Default liefert).
+	 * @return int
+	 */
+	private static function limit( $value, int $default_limit = 5 ): int {
 		$limit = (int) $value;
 		if ( $limit < 0 ) {
 			$limit = 0;

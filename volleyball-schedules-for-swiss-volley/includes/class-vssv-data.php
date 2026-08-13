@@ -141,9 +141,11 @@ class VSSV_Data {
 		return self::fetch( 'rankings' );
 	}
 
-	/* ---------------------------------------------------------------------
+	/*
+	 * ---------------------------------------------------------------------
 	 * Normalisierung
-	 * ------------------------------------------------------------------- */
+	 * -------------------------------------------------------------------
+	 */
 
 	/**
 	 * Einzelnes Roh-Spiel in die interne Struktur überführen.
@@ -298,9 +300,11 @@ class VSSV_Data {
 		return $games;
 	}
 
-	/* ---------------------------------------------------------------------
+	/*
+	 * ---------------------------------------------------------------------
 	 * Ableitungen: Verein, Teams, Saisons
-	 * ------------------------------------------------------------------- */
+	 * -------------------------------------------------------------------
+	 */
 
 	/**
 	 * Eigenen Verein aus den Spieldaten erkennen.
@@ -485,9 +489,11 @@ class VSSV_Data {
 		return $seasons;
 	}
 
-	/* ---------------------------------------------------------------------
+	/*
+	 * ---------------------------------------------------------------------
 	 * Abfragen für Shortcodes/Blöcke
-	 * ------------------------------------------------------------------- */
+	 * -------------------------------------------------------------------
+	 */
 
 	/**
 	 * Spiele eines Teams.
@@ -656,7 +662,7 @@ class VSSV_Data {
 			if ( ! isset( $group_ids[ (int) $group['groupId'] ] ) ) {
 				continue;
 			}
-			// Enthält die Gruppe das Team überhaupt? (Sicherheitsnetz bei Phasenwechseln.)
+			// Enthält die Gruppe das Team überhaupt? (Sicherheitsnetz bei Phasenwechseln).
 			$rows = self::normalize_ranking_rows( (array) $group['ranking'] );
 			if ( empty( $rows ) ) {
 				continue;

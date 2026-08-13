@@ -78,21 +78,21 @@ class VSSV_Plugin {
 	 */
 	public static function default_settings(): array {
 		return array(
-			'api_key'       => '',
-			'api_base_url'  => VSSV_API::DEFAULT_BASE_URL,
-			'club_id'       => '',
-			'club_name'     => '',
-			'season_year'   => '', // leer = alle von der API gelieferten Saisons.
-			'cache_minutes' => 30,
-			'highlight_own' => 1,
+			'api_key'        => '',
+			'api_base_url'   => VSSV_API::DEFAULT_BASE_URL,
+			'club_id'        => '',
+			'club_name'      => '',
+			'season_year'    => '', // leer = alle von der API gelieferten Saisons.
+			'cache_minutes'  => 30,
+			'highlight_own'  => 1,
 
 			// Liga-Darstellung in Spiellisten: 'heading' (Überschrift) oder 'meta' (Detailzeile).
 			'league_display' => 'heading',
 
 			// Interaktiver Gruppierungs-Umschalter für Besucher (0/1).
 			'group_switcher' => 0,
-			'debug'         => 0,
-			'custom_css'    => '',
+			'debug'          => 0,
+			'custom_css'     => '',
 		);
 	}
 

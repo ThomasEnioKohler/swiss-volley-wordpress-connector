@@ -29,9 +29,9 @@ delete_transient( 'vssv_cache_rankings' );
 
 // Multisite: pro Site aufräumen.
 if ( is_multisite() ) {
-	$site_ids = get_sites( array( 'fields' => 'ids' ) );
-	foreach ( $site_ids as $site_id ) {
-		switch_to_blog( (int) $site_id );
+	$vssv_site_ids = get_sites( array( 'fields' => 'ids' ) );
+	foreach ( $vssv_site_ids as $vssv_site_id ) {
+		switch_to_blog( (int) $vssv_site_id );
 
 		delete_option( 'vssv_settings' );
 		delete_option( 'vssv_teams' );

@@ -75,6 +75,13 @@ class VSSV_Renderer {
 		return '<span class="' . esc_attr( $classes ) . '">' . esc_html( $name ) . '</span>';
 	}
 
+	/**
+	 * Prüft, ob die angegebene Spielseite ein eigenes Team ist.
+	 *
+	 * @param array  $game Normalisiertes Spiel.
+	 * @param string $side 'home' | 'away'.
+	 * @return bool
+	 */
 	private static function is_own( array $game, string $side ): bool {
 		$settings = get_option( 'vssv_settings', array() );
 		if ( empty( $settings['highlight_own'] ) ) {
@@ -123,24 +130,17 @@ class VSSV_Renderer {
 	}
 
 	/**
-	 * Spieleliste rendern (Karten, per CSS auf Desktop tabellenartig).
-	 *
-	 * @param array  $games Normalisierte Spiele.
-	 * @param string $empty Meldung bei leerer Liste.
-	 * @return string
-	 */
-	/**
 	 * Spielliste rendern.
 	 *
-	 * @param array  $games Normalisierte Spiele.
-	 * @param string $empty Text bei leerer Liste.
-	 * @param array  $opts  Optionen:
-	 *                      'league' => 'meta'    Liga in der Meta-Zeile (Standard),
-	 *                                  'heading' Liga als Überschrift über dem Spiel,
-	 *                                  'none'    Liga nicht anzeigen.
+	 * @param array  $games         Normalisierte Spiele.
+	 * @param string $empty_message Text bei leerer Liste.
+	 * @param array  $opts          Optionen:
+	 *                              'league' => 'meta'    Liga in der Meta-Zeile (Standard),
+	 *                                          'heading' Liga als Überschrift über dem Spiel,
+	 *                                          'none'    Liga nicht anzeigen.
 	 * @return string
 	 */
-	public static function render_games( array $games, string $empty = '', array $opts = array() ): string {
+	public static function render_games( array $games, string $empty_message = '', array $opts = array() ): string {
 		$league_display = isset( $opts['league'] ) && in_array( $opts['league'], array( 'meta', 'heading', 'none' ), true )
 			? $opts['league']
 			: 'meta';
@@ -191,7 +191,7 @@ class VSSV_Renderer {
 				}
 				$html .= '</div>';
 
-				$html .= self::render_games_body( $games, $empty, $league_display, true );
+				$html .= self::render_games_body( $games, $empty_message, $league_display, true );
 				$html .= '</div>';
 				return $html;
 			}
@@ -208,8 +208,8 @@ class VSSV_Renderer {
 					$own_tid = in_array( (int) $g['home_team_id'], $own_ids, true )
 						? (int) $g['home_team_id']
 						: ( in_array( (int) $g['away_team_id'], $own_ids, true ) ? (int) $g['away_team_id'] : 0 );
-					$key   = 'team-' . $own_tid;
-					$label = $own_tid ? VSSV_Teams::display_name( $own_tid ) : __( 'More games', 'volleyball-schedules-for-swiss-volley' );
+					$key     = 'team-' . $own_tid;
+					$label   = $own_tid ? VSSV_Teams::display_name( $own_tid ) : __( 'More games', 'volleyball-schedules-for-swiss-volley' );
 				} else {
 					$label = (string) $g['league'];
 					if ( '' === $label ) {
@@ -239,7 +239,7 @@ class VSSV_Renderer {
 
 			// Bei Gruppierung nach Liga wäre die Liga-Überschrift pro Spiel
 			// redundant; ohne ausdrücklichen Wunsch wird sie ausgeblendet.
-			$inner_opts = $opts;
+			$inner_opts             = $opts;
 			$inner_opts['group_by'] = 'none';
 			if ( 'league' === $group_by && empty( $opts['league_explicit'] ) ) {
 				$inner_opts['league'] = 'none';
@@ -255,7 +255,7 @@ class VSSV_Renderer {
 			return $html . '</div>';
 		}
 
-		return self::stale_notice() . self::render_games_body( $games, $empty, $league_display );
+		return self::stale_notice() . self::render_games_body( $games, $empty_message, $league_display );
 	}
 
 	/**
@@ -276,11 +276,12 @@ class VSSV_Renderer {
 	 * Eigentliche Kartenausgabe.
 	 *
 	 * @param array  $games          Spiele.
-	 * @param string $empty          Text bei leerer Liste.
+	 * @param string $empty_message  Text bei leerer Liste.
 	 * @param string $league_display 'meta' | 'heading' | 'none'.
+	 * @param bool   $data_attrs     Daten-Attribute für den clientseitigen Umschalter ausgeben.
 	 * @return string
 	 */
-	private static function render_games_body( array $games, string $empty, string $league_display, bool $data_attrs = false ): string {
+	private static function render_games_body( array $games, string $empty_message, string $league_display, bool $data_attrs = false ): string {
 
 		/**
 		 * HTML-Tag für die Liga-Überschrift pro Spiel (Standard 'h3').
@@ -295,8 +296,8 @@ class VSSV_Renderer {
 		$html = '';
 
 		if ( empty( $games ) ) {
-			$empty = $empty ? $empty : __( 'No games are currently available.', 'volleyball-schedules-for-swiss-volley' );
-			return $html . '<p class="vssv-empty">' . esc_html( $empty ) . '</p>';
+			$empty_message = $empty_message ? $empty_message : __( 'No games are currently available.', 'volleyball-schedules-for-swiss-volley' );
+			return $html . '<p class="vssv-empty">' . esc_html( $empty_message ) . '</p>';
 		}
 
 		$html .= '<div class="vssv-games">';
@@ -328,8 +329,8 @@ class VSSV_Renderer {
 				$own_tid = in_array( (int) $g['home_team_id'], $own_ids, true )
 					? (int) $g['home_team_id']
 					: ( in_array( (int) $g['away_team_id'], $own_ids, true ) ? (int) $g['away_team_id'] : 0 );
-				$attrs  = ' data-vssv-league="' . esc_attr( (string) $g['league'] ) . '"';
-				$attrs .= ' data-vssv-team="' . esc_attr( $own_tid ? VSSV_Teams::display_name( $own_tid ) : '' ) . '"';
+				$attrs   = ' data-vssv-league="' . esc_attr( (string) $g['league'] ) . '"';
+				$attrs  .= ' data-vssv-team="' . esc_attr( $own_tid ? VSSV_Teams::display_name( $own_tid ) : '' ) . '"';
 			}
 
 			$html .= '<article class="vssv-game vssv-game-' . esc_attr( $g['status'] ) . '"' . $attrs . '>';
@@ -422,8 +423,8 @@ class VSSV_Renderer {
 					$classes .= ' vssv-own-team';
 				}
 
-				$html .= '<tr class="' . esc_attr( $classes ) . '">';
-				$html .= '<td class="vssv-col-rank">' . esc_html( (string) $row['rank'] ) . '</td>';
+				$html   .= '<tr class="' . esc_attr( $classes ) . '">';
+				$html   .= '<td class="vssv-col-rank">' . esc_html( (string) $row['rank'] ) . '</td>';
 				$row_url = VSSV_Teams::page_url( (int) $row['team_id'] );
 				if ( '' !== $row_url ) {
 					$html .= '<td class="vssv-col-team"><a class="vssv-team-link" href="' . esc_url( $row_url ) . '">' . esc_html( $row['team'] ) . '</a></td>';

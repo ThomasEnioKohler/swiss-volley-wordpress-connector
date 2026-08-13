@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ruleset name="Volleyball Schedules for Swiss Volley">
+	<description>WordPress coding standards for the plugin sources.</description>
+
+	<file>volleyball-schedules-for-swiss-volley</file>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<rule ref="WordPress"/>
+
+	<config name="minimum_supported_wp_version" value="6.2"/>
+	<config name="testVersion" value="8.1-"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="volleyball-schedules-for-swiss-volley"/>
+		</properties>
+	</rule>
+</ruleset>
