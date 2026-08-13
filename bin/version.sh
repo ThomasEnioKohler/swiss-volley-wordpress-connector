@@ -42,6 +42,15 @@ v_konstante="$(genau_eine "$(sed -nE "s/^define\( 'SVC_VERSION', '([0-9]+\.[0-9]
 v_stable="$(genau_eine "$(sed -nE 's/^Stable tag: +([0-9]+\.[0-9]+\.[0-9]+) *$/\1/p' "$README")")"
 v_changelog="$(sed -nE 's/^## \[([0-9]+\.[0-9]+\.[0-9]+)\].*$/\1/p' "$CHANGELOG" | head -1)"
 
+# Doppelte Versionsabschnitte fallen sonst nicht auf: release-notes.sh
+# nähme nur den ersten, und der Generator schriebe zwei identische
+# "= X.Y.Z ="-Blöcke in readme.txt.
+doppelt="$(sed -nE 's/^## \[([0-9]+\.[0-9]+\.[0-9]+)\].*$/\1/p' "$CHANGELOG" | sort | uniq -d)"
+if [ -n "$doppelt" ]; then
+	echo "Fehler: CHANGELOG.md enthält mehrfach denselben Versionsabschnitt: $(printf '%s' "$doppelt" | tr '\n' ' ')" >&2
+	exit 1
+fi
+
 tabelle() {
 	printf '  %-16s %-52s %s\n' "Quelle" "Datei" "Wert" >&2
 	printf '  %-16s %-52s %s\n' "Plugin-Header" "swiss-volley-connector/swiss-volley-connector.php" "${v_header:-(nicht gefunden)}" >&2

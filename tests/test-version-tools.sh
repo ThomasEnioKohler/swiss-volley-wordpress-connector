@@ -179,6 +179,17 @@ test_version_expect_weicht_ab() {
 		bash "$dir/bin/version.sh" --expect 0.2.0
 }
 
+test_version_doppelter_changelog_abschnitt() {
+	local dir
+	dir="$(fixture)"
+	# Zweiten Abschnitt mit derselben Version anlegen.
+	awk '/^## \[0\.1\.6\]/ && !g { print "## [0.1.7]"; print ""; print "- Doppelt"; print ""; g = 1 } { print }' \
+		"$dir/CHANGELOG.md" > "$dir/CHANGELOG.md.tmp"
+	mv "$dir/CHANGELOG.md.tmp" "$dir/CHANGELOG.md"
+	assert_exit "version.sh erkennt einen doppelten Versionsabschnitt" 1 \
+		bash "$dir/bin/version.sh"
+}
+
 test_version_gleichstand
 test_version_drift_header
 test_version_drift_konstante
@@ -186,6 +197,7 @@ test_version_drift_stable_tag
 test_version_drift_changelog
 test_version_expect_passt
 test_version_expect_weicht_ab
+test_version_doppelter_changelog_abschnitt
 
 # --- Ergebnis --------------------------------------------------------------
 
