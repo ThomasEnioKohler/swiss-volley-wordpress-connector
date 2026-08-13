@@ -199,6 +199,75 @@ test_version_expect_passt
 test_version_expect_weicht_ab
 test_version_doppelter_changelog_abschnitt
 
+# --- bump-version.sh -------------------------------------------------------
+
+test_bump_schreibt_alle_stellen() {
+	local dir
+	dir="$(fixture)"
+	bash "$dir/bin/bump-version.sh" 0.2.0 > /dev/null 2>&1
+	assert_stdout "bump-version.sh hebt alle vier Quellen auf 0.2.0" "0.2.0" \
+		bash "$dir/bin/version.sh"
+}
+
+test_bump_legt_changelog_abschnitt_an() {
+	local dir
+	dir="$(fixture)"
+	bash "$dir/bin/bump-version.sh" 0.2.0 > /dev/null 2>&1
+	if grep -qE '^## \[0\.2\.0\] - [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$' "$dir/CHANGELOG.md" \
+		&& grep -qF -- '- TODO: Änderungen beschreiben' "$dir/CHANGELOG.md"; then
+		pass "bump-version.sh legt einen datierten CHANGELOG-Abschnitt mit Platzhalter an"
+	else
+		fail "bump-version.sh legt einen datierten CHANGELOG-Abschnitt mit Platzhalter an" \
+			"$(head -12 "$dir/CHANGELOG.md")"
+	fi
+}
+
+test_bump_haelt_readme_synchron() {
+	local dir
+	dir="$(fixture)"
+	bash "$dir/bin/bump-version.sh" 0.2.0 > /dev/null 2>&1
+	assert_exit "bump-version.sh hinterlässt readme.txt synchron" 0 \
+		bash "$dir/bin/sync-readme-changelog.sh" --check
+}
+
+test_bump_lehnt_ungueltiges_format_ab() {
+	local dir
+	dir="$(fixture)"
+	assert_exit "bump-version.sh lehnt '0.2' ab" 1 \
+		bash "$dir/bin/bump-version.sh" 0.2
+}
+
+test_bump_lehnt_gleichstand_ab() {
+	local dir
+	dir="$(fixture)"
+	assert_exit "bump-version.sh lehnt die aktuelle Version ab" 1 \
+		bash "$dir/bin/bump-version.sh" 0.1.7
+}
+
+test_bump_lehnt_rueckwaerts_ab() {
+	local dir
+	dir="$(fixture)"
+	assert_exit "bump-version.sh lehnt einen Rückwärtssprung ab" 1 \
+		bash "$dir/bin/bump-version.sh" 0.1.6
+}
+
+test_bump_lehnt_drift_ab() {
+	local dir
+	dir="$(fixture)"
+	verbiege "$dir/swiss-volley-connector/readme.txt" \
+		'^Stable tag: 0\.1\.7' 'Stable tag: 0.9.9'
+	assert_exit "bump-version.sh verweigert den Bump auf driftendem Stand" 1 \
+		bash "$dir/bin/bump-version.sh" 0.2.0
+}
+
+test_bump_schreibt_alle_stellen
+test_bump_legt_changelog_abschnitt_an
+test_bump_haelt_readme_synchron
+test_bump_lehnt_ungueltiges_format_ab
+test_bump_lehnt_gleichstand_ab
+test_bump_lehnt_rueckwaerts_ab
+test_bump_lehnt_drift_ab
+
 # --- Ergebnis --------------------------------------------------------------
 
 printf '\n%d bestanden, %d fehlgeschlagen\n' "$PASS" "$FAIL"
