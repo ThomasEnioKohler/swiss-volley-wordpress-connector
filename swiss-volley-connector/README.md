@@ -1,6 +1,6 @@
 # Swiss Volley Connector
 
-WordPress-Plugin zur automatischen Darstellung von Spielplänen, Resultaten und Ranglisten aus der offiziellen Swiss-Volley-API (Volley Manager). Entwickelt für [www.volleypizol.org](https://www.volleypizol.org), Version 0.1.0 (Private Beta).
+WordPress-Plugin zur automatischen Darstellung von Spielplänen, Resultaten und Ranglisten aus der offiziellen Swiss-Volley-API (Volley Manager). Entwickelt für [www.volleypizol.org](https://www.volleypizol.org).
 
 ## Architektur
 

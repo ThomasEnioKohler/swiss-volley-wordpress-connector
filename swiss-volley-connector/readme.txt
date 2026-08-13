@@ -8,7 +8,7 @@ Stable tag: 0.1.7
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Zeigt Spielpläne, Resultate und Ranglisten automatisch aus der offiziellen Swiss-Volley-API an. Private Beta für www.volleypizol.org.
+Zeigt Spielpläne, Resultate und Ranglisten automatisch aus der offiziellen Swiss-Volley-API an. Entwickelt für www.volleypizol.org.
 
 == Description ==
 
@@ -21,7 +21,7 @@ Swiss Volley Connector verbindet WordPress mit der offiziellen Swiss-Volley-API 
 
 Ändert sich ein Spieltermin oder wird ein Resultat bei Swiss Volley eingetragen, erscheint die Änderung automatisch – ohne manuelle Pflege. Die API wird gecacht (WordPress Transients) und ausschliesslich serverseitig aufgerufen: Der API-Key erscheint nie im Frontend, in JavaScript oder in Logs; Besucher senden keine Requests an Swiss Volley (Datenschutz).
 
-**Hinweis Private Beta:** Version 0.1.0 ist für den privaten Einsatz gedacht und nicht im WordPress-Plugin-Verzeichnis gelistet.
+**Hinweis zur Verteilung:** Das Plugin ist nicht im WordPress-Plugin-Verzeichnis gelistet. Installation und Aktualisierung erfolgen über das ZIP aus dem jeweiligen Release.
 
 == Installation ==
 

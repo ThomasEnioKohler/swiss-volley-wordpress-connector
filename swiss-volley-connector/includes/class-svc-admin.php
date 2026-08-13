@@ -198,7 +198,7 @@ class SVC_Admin {
 		}
 
 		echo '<div class="wrap svc-admin">';
-		echo '<h1>' . esc_html__( 'Swiss Volley Connector', 'swiss-volley-connector' ) . ' <span class="svc-beta">' . esc_html__( 'Private Beta 0.1.0', 'swiss-volley-connector' ) . '</span></h1>';
+		echo '<h1>' . esc_html__( 'Swiss Volley Connector', 'swiss-volley-connector' ) . '</h1>';
 
 		echo '<nav class="nav-tab-wrapper">';
 		foreach ( $tabs as $slug => $label ) {

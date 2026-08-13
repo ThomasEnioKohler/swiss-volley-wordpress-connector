@@ -2,20 +2,6 @@
  * Swiss Volley Connector – Admin-Styles.
  */
 
-.svc-admin .svc-beta {
-	display: inline-block;
-	margin-left: 0.5em;
-	padding: 0.15em 0.6em;
-	border-radius: 999px;
-	background: #dcdcde;
-	color: #3c434a;
-	font-size: 0.5em;
-	font-weight: 600;
-	vertical-align: middle;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
-}
-
 .svc-inline-result {
 	display: inline-block;
 	margin-left: 0.75em;
