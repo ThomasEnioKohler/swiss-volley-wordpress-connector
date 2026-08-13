@@ -40,9 +40,14 @@ auf, die auch CI ausführt.
 ## Änderung am Changelog
 
 `CHANGELOG.md` im Repo-Root wird die einzige gepflegte Changelog-Quelle
-(Keep-a-Changelog-Format, volle Historie). Die Sektion `== Changelog ==` in
-`readme.txt` wird daraus generiert und enthält die letzten drei Versionen plus
-einen Link auf die vollständige Historie.
+(Keep-a-Changelog-Format). Die Sektion `== Changelog ==` in `readme.txt` wird
+daraus generiert und enthält die **vollständige** Historie — jede Version, die
+in `CHANGELOG.md` steht.
+
+Keine Kappung auf die letzten N Versionen: Nutzer sehen die Historie in der
+WordPress-Oberfläche, und ein Verweis auf das Repo hilft ihnen nicht, solange es
+privat ist. Beide Dateien enthalten damit dieselben Einträge in
+unterschiedlicher Notation — kein Drift, weil `readme.txt` generiert wird.
 
 Doppelte Pflege entsteht dadurch nicht: `readme.txt` wird nicht mehr von Hand
 editiert, sondern erzeugt und per `--check` gegen die Quelle verglichen.
@@ -75,9 +80,11 @@ Import-Commit; echte Release-Daten sind nicht rekonstruierbar, und erfundene
 Daten wären schlechter als gar keine. Ab der ersten mit diesem Werkzeug
 erzeugten Version steht `## [X.Y.Z] - YYYY-MM-DD`.
 
-Die Migration ist überprüfbar: Nach dem Umbau muss der Generator die drei
-obersten Abschnitte der `readme.txt` byteweise so wiederherstellen, wie sie
-heute dort stehen. Weicht ein Zeichen ab, war die Migration nicht wortgleich.
+Die Migration ist vollständig überprüfbar: Nach dem Umbau muss der Generator die
+Sektion `== Changelog ==` byteweise so wiederherstellen, wie sie heute in
+`readme.txt` steht — alle acht Versionen, nicht nur die obersten. Weicht ein
+Zeichen ab, war die Migration nicht wortgleich. Das ist der schärfste Test des
+Vorhabens: Er beweist, dass die Umstellung für Nutzer folgenlos ist.
 
 `== Changelog ==` ist die letzte Sektion der `readme.txt`; der Generator ersetzt
 alles von dieser Zeile bis zum Dateiende.
@@ -103,13 +110,9 @@ Alle Extraktionen nutzen `sed -E` (funktioniert mit BSD- und GNU-sed).
 
 ### `bin/sync-readme-changelog.sh [--check]`
 
-Erzeugt die Sektion `== Changelog ==` in `readme.txt` aus `CHANGELOG.md`: die
-obersten drei Versionen nach der Abbildungstabelle oben, danach eine Leerzeile
-und die Zeile
-
-```
-Vollständige Historie: https://github.com/ThomasEnioKohler/swiss-volley-wordpress-connector/blob/main/CHANGELOG.md
-```
+Erzeugt die Sektion `== Changelog ==` in `readme.txt` aus `CHANGELOG.md`: alle
+Versionen in der Reihenfolge der Quelle (neueste zuerst), nach der
+Abbildungstabelle oben. Keine Kürzung, kein Zusatztext.
 
 Mit `--check` wird nichts geschrieben: Das Skript erzeugt die Sektion im
 Speicher und vergleicht sie mit der Datei. Unterschied → Diff auf stderr,
@@ -215,8 +218,9 @@ Abgedeckte Fälle:
 * `version.sh --expect` mit passendem und mit abweichendem Wert
 * `sync --check` auf synchronem Stand: Exit 0
 * `sync --check` nach Handedit an `readme.txt`: Exit 1
-* `sync` erzeugt aus der migrierten `CHANGELOG.md` die drei obersten Abschnitte
-  byteweise so, wie sie vor der Migration in `readme.txt` standen
+* `sync` erzeugt aus der migrierten `CHANGELOG.md` die vollständige Sektion
+  `== Changelog ==` byteweise so, wie sie vor der Migration in `readme.txt`
+  stand (alle acht Versionen)
 * `release-notes.sh` mit vorhandenem Abschnitt: korrekter Ausschnitt
 * `release-notes.sh` mit fehlendem Abschnitt und mit Platzhalter: Exit 1
 * `bump-version.sh` schreibt alle Stellen und legt den CHANGELOG-Abschnitt an
