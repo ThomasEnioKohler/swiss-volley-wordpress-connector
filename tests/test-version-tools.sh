@@ -131,7 +131,7 @@ test_sync_meldet_unverstandene_zeile() {
 
 	# Fortsetzungszeile eines umbrochenen Aufzählungspunkts einfügen — sie
 	# beginnt weder mit "### " noch mit "- " und darf nicht wortlos wegfallen.
-	awk '{ print } /Interaktive Gruppierung/ && !getroffen {
+	awk '{ print } /Swiss Volley API/ && !getroffen {
 		print "  (Fortsetzungszeile ohne Bindestrich)"; getroffen = 1
 	}' "$dir/CHANGELOG.md" > "$dir/CHANGELOG.md.tmp"
 	mv "$dir/CHANGELOG.md.tmp" "$dir/CHANGELOG.md"
@@ -346,9 +346,9 @@ test_bump_lehnt_drift_ab
 test_notes_liefert_abschnitt() {
 	local dir ausgabe
 	dir="$(fixture)"
-	ausgabe="$(bash "$dir/bin/release-notes.sh" 0.1.7 2>/dev/null)"
-	if printf '%s' "$ausgabe" | grep -q '^### Neu$' \
-		&& printf '%s' "$ausgabe" | grep -q 'Interaktive Gruppierung' \
+	ausgabe="$(bash "$dir/bin/release-notes.sh" 1.0.0 2>/dev/null)"
+	if printf '%s' "$ausgabe" | grep -q 'Swiss Volley API' \
+		&& printf '%s' "$ausgabe" | grep -q 'Automatic club and team detection' \
 		&& ! printf '%s' "$ausgabe" | grep -q '^## \['; then
 		pass "release-notes.sh liefert den Abschnitt ohne die Überschrift"
 	else
@@ -359,12 +359,14 @@ test_notes_liefert_abschnitt() {
 test_notes_endet_vor_naechster_version() {
 	local dir ausgabe
 	dir="$(fixture)"
-	ausgabe="$(bash "$dir/bin/release-notes.sh" 0.1.7 2>/dev/null)"
-	if printf '%s' "$ausgabe" | grep -q 'Gruppierung von Spiellisten'; then
-		fail "release-notes.sh endet vor der nächsten Version" \
-			"Inhalt von 0.1.6 ist mit ausgegeben worden"
-	else
+	# Append a synthetic older section below 1.0.0 to test that extraction stops at next version
+	printf '\n## [0.9.0] - 2026-01-01\n\n- Older entry that must not appear in 1.0.0 notes.\n' >> "$dir/CHANGELOG.md"
+	ausgabe="$(bash "$dir/bin/release-notes.sh" 1.0.0 2>/dev/null)"
+	if printf '%s' "$ausgabe" | grep -q 'Swiss Volley API' \
+		&& ! printf '%s' "$ausgabe" | grep -q 'Older entry that must not appear'; then
 		pass "release-notes.sh endet vor der nächsten Version"
+	else
+		fail "release-notes.sh endet vor der nächsten Version" "$ausgabe"
 	fi
 }
 
