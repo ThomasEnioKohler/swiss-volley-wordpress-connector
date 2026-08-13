@@ -32,20 +32,51 @@ php -d error_reporting=E_ALL tests/harness.php
 
 ## Release-Workflow
 
-1. Version an drei Stellen anheben: Plugin-Header und `SVC_VERSION` in `swiss-volley-connector/swiss-volley-connector.php`, `Stable tag` in `swiss-volley-connector/readme.txt` (plus Changelog-Eintrag).
-2. Committen, dann Tag pushen:
+Der bequeme Weg ist der Claude-Command `/release`: Er fragt nach Bump-Art und
+Changelog-Einträgen, schreibt alle Stellen, baut, committet, taggt und fragt vor
+dem Push noch einmal nach.
+
+Von Hand geht es genauso:
 
 ```bash
-git commit -am "Version 0.2.0"
+bin/bump-version.sh 0.2.0          # hebt alle vier Versionsstellen an
+$EDITOR CHANGELOG.md               # Platzhalter durch die Änderungen ersetzen
+bin/sync-readme-changelog.sh       # readme.txt neu erzeugen
+bin/build.sh                       # Konsistenz, Lint, Tests, POT, ZIP
+git commit -am "chore(release): 0.2.0"
 git tag v0.2.0
 git push && git push --tags
 ```
 
-GitHub Actions baut daraufhin das ZIP und veröffentlicht es automatisch als Release-Anhang.
+GitHub Actions prüft den Tag gegen die Dateien, baut das ZIP und veröffentlicht
+es mit dem Changelog-Abschnitt als Release-Beschreibung. Versionen unter 1.0.0
+werden als Pre-Release markiert.
+
+### Wo die Version steht
+
+An vier Stellen, die `bin/version.sh` gegeneinander prüft:
+
+| Stelle | Datei |
+| --- | --- |
+| `Version:` im Plugin-Header | `swiss-volley-connector/swiss-volley-connector.php` |
+| `SVC_VERSION` | dieselbe Datei |
+| `Stable tag:` | `swiss-volley-connector/readme.txt` |
+| oberste `## [X.Y.Z]` | `CHANGELOG.md` |
+
+Weicht eine ab, brechen `bin/build.sh` und der Release-Workflow ab.
+
+### Changelog
+
+`CHANGELOG.md` im Repo-Root ist die gepflegte Quelle. Die Sektion
+`== Changelog ==` in `swiss-volley-connector/readme.txt` wird daraus erzeugt und
+enthält die vollständige Historie — dort nichts von Hand ändern, sondern
+`bin/sync-readme-changelog.sh` laufen lassen. `bin/build.sh` prüft das mit
+`--check`.
 
 ## Dokumentation
 
 * `swiss-volley-connector/readme.txt` – Installation, Konfiguration, FAQ, Changelog
+* `CHANGELOG.md` – gepflegte Changelog-Historie (Quelle für `readme.txt`)
 * `swiss-volley-connector/docs/API.md` – verwendete Swiss-Volley-Endpunkte, Mapping, Einschränkungen
 * `swiss-volley-connector/docs/SHORTCODES.md` – alle Shortcodes und Attribute
 
