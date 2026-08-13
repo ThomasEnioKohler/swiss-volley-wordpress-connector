@@ -114,6 +114,79 @@ test_sync_roundtrip
 test_sync_check_ok
 test_sync_check_erkennt_handedit
 
+# --- version.sh ------------------------------------------------------------
+
+# Ersetzt in einer Datei der Arbeitskopie einen String durch einen anderen.
+verbiege() { # <datei> <suchen> <ersetzen>
+	local file="$1" suchen="$2" ersetzen="$3"
+	sed -E "s/$suchen/$ersetzen/" "$file" > "$file.tmp"
+	mv "$file.tmp" "$file"
+}
+
+test_version_gleichstand() {
+	local dir
+	dir="$(fixture)"
+	assert_stdout "version.sh druckt die Version bei Gleichstand" "0.1.7" \
+		bash "$dir/bin/version.sh"
+}
+
+test_version_drift_header() {
+	local dir
+	dir="$(fixture)"
+	verbiege "$dir/swiss-volley-connector/swiss-volley-connector.php" \
+		'^ \* Version: +0\.1\.7' ' * Version:           0.9.9'
+	assert_exit "version.sh erkennt Drift im Plugin-Header" 1 \
+		bash "$dir/bin/version.sh"
+}
+
+test_version_drift_konstante() {
+	local dir
+	dir="$(fixture)"
+	verbiege "$dir/swiss-volley-connector/swiss-volley-connector.php" \
+		"SVC_VERSION', '0\.1\.7'" "SVC_VERSION', '0.9.9'"
+	assert_exit "version.sh erkennt Drift bei SVC_VERSION" 1 \
+		bash "$dir/bin/version.sh"
+}
+
+test_version_drift_stable_tag() {
+	local dir
+	dir="$(fixture)"
+	verbiege "$dir/swiss-volley-connector/readme.txt" \
+		'^Stable tag: 0\.1\.7' 'Stable tag: 0.9.9'
+	assert_exit "version.sh erkennt Drift bei Stable tag" 1 \
+		bash "$dir/bin/version.sh"
+}
+
+test_version_drift_changelog() {
+	local dir
+	dir="$(fixture)"
+	verbiege "$dir/CHANGELOG.md" '^## \[0\.1\.7\]' '## [0.9.9]'
+	assert_exit "version.sh erkennt Drift in CHANGELOG.md" 1 \
+		bash "$dir/bin/version.sh"
+}
+
+test_version_expect_passt() {
+	local dir
+	dir="$(fixture)"
+	assert_exit "version.sh --expect akzeptiert die passende Version" 0 \
+		bash "$dir/bin/version.sh" --expect 0.1.7
+}
+
+test_version_expect_weicht_ab() {
+	local dir
+	dir="$(fixture)"
+	assert_exit "version.sh --expect lehnt eine abweichende Version ab" 1 \
+		bash "$dir/bin/version.sh" --expect 0.2.0
+}
+
+test_version_gleichstand
+test_version_drift_header
+test_version_drift_konstante
+test_version_drift_stable_tag
+test_version_drift_changelog
+test_version_expect_passt
+test_version_expect_weicht_ab
+
 # --- Ergebnis --------------------------------------------------------------
 
 printf '\n%d bestanden, %d fehlgeschlagen\n' "$PASS" "$FAIL"
