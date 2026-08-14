@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f7a78"/>
+      <stop offset="100%" stop-color="#123a52"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background: rounded square, sporty teal-to-navy, no flag colours -->
+  <rect x="6" y="6" width="244" height="244" rx="46" fill="url(#bg)"/>
+
+  <!-- Ball -->
+  <circle cx="128" cy="128" r="97" fill="#12384a"/>
+  <circle cx="128" cy="128" r="92" fill="#f6f8f6"/>
+
+  <!-- Pinwheel seam, three curved arms meeting at centre (classic volleyball panel layout) -->
+  <g stroke="#12384a" stroke-width="19" stroke-linecap="round" fill="none">
+    <path d="M128,128 Q153,85 128,33"/>
+    <path d="M128,128 Q78,128 45.7,175.5"/>
+    <path d="M128,128 Q153,171.3 210.3,175.5"/>
+  </g>
+
+  <!-- Hub dot: makes the three-arm join read as a deliberate ball seam, not a crack -->
+  <circle cx="128" cy="128" r="11" fill="#12384a"/>
+</svg>

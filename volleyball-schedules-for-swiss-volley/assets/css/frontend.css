@@ -1,0 +1,342 @@
+/**
+ * Volleyball Schedules for Swiss Volley – Frontend-Styles.
+ *
+ * Bewusst zurückhaltend und theme-neutral:
+ *  - Farben leiten sich von currentColor bzw. CSS-Variablen ab.
+ *  - Keine !important-Regeln.
+ *  - Anpassung über die Variablen unten oder das Feld «Eigenes CSS».
+ */
+
+.vssv-games,
+.vssv-ranking-wrap,
+.vssv-team-view {
+	/* Fallbacks für Browser ohne color-mix() */
+	--vssv-border: rgba(128, 128, 128, 0.35);
+	--vssv-muted: rgba(128, 128, 128, 0.9);
+	--vssv-soft-bg: rgba(128, 128, 128, 0.08);
+	--vssv-accent: currentColor;
+	--vssv-gap: 0.75rem;
+}
+
+@supports (color: color-mix(in srgb, red 50%, blue)) {
+	.vssv-games,
+	.vssv-ranking-wrap,
+	.vssv-team-view {
+		--vssv-border: color-mix(in srgb, currentColor 16%, transparent);
+		--vssv-muted: color-mix(in srgb, currentColor 62%, transparent);
+		--vssv-soft-bg: color-mix(in srgb, currentColor 4%, transparent);
+	}
+}
+
+/* ------------------------------------------------------------------ *
+ * Hinweise / Leerzustände
+ * ------------------------------------------------------------------ */
+
+.vssv-notice,
+.vssv-empty {
+	margin: 0.5em 0 1em;
+	font-size: 0.9375em;
+}
+
+.vssv-notice-stale,
+.vssv-notice-error {
+	padding: 0.5em 0.75em;
+	border-inline-start: 3px solid var(--vssv-border, currentColor);
+	background: var(--vssv-soft-bg, transparent);
+}
+
+.vssv-notice-debug {
+	font-family: monospace;
+	font-size: 0.8125em;
+	opacity: 0.8;
+}
+
+/* ------------------------------------------------------------------ *
+ * Spiele: mobile Karten, ab 720 px tabellenartige Zeilen
+ * ------------------------------------------------------------------ */
+
+.vssv-games {
+	display: flex;
+	flex-direction: column;
+	gap: var(--vssv-gap);
+	margin: 0 0 1.5em;
+}
+
+.vssv-game {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0.375rem;
+	padding: 0.875rem 1rem;
+	border: 1px solid var(--vssv-border);
+	border-radius: 0.5rem;
+}
+
+.vssv-game-league {
+	margin: 0;
+	font-size: 0.75em;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--vssv-muted);
+}
+
+.vssv-when {
+	display: flex;
+	gap: 0.5rem;
+	font-size: 0.875em;
+	color: var(--vssv-muted);
+}
+
+.vssv-date::after {
+	content: "·";
+	margin-inline-start: 0.5rem;
+	opacity: 0.6;
+}
+
+.vssv-time:empty,
+.vssv-date:only-child::after {
+	display: none;
+}
+
+.vssv-matchup {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.375rem 0.5rem;
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.vssv-vs {
+	font-weight: 400;
+	font-size: 0.8125em;
+	color: var(--vssv-muted);
+}
+
+.vssv-own-team {
+	text-decoration-line: underline;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 0.25em;
+	text-decoration-color: var(--vssv-accent);
+}
+
+.vssv-result {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.25rem 0.75rem;
+}
+
+.vssv-result-sets {
+	font-variant-numeric: tabular-nums;
+	font-weight: 700;
+	font-size: 1.0625em;
+}
+
+.vssv-result-detail {
+	font-variant-numeric: tabular-nums;
+	font-size: 0.875em;
+	color: var(--vssv-muted);
+}
+
+.vssv-result-pending {
+	color: var(--vssv-muted);
+}
+
+.vssv-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 1rem;
+	font-size: 0.875em;
+	color: var(--vssv-muted);
+}
+
+/* Tabellenartige Darstellung auf breiten Viewports */
+@media (min-width: 720px) {
+	.vssv-game {
+		grid-template-columns: 11rem minmax(0, 1fr) auto;
+		grid-template-areas:
+			"league league league"
+			"when matchup result"
+			"when meta result";
+		align-items: center;
+		column-gap: 1.25rem;
+	}
+
+	.vssv-game-league {
+		grid-area: league;
+		margin-bottom: 0.25rem;
+	}
+
+	.vssv-when {
+		grid-area: when;
+		flex-direction: column;
+		gap: 0.125rem;
+	}
+
+	.vssv-date::after {
+		display: none;
+	}
+
+	.vssv-matchup {
+		grid-area: matchup;
+	}
+
+	.vssv-meta {
+		grid-area: meta;
+	}
+
+	.vssv-result {
+		grid-area: result;
+		flex-direction: column;
+		align-items: flex-end;
+		text-align: end;
+		gap: 0.125rem;
+		min-width: 8rem;
+	}
+}
+
+/* ------------------------------------------------------------------ *
+ * Rangliste
+ * ------------------------------------------------------------------ */
+
+.vssv-ranking-wrap {
+	margin: 0 0 1.5em;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.vssv-ranking {
+	width: 100%;
+	border-collapse: collapse;
+	font-variant-numeric: tabular-nums;
+}
+
+.vssv-ranking th,
+.vssv-ranking td {
+	padding: 0.5rem 0.625rem;
+	border-bottom: 1px solid var(--vssv-border);
+	text-align: start;
+	white-space: nowrap;
+}
+
+.vssv-ranking .vssv-col-num {
+	text-align: end;
+}
+
+.vssv-ranking thead th {
+	font-size: 0.8125em;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--vssv-muted);
+	border-bottom-width: 2px;
+}
+
+.vssv-ranking .vssv-col-team {
+	width: 100%;
+	white-space: normal;
+}
+
+.vssv-ranking .vssv-col-points {
+	font-weight: 700;
+}
+
+.vssv-ranking tr.vssv-own-team td {
+	background: var(--vssv-soft-bg);
+	text-decoration: none;
+}
+
+.vssv-ranking tr.vssv-own-team .vssv-col-team {
+	font-weight: 700;
+}
+
+@media (max-width: 540px) {
+	.vssv-ranking .vssv-col-sets {
+		display: none;
+	}
+}
+
+/* ------------------------------------------------------------------ *
+ * Kombinierte Teamansicht
+ * ------------------------------------------------------------------ */
+
+.vssv-team-view .vssv-heading {
+	margin: 1.5em 0 0.5em;
+}
+
+.vssv-team-view .vssv-heading:first-child {
+	margin-top: 0;
+}
+
+/* Verlinkte Teamnamen: unauffällig, Farbe vom Theme */
+a.vssv-team-link {
+	color: inherit;
+}
+
+a.vssv-team-link:hover,
+a.vssv-team-link:focus {
+	text-decoration-line: underline;
+}
+
+/* ------------------------------------------------------------------ *
+ * Gruppierte Spiellisten
+ * ------------------------------------------------------------------ */
+
+.vssv-game-groups {
+	margin: 0 0 1.5em;
+}
+
+.vssv-game-group + .vssv-game-group {
+	margin-top: 1.5rem;
+}
+
+.vssv-group-heading {
+	margin: 0 0 0.625rem;
+	font-size: 1em;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.vssv-game-group .vssv-games {
+	margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------------ *
+ * Interaktiver Gruppierungs-Umschalter
+ * ------------------------------------------------------------------ */
+
+.vssv-switcher {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.375rem;
+	margin: 0 0 0.875rem;
+}
+
+.vssv-switch {
+	padding: 0.3em 0.9em;
+	border: 1px solid var(--vssv-border, rgba(128, 128, 128, 0.35));
+	border-radius: 999px;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: 0.8125em;
+	cursor: pointer;
+}
+
+.vssv-switch:hover,
+.vssv-switch:focus-visible {
+	background: var(--vssv-soft-bg, rgba(128, 128, 128, 0.08));
+}
+
+.vssv-switch.vssv-active {
+	background: var(--vssv-soft-bg, rgba(128, 128, 128, 0.08));
+	border-color: currentColor;
+	font-weight: 700;
+}
+
+/* Bei Gruppierung nach Liga die Liga pro Karte ausblenden (nicht doppelt) */
+.vssv-grouped-league .vssv-game-league,
+.vssv-grouped-league .vssv-league {
+	display: none;
+}

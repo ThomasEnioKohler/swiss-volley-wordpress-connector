@@ -26,8 +26,12 @@ fail() {
 }
 
 # Legt eine vollständige Arbeitskopie des Plugin-Baums an, wie sie
-# bin/build.sh zum Bauen braucht (bin/, tests/harness.php, das komplette
-# Plugin-Verzeichnis inkl. languages/, docs/, README.md).
+# bin/build.sh zum Bauen braucht (bin/, tests/harness.php, tests/test-i18n.sh,
+# das komplette Plugin-Verzeichnis inkl. languages/, docs/, README.md).
+#
+# tests/test-i18n.sh muss mitkopiert werden: bin/build.sh ruft es seit der
+# i18n-Gate-Anbindung selbst auf (Schritt 4/9), sonst schlaegt der Build in
+# dieser Fixture fehl, obwohl er ausserhalb davon funktioniert.
 fixture() {
 	local dir
 	dir="$(mktemp -d)"
@@ -37,7 +41,8 @@ fixture() {
 	cp "$ROOT"/bin/*.py "$dir/bin/"
 	cp "$ROOT/CHANGELOG.md" "$dir/CHANGELOG.md"
 	cp "$ROOT/tests/harness.php" "$dir/tests/harness.php"
-	cp -R "$ROOT/swiss-volley-connector" "$dir/swiss-volley-connector"
+	cp "$ROOT/tests/test-i18n.sh" "$dir/tests/test-i18n.sh"
+	cp -R "$ROOT/volleyball-schedules-for-swiss-volley" "$dir/volleyball-schedules-for-swiss-volley"
 	printf '%s' "$dir"
 }
 
@@ -60,7 +65,7 @@ test_build_erfolgreich() {
 	fi
 
 	version="$(bash "$dir/bin/version.sh")"
-	zip="$dir/dist/swiss-volley-connector-$version.zip"
+	zip="$dir/dist/volleyball-schedules-for-swiss-volley-$version.zip"
 	if [ -f "$zip" ]; then
 		pass "build.sh läuft mit Exit 0 durch und erzeugt das ZIP"
 	else
@@ -82,7 +87,7 @@ test_build_erkennt_zip_ohne_hauptdatei() {
 	# Zeilennummer des zip-Aufrufs ermitteln, statt die Zeile per awk/regex
 	# nachzubauen — vermeidet Unterschiede in der Escape-Behandlung von
 	# "-v"-Zuweisungen zwischen awk-Implementationen (BSD/GNU).
-	lineno="$(grep -n -F -- 'zip -rq "$ZIP" swiss-volley-connector' "$dir/bin/build.sh" | head -1 | cut -d: -f1)"
+	lineno="$(grep -n -F -- 'zip -rq "$ZIP" volleyball-schedules-for-swiss-volley' "$dir/bin/build.sh" | head -1 | cut -d: -f1)"
 	if [ -z "$lineno" ]; then
 		fail "build.sh erkennt ein ZIP ohne die Hauptdatei" \
 			"Zeile mit dem zip-Aufruf in build.sh nicht gefunden"
@@ -92,7 +97,7 @@ test_build_erkennt_zip_ohne_hauptdatei() {
 	# Zusätzliches -x direkt nach dieser Zeile einfügen ($'...' liefert den
 	# literalen Tab und Backslash ohne weitere Interpretation durch ein
 	# externes Werkzeug).
-	insert_line=$'\t-x \'swiss-volley-connector/swiss-volley-connector.php\' \\'
+	insert_line=$'\t-x \'volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php\' \\'
 	{
 		head -n "$lineno" "$dir/bin/build.sh"
 		printf '%s\n' "$insert_line"
@@ -108,8 +113,59 @@ test_build_erkennt_zip_ohne_hauptdatei() {
 	fi
 }
 
+# Das Build-Verzeichnis geht 1:1 nach SVN. Entwickler-Dateien darin
+# landen sonst in der oeffentlichen Installation.
+test_build_verzeichnis_ist_sauber() {
+	local dir build
+	dir="$(fixture)"
+
+	if ! bash "$dir/bin/build.sh" > "$dir/build.log" 2>&1; then
+		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
+			"$(tail -20 "$dir/build.log")"
+		return
+	fi
+
+	build="$dir/dist/build/volleyball-schedules-for-swiss-volley"
+	if [ ! -f "$build/volleyball-schedules-for-swiss-volley.php" ]; then
+		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
+			"Hauptdatei fehlt in $build"
+		return
+	fi
+	if [ -d "$build/docs" ] || [ -f "$build/README.md" ]; then
+		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
+			"docs/ oder README.md im Build-Verzeichnis"
+		return
+	fi
+	if ! ls "$build"/languages/*.mo > /dev/null 2>&1; then
+		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
+			"keine .mo-Dateien im Build-Verzeichnis"
+		return
+	fi
+
+	# Array-Glob statt "[ ! -f .../*.po ]": Letzteres prueft bei mehreren
+	# Treffern nur den ersten Dateinamen woertlich und liefert dann ein
+	# falsches Ergebnis. Bei keinem Treffer bleibt der Glob unexpandiert
+	# ("*.po" als Literal) und "-e" ist dann korrekt false.
+	local po_files=("$build"/languages/*.po)
+	if [ -e "${po_files[0]}" ]; then
+		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
+			".po-Dateien im Build-Verzeichnis: ${po_files[*]}"
+		return
+	fi
+
+	local json_files=("$build"/languages/*-vssv-blocks.json)
+	if [ ! -e "${json_files[0]}" ] || [ "${#json_files[@]}" -lt 2 ]; then
+		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
+			"weniger als zwei JSON-Sprachkataloge im Build-Verzeichnis: ${json_files[*]}"
+		return
+	fi
+
+	pass "build.sh erzeugt ein sauberes Build-Verzeichnis"
+}
+
 test_build_erfolgreich
 test_build_erkennt_zip_ohne_hauptdatei
+test_build_verzeichnis_ist_sauber
 
 printf '\n%d bestanden, %d fehlgeschlagen\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]

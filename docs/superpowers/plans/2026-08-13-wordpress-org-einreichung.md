@@ -204,15 +204,19 @@ PY
 	fi
 }
 
-# Der Textdomain-String muss überall der Slug sein; ein Tippfehler
-# fliegt sonst erst auf, wenn eine Übersetzung stumm nicht greift.
+# Ein falscher Textdomain-String faellt im Betrieb nicht auf: die
+# Uebersetzung greift stumm nicht, der englische Quelltext erscheint.
+# Geprueft wird deshalb, dass KEIN Uebersetzungsaufruf eine andere
+# Domain verwendet als den Slug.
 test_textdomain_konsistent() {
-	local treffer
-	treffer="$(grep -rn "'volleyball-schedules-for-swiss-volley'" "$PLUGIN" --include='*.php' | wc -l | tr -d ' ')"
-	if [ "$treffer" -gt 0 ]; then
-		pass "Text Domain wird verwendet ($treffer Fundstellen)"
+	local falsch
+	falsch="$(grep -rnoE "(__|_e|_x|_n|esc_html__|esc_html_e|esc_attr__|esc_attr_e|esc_html_x|esc_attr_x)\( *'[^']*' *(, *'[^']*' *)*, *'[^']+'" \
+		"$PLUGIN" --include='*.php' --include='*.js' \
+		| grep -v "'volleyball-schedules-for-swiss-volley'" || true)"
+	if [ -z "$falsch" ]; then
+		pass "alle Übersetzungsaufrufe verwenden die Text Domain des Slugs"
 	else
-		fail "Text Domain wird verwendet" "keine Fundstelle"
+		fail "alle Übersetzungsaufrufe verwenden die Text Domain des Slugs" "$falsch"
 	fi
 }
 
@@ -496,8 +500,8 @@ text = text.replace('"Language: de_CH\\n"', '"Language: de_DE\\n"')
 def swap(match):
     body = match.group(1)
     for ch_form, de_form in (('gross', 'groß'), ('Gross', 'Groß'), ('ausser', 'außer'),
-                             ('Ausser', 'Außer'), ('schliesse', 'schließe'), ('Strasse', 'Straße'),
-                             ('musste', 'musste'), ('heisst', 'heißt'), ('weiss', 'weiß')):
+                             ('Ausser', 'Außer'), ('schliess', 'schließ'), ('Schliess', 'Schließ'),
+                             ('Strasse', 'Straße'), ('heisst', 'heißt'), ('weiss', 'weiß')):
         body = body.replace(ch_form, de_form)
     return f'msgstr "{body}"'
 

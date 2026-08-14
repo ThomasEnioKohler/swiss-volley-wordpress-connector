@@ -11,8 +11,8 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PLUGIN="$ROOT/swiss-volley-connector/swiss-volley-connector.php"
-README="$ROOT/swiss-volley-connector/readme.txt"
+PLUGIN="$ROOT/volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php"
+README="$ROOT/volleyball-schedules-for-swiss-volley/readme.txt"
 CHANGELOG="$ROOT/CHANGELOG.md"
 
 EXPECT=""
@@ -48,7 +48,7 @@ genau_eine() {
 }
 
 v_header_roh="$(sed -nE 's/^ \* Version: +([0-9]+\.[0-9]+\.[0-9]+) *$/\1/p' "$PLUGIN")"
-v_konstante_roh="$(sed -nE "s/^define\( 'SVC_VERSION', '([0-9]+\.[0-9]+\.[0-9]+)' \);.*$/\1/p" "$PLUGIN")"
+v_konstante_roh="$(sed -nE "s/^define\( 'VSSV_VERSION', '([0-9]+\.[0-9]+\.[0-9]+)' \);.*$/\1/p" "$PLUGIN")"
 v_stable_roh="$(sed -nE 's/^Stable tag: +([0-9]+\.[0-9]+\.[0-9]+) *$/\1/p' "$README")"
 
 v_header="$(genau_eine "$v_header_roh")"
@@ -83,9 +83,9 @@ fi
 
 tabelle() {
 	printf '  %-16s %-52s %s\n' "Quelle" "Datei" "Wert" >&2
-	printf '  %-16s %-52s %s\n' "Plugin-Header" "swiss-volley-connector/swiss-volley-connector.php" "$(diagnose "$v_header" "$v_header_roh")" >&2
-	printf '  %-16s %-52s %s\n' "SVC_VERSION" "swiss-volley-connector/swiss-volley-connector.php" "$(diagnose "$v_konstante" "$v_konstante_roh")" >&2
-	printf '  %-16s %-52s %s\n' "Stable tag" "swiss-volley-connector/readme.txt" "$(diagnose "$v_stable" "$v_stable_roh")" >&2
+	printf '  %-16s %-52s %s\n' "Plugin-Header" "volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php" "$(diagnose "$v_header" "$v_header_roh")" >&2
+	printf '  %-16s %-52s %s\n' "VSSV_VERSION" "volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php" "$(diagnose "$v_konstante" "$v_konstante_roh")" >&2
+	printf '  %-16s %-52s %s\n' "Stable tag" "volleyball-schedules-for-swiss-volley/readme.txt" "$(diagnose "$v_stable" "$v_stable_roh")" >&2
 	printf '  %-16s %-52s %s\n' "CHANGELOG.md" "CHANGELOG.md" "${v_changelog:-(nicht gefunden)}" >&2
 	if [ -n "$EXPECT" ]; then
 		printf '  %-16s %-52s %s\n' "Erwartet (Tag)" "-" "$EXPECT" >&2

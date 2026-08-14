@@ -83,7 +83,7 @@ kann — mache nichts rückgängig.
 
 **Hinweis zum `.pot`:** `bin/build.sh` erneuert in seinem POT-Schritt bei
 jedem Lauf das Feld `POT-Creation-Date` in
-`swiss-volley-connector/languages/swiss-volley-connector.pot`. Das
+`volleyball-schedules-for-swiss-volley/languages/volleyball-schedules-for-swiss-volley.pot`. Das
 Arbeitsverzeichnis ist danach also fast immer schmutzig, auch wenn inhaltlich
 sonst nichts geändert wurde. Das ist erwartet und richtig, kein Fehler: Das
 ausgelieferte ZIP enthält genau dieses `.pot`, daher gehört die Änderung mit

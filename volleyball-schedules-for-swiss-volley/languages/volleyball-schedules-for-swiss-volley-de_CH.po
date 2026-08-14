@@ -1,0 +1,400 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Volleyball Schedules for Swiss Volley 1.0.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_CH\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: volleyball-schedules-for-swiss-volley\n"
+
+msgid "****** (saved - leave empty to keep)"
+msgstr "•••••• (gespeichert – leer lassen zum Behalten)"
+
+msgid "-- Select team --"
+msgstr "– Team wählen –"
+
+msgid "1 hour"
+msgstr "1 Stunde"
+
+msgid "12 hours"
+msgstr "12 Stunden"
+
+msgid "15 minutes"
+msgstr "15 Minuten"
+
+msgid "24 hours"
+msgstr "24 Stunden"
+
+msgid "3 hours"
+msgstr "3 Stunden"
+
+msgid "30 minutes"
+msgstr "30 Minuten"
+
+msgid "5 minutes"
+msgstr "5 Minuten"
+
+msgid "6 hours"
+msgstr "6 Stunden"
+
+msgid "API base URL"
+msgstr "API-Basis-URL"
+
+msgid "API key / token"
+msgstr "API-Key / Token"
+
+msgid "API log"
+msgstr "API-Log"
+
+msgid "Alias for shortcodes"
+msgstr "Alias für Shortcodes"
+
+msgid "An error occurred."
+msgstr "Es ist ein Fehler aufgetreten."
+
+msgid "Applies to all game lists. Can be overridden per shortcode with league=\"heading\", league=\"meta\", or league=\"none\"."
+msgstr "Gilt für alle Spiellisten. Pro Shortcode übersteuerbar mit league=\"heading\", league=\"meta\" oder league=\"none\"."
+
+msgid "As a heading above the game (large)"
+msgstr "Als Überschrift über dem Spiel (gross)"
+
+msgid "Authentication failed. Please check the API key (Volley Manager: Administration -> Club -> Webservice/API)."
+msgstr "Authentifizierung fehlgeschlagen. Bitte den API-Key prüfen (Volley Manager: Administration → Club → Webservice/API)."
+
+msgid "Automatically detected when loading the teams (e.g. Volley Pizol)."
+msgstr "Wird beim Laden der Teams automatisch erkannt (z. B. Volley Pizol)."
+
+msgid "Automatically loads the club and teams from the Swiss Volley data. Existing aliases, custom team names, league names, and the selection for club-wide views are preserved."
+msgstr "Lädt Verein und Mannschaften automatisch aus den Swiss-Volley-Daten. Bestehende Aliase, eigene Teamnamen und Liga-Bezeichnungen sowie die Auswahl für vereinsweite Ansichten bleiben erhalten."
+
+msgid "By league"
+msgstr "Nach Liga"
+
+msgid "By team"
+msgstr "Nach Team"
+
+msgid "Cache"
+msgstr "Cache"
+
+msgid "Cache duration"
+msgstr "Cache-Dauer"
+
+msgid "Chronological"
+msgstr "Chronologisch"
+
+msgid "Clear cache now"
+msgstr "Cache jetzt leeren"
+
+msgid "Clear log"
+msgstr "Log leeren"
+
+msgid "Clearing cache..."
+msgstr "Cache wird geleert …"
+
+msgid "Club"
+msgstr "Verein / Club"
+
+msgid "Club \"%1$s\" detected, %2$d teams loaded. Available seasons: %3$s. Reloading the page..."
+msgstr "Verein «%1$s» erkannt, %2$d Teams geladen. Verfügbare Saisons: %3$s. Die Seite wird neu geladen …"
+
+msgid "Club ID"
+msgstr "Club-ID"
+
+msgid "Club and season"
+msgstr "Verein und Saison"
+
+msgid "Connection successful. The API returned %d games."
+msgstr "Verbindung erfolgreich. Die API hat %d Spiele geliefert."
+
+msgid "Current season"
+msgstr "Aktuelle Saison"
+
+msgid "Custom CSS"
+msgstr "Eigenes CSS"
+
+msgid "Custom league name"
+msgstr "Eigene Liga-Bezeichnung"
+
+msgid "Custom team name"
+msgstr "Eigener Teamname"
+
+msgid "Custom team name and custom league name replace the Swiss Volley values in all displays (games, results, standings) - e.g. \"Volley Pizol Herren 1\" -> \"Herren 1\" or \"H2L\" -> \"Herren 2. Liga\". Empty fields continue to use the Swiss Volley value. Opponent names remain unchanged; cup games keep the official competition name. Team link: if a URL is set (e.g. the team page), the team name is linked in all displays."
+msgstr "Eigener Teamname und eigene Liga-Bezeichnung ersetzen in allen Anzeigen (Spiele, Resultate, Rangliste) die Werte von Swiss Volley – z. B. «Volley Pizol Herren 1» → «Herren 1» oder «H2L» → «Herren 2. Liga». Leere Felder verwenden weiterhin den Swiss-Volley-Wert. Gegnernamen bleiben unverändert; Cup-Spiele behalten den offiziellen Wettbewerbsnamen. Team-Link: ist eine URL hinterlegt (z. B. die Teamseite), wird der Teamname in allen Anzeigen verlinkt."
+
+msgid "Debug (visible to administrators only):"
+msgstr "Debug (nur für Administratoren sichtbar):"
+
+msgid "Debug mode"
+msgstr "Debug-Modus"
+
+msgid "Debug mode is disabled. Enable it in the settings to log API calls."
+msgstr "Der Debug-Modus ist deaktiviert. Aktiviere ihn in den Einstellungen, um API-Aufrufe zu protokollieren."
+
+msgid "Default: https://api.volleyball.ch - change only if Swiss Volley updates the URL."
+msgstr "Standard: https://api.volleyball.ch – nur ändern, falls Swiss Volley die URL anpasst."
+
+msgid "Delete saved key"
+msgstr "Gespeicherten Key löschen"
+
+msgid "Detected club: %1$s (club ID %2$s)."
+msgstr "Erkannter Verein: %1$s (Club-ID %2$s)."
+
+msgid "Display"
+msgstr "Darstellung"
+
+msgid "Endpoint"
+msgstr "Endpunkt"
+
+msgid "Enter API key"
+msgstr "API-Key eingeben"
+
+msgid "Error diagnostics"
+msgstr "Fehlerdiagnose"
+
+msgid "Group games"
+msgstr "Spiele gruppieren"
+
+msgid "HTTP status"
+msgstr "HTTP-Status"
+
+msgid "Highlight own club"
+msgstr "Eigener Verein hervorheben"
+
+msgid "In club-wide views"
+msgstr "In vereinsweiten Ansichten"
+
+msgid "Interactive grouping"
+msgstr "Interaktive Gruppierung"
+
+msgctxt "Abbreviation for losses"
+msgid "L"
+msgstr "N"
+
+msgid "Latest results"
+msgstr "Letzte Resultate"
+
+msgid "League"
+msgstr "Liga"
+
+msgid "League display in game lists"
+msgstr "Liga-Darstellung in Spiellisten"
+
+msgid "Load club and teams now"
+msgstr "Verein und Teams jetzt laden"
+
+msgid "Load teams from Swiss Volley"
+msgstr "Teams aus Swiss Volley laden"
+
+msgid "Loaded after the default stylesheet of this plugin. Example: .vssv-own-team { font-weight: 700; }"
+msgstr "Wird nach dem Standard-Stylesheet des Plugins geladen. Beispiel: .vssv-own-team { font-weight: 700; }"
+
+msgid "Loading teams..."
+msgstr "Teams werden geladen …"
+
+msgid "Log"
+msgstr "Log"
+
+msgid "Log API calls (endpoint, HTTP status, time, error message - never the API key) and show administrators detailed error messages"
+msgstr "API-Aufrufe protokollieren (Endpunkt, HTTP-Status, Zeitpunkt, Fehlermeldung – nie der API-Key) und Administratoren detaillierte Fehlermeldungen anzeigen"
+
+msgid "Mark own teams with the CSS class vssv-own-team"
+msgstr "Eigene Teams mit der CSS-Klasse vssv-own-team kennzeichnen"
+
+msgid "Message"
+msgstr "Meldung"
+
+msgid "More games"
+msgstr "Weitere Spiele"
+
+msgid "No Swiss Volley API key is set."
+msgstr "Es ist kein Swiss-Volley-API-Key hinterlegt."
+
+msgid "No club could be detected in the Swiss Volley data. Does the current season already contain games?"
+msgstr "In den Swiss-Volley-Daten konnte kein Verein erkannt werden. Enthält die aktuelle Saison bereits Spiele?"
+
+msgid "No games are currently available."
+msgstr "Zurzeit sind keine Spiele vorhanden."
+
+msgid "No log entries available."
+msgstr "Keine Log-Einträge vorhanden."
+
+msgid "No permission."
+msgstr "Keine Berechtigung."
+
+msgid "No results are available yet."
+msgstr "Zurzeit liegen noch keine Resultate vor."
+
+msgid "No standings are currently available."
+msgstr "Zurzeit ist keine Rangliste verfügbar."
+
+msgid "No teams configured yet. Load teams under Swiss Volley -> Teams first."
+msgstr "Noch keine Teams konfiguriert. Teams zuerst unter Swiss Volley → Teams laden."
+
+msgid "No teams loaded yet. First enter the API key in the settings, then click \"Load club and teams now\"."
+msgstr "Noch keine Teams geladen. Hinterlege zuerst den API-Key in den Einstellungen und klicke dann auf «Verein und Teams jetzt laden»."
+
+msgid "No upcoming games are currently scheduled."
+msgstr "Zurzeit sind keine kommenden Spiele angesetzt."
+
+msgid "Number of games"
+msgstr "Anzahl Spiele"
+
+msgid "Only appears if a list contains multiple leagues or teams. Can be overridden per shortcode with switcher=\"1\" or switcher=\"0\". A default set via group_by remains the starting view."
+msgstr "Erscheint nur, wenn eine Liste mehrere Ligen oder Teams enthält. Pro Shortcode übersteuerbar mit switcher=\"1\" oder switcher=\"0\". Ein per group_by gesetzter Standard bleibt als Startansicht erhalten."
+
+msgctxt "Abbreviation for games played"
+msgid "P"
+msgstr "Sp"
+
+msgid "Please select a team in the block settings."
+msgstr "Bitte in den Block-Einstellungen ein Team wählen."
+
+msgctxt "Abbreviation for points"
+msgid "Pts"
+msgstr "Pkt"
+
+msgctxt "Standings column"
+msgid "Rank"
+msgstr "Rang"
+
+msgid "Save a new key first before testing the connection."
+msgstr "Speichere einen neuen Key zuerst, bevor du die Verbindung testest."
+
+msgid "Save settings"
+msgstr "Einstellungen speichern"
+
+msgid "Save teams"
+msgstr "Teams speichern"
+
+msgid "Season"
+msgstr "Saison"
+
+msgctxt "Standings column"
+msgid "Sets"
+msgstr "Sätze"
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Shortcode examples"
+msgstr "Shortcode-Beispiele"
+
+msgid "Show visitors a \"Chronological / By league / By team\" toggle above the game lists"
+msgstr "Besuchern einen Umschalter «Chronologisch / Nach Liga / Nach Team» über den Spiellisten anzeigen"
+
+msgid "Small, in the detail row (next to venue)"
+msgstr "Klein in der Detailzeile (neben Spielort)"
+
+msgid "Standings"
+msgstr "Rangliste"
+
+msgid "Start year of the season, e.g. 2026 for the 2026/27 season. Leave empty to show all data provided by the API (recommended; the API always returns the current season). Available seasons are shown when loading the teams."
+msgstr "Startjahr der Saison, z. B. 2026 für die Saison 2026/27. Leer lassen, um alle von der API gelieferten Daten anzuzeigen (empfohlen; die API liefert jeweils die aktuelle Saison). Beim Laden der Teams werden die verfügbaren Saisons angezeigt."
+
+msgid "Swiss Volley"
+msgstr "Swiss Volley"
+
+msgid "Swiss Volley - Games"
+msgstr "Swiss Volley – Spiele"
+
+msgid "Swiss Volley - Results"
+msgstr "Swiss Volley – Resultate"
+
+msgid "Swiss Volley - Standings"
+msgstr "Swiss Volley – Rangliste"
+
+msgid "Swiss Volley - Team"
+msgstr "Swiss Volley – Team"
+
+msgid "Swiss Volley API"
+msgstr "Swiss-Volley-API"
+
+msgid "Swiss Volley club ID; automatically detected when loading the teams."
+msgstr "Swiss-Volley-Club-ID; wird beim Laden der Teams automatisch erkannt."
+
+msgid "Team"
+msgstr "Team"
+
+msgid "Team ID"
+msgstr "Team-ID"
+
+msgid "Team link"
+msgstr "Team-Link"
+
+msgid "Teams"
+msgstr "Teams"
+
+msgid "Teams of %s"
+msgstr "Teams von %s"
+
+msgid "Test API connection"
+msgstr "API-Verbindung testen"
+
+msgid "Test connection"
+msgstr "Verbindung testen"
+
+msgid "Testing connection..."
+msgstr "Verbindung wird geprüft …"
+
+msgid "The Swiss Volley API is currently unreachable."
+msgstr "Die Swiss-Volley-API ist momentan nicht erreichbar."
+
+msgid "The Swiss Volley API is queried at most once per cache duration (WordPress transients)."
+msgstr "Die Swiss-Volley-API wird höchstens einmal pro Cache-Dauer abgefragt (WordPress Transients)."
+
+msgid "The Swiss Volley API returned an unexpected status (HTTP %d)."
+msgstr "Die Swiss-Volley-API hat einen unerwarteten Status geliefert (HTTP %d)."
+
+msgid "The cache has been cleared. Fresh data will be loaded on the next page view."
+msgstr "Der Cache wurde geleert. Beim nächsten Seitenaufruf werden frische Daten geladen."
+
+msgid "The game data could not be loaded at this time."
+msgstr "Die Spieldaten konnten momentan nicht geladen werden."
+
+msgid "The game data could not be updated at this time. Showing the last known state."
+msgstr "Die Spieldaten konnten momentan nicht aktualisiert werden. Angezeigt wird der letzte bekannte Stand."
+
+msgid "The log has been cleared."
+msgstr "Das Log wurde geleert."
+
+msgid "The response from the Swiss Volley API could not be processed."
+msgstr "Die Antwort der Swiss-Volley-API konnte nicht verarbeitet werden."
+
+msgid "The team parameter accepts the team ID or the alias:"
+msgstr "Team-Parameter akzeptiert die Team-ID oder den Alias:"
+
+msgid "Time"
+msgstr "Zeitpunkt"
+
+msgid "Upcoming games"
+msgstr "Nächste Spiele"
+
+msgid "Volleyball Schedules for Swiss Volley"
+msgstr "Volleyball Schedules for Swiss Volley"
+
+msgid "Volleyball Schedules for Swiss Volley: The specified team was not found. Please check the team ID or alias."
+msgstr "Volleyball Schedules for Swiss Volley: Das angegebene Team wurde nicht gefunden. Bitte Team-ID oder Alias prüfen."
+
+msgctxt "Abbreviation for wins"
+msgid "W"
+msgstr "S"
+
+msgid "You get the club-bound key in the Volley Manager under Administration -> Club -> Webservice/API. The key is used server-side only and is never output in the frontend."
+msgstr "Den club-gebundenen Key erhältst du im Volley Manager unter Administration → Club → Webservice/API. Der Key wird ausschliesslich serverseitig verwendet und nie im Frontend ausgegeben."
+
+msgid "e.g. Herren 1"
+msgstr "z. B. Herren 1"
+
+msgid "e.g. Herren 2. Liga"
+msgstr "z. B. Herren 2. Liga"
+
+msgid "e.g. herren-1"
+msgstr "z. B. herren-1"
+
+msgid "e.g. https://www.volleypizol.org/herren-1/"
+msgstr "z. B. https://www.volleypizol.org/herren-1/"
+
+msgctxt "Home/away team separator"
+msgid "vs."
+msgstr "vs."

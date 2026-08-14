@@ -11,8 +11,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PLUGIN="$ROOT/swiss-volley-connector/swiss-volley-connector.php"
-README="$ROOT/swiss-volley-connector/readme.txt"
+PLUGIN="$ROOT/volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php"
+README="$ROOT/volleyball-schedules-for-swiss-volley/readme.txt"
 CHANGELOG="$ROOT/CHANGELOG.md"
 PLATZHALTER="- TODO: Änderungen beschreiben"
 
@@ -58,7 +58,7 @@ ersetze() { # <datei> <sed-ausdruck>
 ALT_RE="${ALT//./\\.}"
 
 ersetze "$PLUGIN" "s/^( \* Version: +)$ALT_RE *\$/\\1$NEU/"
-ersetze "$PLUGIN" "s/^(define\\( 'SVC_VERSION', ')$ALT_RE(' \\);.*)\$/\\1$NEU\\2/"
+ersetze "$PLUGIN" "s/^(define\\( 'VSSV_VERSION', ')$ALT_RE(' \\);.*)\$/\\1$NEU\\2/"
 ersetze "$README" "s/^(Stable tag: +)$ALT_RE *\$/\\1$NEU/"
 
 HEUTE="$(date +%F)"
@@ -79,9 +79,9 @@ mv "$CHANGELOG.tmp" "$CHANGELOG"
 "$ROOT/bin/sync-readme-changelog.sh" > /dev/null
 
 printf 'Version %s -> %s\n' "$ALT" "$NEU"
-printf '  %-46s Version:\n' "swiss-volley-connector/swiss-volley-connector.php"
-printf '  %-46s SVC_VERSION\n' "swiss-volley-connector/swiss-volley-connector.php"
-printf '  %-46s Stable tag:\n' "swiss-volley-connector/readme.txt"
+printf '  %-46s Version:\n' "volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php"
+printf '  %-46s VSSV_VERSION\n' "volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php"
+printf '  %-46s Stable tag:\n' "volleyball-schedules-for-swiss-volley/readme.txt"
 printf '  %-46s neuer Abschnitt ## [%s] - %s\n' "CHANGELOG.md" "$NEU" "$HEUTE"
-printf '  %-46s neu erzeugt\n' "swiss-volley-connector/readme.txt"
+printf '  %-46s neu erzeugt\n' "volleyball-schedules-for-swiss-volley/readme.txt"
 printf '\nNoch zu tun: %s in CHANGELOG.md ersetzen, dann sync erneut laufen lassen.\n' "$PLATZHALTER"

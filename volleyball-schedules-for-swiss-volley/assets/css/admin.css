@@ -1,0 +1,51 @@
+/**
+ * Volleyball Schedules for Swiss Volley – Admin-Styles.
+ */
+
+.vssv-inline-result {
+	display: inline-block;
+	margin-left: 0.75em;
+	font-weight: 500;
+}
+
+.vssv-inline-result.vssv-ok {
+	color: #00711b;
+}
+
+.vssv-inline-result.vssv-fail {
+	color: #b32d2e;
+}
+
+.vssv-remove-key {
+	display: inline-block;
+	margin-left: 0.75em;
+}
+
+.vssv-teams-table input[type="text"] {
+	width: 14em;
+	max-width: 100%;
+}
+
+.vssv-teams-table .vssv-col-check {
+	text-align: center;
+}
+
+.vssv-shortcode-examples code {
+	font-size: 13px;
+}
+
+.vssv-log-error td {
+	color: #b32d2e;
+}
+
+.vssv-empty-admin {
+	padding: 1em;
+	background: #f6f7f7;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	max-width: 48em;
+}
+.vssv-teams-table input.vssv-url-input {
+	width: 20em;
+	max-width: 100%;
+}

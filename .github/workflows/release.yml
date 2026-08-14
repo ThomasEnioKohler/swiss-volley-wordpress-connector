@@ -13,6 +13,12 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Auf Job-Ebene gesetzt, damit der "if" des Deploy-Schritts weiter unten
+    # den Wert sehen kann: env, das ein Schritt sich selbst mitgibt, steht
+    # dessen eigener "if"-Auswertung nicht zur Verfügung (die Bedingung wird
+    # ausgewertet, bevor der Schritt seinen eigenen env-Block anwendet).
+    env:
+      SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
     steps:
       - uses: actions/checkout@v4
 
@@ -37,7 +43,21 @@ jobs:
       - name: Release veröffentlichen
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/swiss-volley-connector-*.zip
+          files: dist/volleyball-schedules-for-swiss-volley-*.zip
           fail_on_unmatched_files: true
           body_path: release-notes.md
           prerelease: ${{ startsWith(env.VERSION, '0.') }}
+
+      # Laeuft nur, wenn die SVN-Zugangsdaten hinterlegt sind. Vor der
+      # Freigabe durch das Plugin-Team existiert kein SVN-Repository,
+      # der Schritt wird dann uebersprungen statt fehlzuschlagen.
+      - name: WordPress.org Deploy
+        if: ${{ env.SVN_USERNAME != '' }}
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: volleyball-schedules-for-swiss-volley
+          BUILD_DIR: dist/build/volleyball-schedules-for-swiss-volley
+          ASSETS_DIR: .wordpress-org
+          VERSION: ${{ env.VERSION }}

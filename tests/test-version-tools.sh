@@ -30,11 +30,11 @@ fixture() {
 	local dir
 	dir="$(mktemp -d)"
 	TMPDIRS+=("$dir")
-	mkdir -p "$dir/bin" "$dir/swiss-volley-connector"
+	mkdir -p "$dir/bin" "$dir/volleyball-schedules-for-swiss-volley"
 	cp "$ROOT"/bin/*.sh "$dir/bin/"
 	cp "$ROOT/CHANGELOG.md" "$dir/CHANGELOG.md"
-	cp "$ROOT/swiss-volley-connector/readme.txt" "$dir/swiss-volley-connector/"
-	cp "$ROOT/swiss-volley-connector/swiss-volley-connector.php" "$dir/swiss-volley-connector/"
+	cp "$ROOT/volleyball-schedules-for-swiss-volley/readme.txt" "$dir/volleyball-schedules-for-swiss-volley/"
+	cp "$ROOT/volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php" "$dir/volleyball-schedules-for-swiss-volley/"
 	printf '%s' "$dir"
 }
 
@@ -84,13 +84,13 @@ test_sync_roundtrip() {
 	# Die Sektion, wie sie vor der Migration in readme.txt stand — MUSS vor
 	# dem Verfälschen gesichert werden, sonst würde die Referenz mit
 	# verfälscht.
-	sed -n '/^== Changelog ==/,$p' "$dir/swiss-volley-connector/readme.txt" > "$referenz"
+	sed -n '/^== Changelog ==/,$p' "$dir/volleyball-schedules-for-swiss-volley/readme.txt" > "$referenz"
 
 	# readme.txt jetzt gezielt verfälschen: nur ein echter Schreibvorgang
 	# des Generators kann die Datei wieder auf den Originalstand bringen.
 	# Bricht der Generator ab (oder schreibt er gar nicht), bleibt die
 	# Verfälschung stehen und der folgende diff schlägt zu Recht fehl.
-	printf '\n* Verfaelscht fuer den Test\n' >> "$dir/swiss-volley-connector/readme.txt"
+	printf '\n* Verfaelscht fuer den Test\n' >> "$dir/volleyball-schedules-for-swiss-volley/readme.txt"
 
 	bash "$dir/bin/sync-readme-changelog.sh" > /dev/null
 	rc=$?
@@ -100,7 +100,7 @@ test_sync_roundtrip() {
 		return
 	fi
 
-	sed -n '/^== Changelog ==/,$p' "$dir/swiss-volley-connector/readme.txt" > "$erzeugt"
+	sed -n '/^== Changelog ==/,$p' "$dir/volleyball-schedules-for-swiss-volley/readme.txt" > "$erzeugt"
 
 	if diff -u "$referenz" "$erzeugt" > "$dir/diff.txt"; then
 		pass "sync erzeugt die Changelog-Sektion byteweise identisch"
@@ -120,7 +120,7 @@ test_sync_check_ok() {
 test_sync_check_erkennt_handedit() {
 	local dir
 	dir="$(fixture)"
-	printf '\n* Von Hand eingefügt\n' >> "$dir/swiss-volley-connector/readme.txt"
+	printf '\n* Von Hand eingefügt\n' >> "$dir/volleyball-schedules-for-swiss-volley/readme.txt"
 	assert_exit "sync --check erkennt Handedit an readme.txt" 1 \
 		bash "$dir/bin/sync-readme-changelog.sh" --check
 }
@@ -131,7 +131,7 @@ test_sync_meldet_unverstandene_zeile() {
 
 	# Fortsetzungszeile eines umbrochenen Aufzählungspunkts einfügen — sie
 	# beginnt weder mit "### " noch mit "- " und darf nicht wortlos wegfallen.
-	awk '{ print } /Interaktive Gruppierung/ && !getroffen {
+	awk '{ print } /Swiss Volley API/ && !getroffen {
 		print "  (Fortsetzungszeile ohne Bindestrich)"; getroffen = 1
 	}' "$dir/CHANGELOG.md" > "$dir/CHANGELOG.md.tmp"
 	mv "$dir/CHANGELOG.md.tmp" "$dir/CHANGELOG.md"
@@ -161,14 +161,14 @@ verbiege() { # <datei> <suchen> <ersetzen>
 	mv "$file.tmp" "$file"
 }
 
-# Liest SVC_VERSION aus der Arbeitskopie.
+# Liest VSSV_VERSION aus der Arbeitskopie.
 #
 # Die Tests dürfen keine feste Versionsnummer enthalten: Sonst treffen die
 # Suchmuster nach dem nächsten Bump nichts mehr, es wird gar keine Drift
 # erzeugt, und die Drift-Tests prüfen stillschweigend nichts.
 ist_version() { # <fixture-verzeichnis>
-	sed -nE "s/^define\( 'SVC_VERSION', '([0-9]+\.[0-9]+\.[0-9]+)' \);.*\$/\1/p" \
-		"$1/swiss-volley-connector/swiss-volley-connector.php"
+	sed -nE "s/^define\( 'VSSV_VERSION', '([0-9]+\.[0-9]+\.[0-9]+)' \);.*\$/\1/p" \
+		"$1/volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php"
 }
 
 # Eine Version, die garantiert über jeder real vorkommenden liegt — als Ziel
@@ -185,7 +185,7 @@ test_version_gleichstand() {
 test_version_drift_header() {
 	local dir
 	dir="$(fixture)"
-	verbiege "$dir/swiss-volley-connector/swiss-volley-connector.php" \
+	verbiege "$dir/volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php" \
 		'^ \* Version: +[0-9]+\.[0-9]+\.[0-9]+ *$' ' * Version:           0.9.9'
 	assert_exit "version.sh erkennt Drift im Plugin-Header" 1 \
 		bash "$dir/bin/version.sh"
@@ -194,16 +194,16 @@ test_version_drift_header() {
 test_version_drift_konstante() {
 	local dir
 	dir="$(fixture)"
-	verbiege "$dir/swiss-volley-connector/swiss-volley-connector.php" \
-		"SVC_VERSION', '[0-9]+\.[0-9]+\.[0-9]+'" "SVC_VERSION', '0.9.9'"
-	assert_exit "version.sh erkennt Drift bei SVC_VERSION" 1 \
+	verbiege "$dir/volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php" \
+		"VSSV_VERSION', '[0-9]+\.[0-9]+\.[0-9]+'" "VSSV_VERSION', '0.9.9'"
+	assert_exit "version.sh erkennt Drift bei VSSV_VERSION" 1 \
 		bash "$dir/bin/version.sh"
 }
 
 test_version_drift_stable_tag() {
 	local dir
 	dir="$(fixture)"
-	verbiege "$dir/swiss-volley-connector/readme.txt" \
+	verbiege "$dir/volleyball-schedules-for-swiss-volley/readme.txt" \
 		'^Stable tag: +[0-9]+\.[0-9]+\.[0-9]+ *$' 'Stable tag: 0.9.9'
 	assert_exit "version.sh erkennt Drift bei Stable tag" 1 \
 		bash "$dir/bin/version.sh"
@@ -248,8 +248,8 @@ test_version_header_mehrdeutig() {
 	# Eine zweite " * Version:"-Zeile einfügen, statt eine bestehende zu
 	# überschreiben — die Quelle liefert dann zwei Treffer.
 	awk '{ print } /^ \* Version: +[0-9]+\.[0-9]+\.[0-9]+ *$/ && !g { print; g = 1 }' \
-		"$dir/swiss-volley-connector/swiss-volley-connector.php" > "$dir/tmp.php"
-	mv "$dir/tmp.php" "$dir/swiss-volley-connector/swiss-volley-connector.php"
+		"$dir/volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php" > "$dir/tmp.php"
+	mv "$dir/tmp.php" "$dir/volleyball-schedules-for-swiss-volley/volleyball-schedules-for-swiss-volley.php"
 
 	ausgabe="$(bash "$dir/bin/version.sh" 2>&1 1>/dev/null)"
 	rc=$?
@@ -327,7 +327,7 @@ test_bump_lehnt_rueckwaerts_ab() {
 test_bump_lehnt_drift_ab() {
 	local dir
 	dir="$(fixture)"
-	verbiege "$dir/swiss-volley-connector/readme.txt" \
+	verbiege "$dir/volleyball-schedules-for-swiss-volley/readme.txt" \
 		'^Stable tag: +[0-9]+\.[0-9]+\.[0-9]+ *$' 'Stable tag: 0.9.9'
 	assert_exit "bump-version.sh verweigert den Bump auf driftendem Stand" 1 \
 		bash "$dir/bin/bump-version.sh" "$ZIEL_HOCH"
@@ -346,9 +346,9 @@ test_bump_lehnt_drift_ab
 test_notes_liefert_abschnitt() {
 	local dir ausgabe
 	dir="$(fixture)"
-	ausgabe="$(bash "$dir/bin/release-notes.sh" 0.1.7 2>/dev/null)"
-	if printf '%s' "$ausgabe" | grep -q '^### Neu$' \
-		&& printf '%s' "$ausgabe" | grep -q 'Interaktive Gruppierung' \
+	ausgabe="$(bash "$dir/bin/release-notes.sh" 1.0.0 2>/dev/null)"
+	if printf '%s' "$ausgabe" | grep -q 'Swiss Volley API' \
+		&& printf '%s' "$ausgabe" | grep -q 'Automatic club and team detection' \
 		&& ! printf '%s' "$ausgabe" | grep -q '^## \['; then
 		pass "release-notes.sh liefert den Abschnitt ohne die Überschrift"
 	else
@@ -359,12 +359,14 @@ test_notes_liefert_abschnitt() {
 test_notes_endet_vor_naechster_version() {
 	local dir ausgabe
 	dir="$(fixture)"
-	ausgabe="$(bash "$dir/bin/release-notes.sh" 0.1.7 2>/dev/null)"
-	if printf '%s' "$ausgabe" | grep -q 'Gruppierung von Spiellisten'; then
-		fail "release-notes.sh endet vor der nächsten Version" \
-			"Inhalt von 0.1.6 ist mit ausgegeben worden"
-	else
+	# Append a synthetic older section below 1.0.0 to test that extraction stops at next version
+	printf '\n## [0.9.0] - 2026-01-01\n\n- Older entry that must not appear in 1.0.0 notes.\n' >> "$dir/CHANGELOG.md"
+	ausgabe="$(bash "$dir/bin/release-notes.sh" 1.0.0 2>/dev/null)"
+	if printf '%s' "$ausgabe" | grep -q 'Swiss Volley API' \
+		&& ! printf '%s' "$ausgabe" | grep -q 'Older entry that must not appear'; then
 		pass "release-notes.sh endet vor der nächsten Version"
+	else
+		fail "release-notes.sh endet vor der nächsten Version" "$ausgabe"
 	fi
 }
 
@@ -393,10 +395,8 @@ test_notes_ohne_argument() {
 test_notes_nur_kategorie_ohne_eintrag() {
 	local dir
 	dir="$(fixture)"
-	# Abschnitt besteht nur aus einer Kategorie-Überschrift, kein "- "-Eintrag.
-	awk '/^## \[0\.1\.6\]/ && !g { print "## [9.8.7]"; print ""; print "### Neu"; print ""; g = 1 } { print }' \
-		"$dir/CHANGELOG.md" > "$dir/CHANGELOG.md.tmp"
-	mv "$dir/CHANGELOG.md.tmp" "$dir/CHANGELOG.md"
+	# Append synthetic section with only a category heading, no bullet entries
+	printf '\n## [9.8.7]\n\n### Neu\n' >> "$dir/CHANGELOG.md"
 	assert_exit "release-notes.sh scheitert bei einem Abschnitt nur mit Kategorie-Überschrift" 1 \
 		bash "$dir/bin/release-notes.sh" 9.8.7
 }
