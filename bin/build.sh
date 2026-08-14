@@ -9,7 +9,7 @@
 #   3. Neugenerierung der Übersetzungsvorlage (.pot)
 #   4. Übersetzungskataloge (.mo aus .po via msgfmt)
 #   5. Bau des Build-Verzeichnisses nach dist/build/volleyball-schedules-for-swiss-volley
-#   6. Bau des installierbaren ZIPs nach dist/volleyball-schedules-for-swiss-volley-<version>.zip
+#   6. Bau des installierbaren ZIPs aus dem Build-Verzeichnis nach dist/volleyball-schedules-for-swiss-volley-<version>.zip
 #   7. ZIP-Inhalt prüfen
 #
 # Aufruf:  bin/build.sh
@@ -60,10 +60,12 @@ echo "== 6/7 ZIP bauen =="
 mkdir -p "$DIST_DIR"
 ZIP="$DIST_DIR/volleyball-schedules-for-swiss-volley-$VERSION.zip"
 rm -f "$ZIP"
-( cd "$ROOT" && zip -rq "$ZIP" volleyball-schedules-for-swiss-volley \
-	-x '*.DS_Store' \
-	-x 'volleyball-schedules-for-swiss-volley/README.md' \
-	-x 'volleyball-schedules-for-swiss-volley/docs/*' )
+# Aus dem bereits bereinigten Build-Verzeichnis gezippt, nicht aus
+# PLUGIN_DIR: ein zweites, unabhaengig gepflegtes Exclude-Muster hier
+# wuerde ueber kurz oder lang vom Build-Verzeichnis abweichen (siehe
+# Schritt 5/7) und ZIP und SVN wieder auseinanderlaufen lassen.
+( cd "$DIST_DIR/build" && zip -rq "$ZIP" volleyball-schedules-for-swiss-volley \
+	-x '*.DS_Store' )
 
 echo "== 7/7 ZIP prüfen =="
 unzip -l "$ZIP" | tail -1
