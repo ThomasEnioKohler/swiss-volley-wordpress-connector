@@ -15,7 +15,18 @@
 
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="volleyball-schedules-for-swiss-volley"/>
+			<property name="text_domain" type="array">
+				<element value="volleyball-schedules-for-swiss-volley"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="VSSV"/>
+				<element value="vssv"/>
+			</property>
 		</properties>
 	</rule>
 </ruleset>
