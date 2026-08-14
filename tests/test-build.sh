@@ -26,8 +26,12 @@ fail() {
 }
 
 # Legt eine vollständige Arbeitskopie des Plugin-Baums an, wie sie
-# bin/build.sh zum Bauen braucht (bin/, tests/harness.php, das komplette
-# Plugin-Verzeichnis inkl. languages/, docs/, README.md).
+# bin/build.sh zum Bauen braucht (bin/, tests/harness.php, tests/test-i18n.sh,
+# das komplette Plugin-Verzeichnis inkl. languages/, docs/, README.md).
+#
+# tests/test-i18n.sh muss mitkopiert werden: bin/build.sh ruft es seit der
+# i18n-Gate-Anbindung selbst auf (Schritt 4/9), sonst schlaegt der Build in
+# dieser Fixture fehl, obwohl er ausserhalb davon funktioniert.
 fixture() {
 	local dir
 	dir="$(mktemp -d)"
@@ -37,6 +41,7 @@ fixture() {
 	cp "$ROOT"/bin/*.py "$dir/bin/"
 	cp "$ROOT/CHANGELOG.md" "$dir/CHANGELOG.md"
 	cp "$ROOT/tests/harness.php" "$dir/tests/harness.php"
+	cp "$ROOT/tests/test-i18n.sh" "$dir/tests/test-i18n.sh"
 	cp -R "$ROOT/volleyball-schedules-for-swiss-volley" "$dir/volleyball-schedules-for-swiss-volley"
 	printf '%s' "$dir"
 }
