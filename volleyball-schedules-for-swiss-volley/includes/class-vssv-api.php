@@ -119,7 +119,7 @@ class VSSV_API {
 		$body = wp_remote_retrieve_body( $response );
 
 		if ( 401 === $code || 403 === $code ) {
-			VSSV_Logger::log( $path, $code, 'Authentifizierung fehlgeschlagen.', 'error' );
+			VSSV_Logger::log( $path, $code, 'Authentication failed.', 'error' );
 			return new WP_Error(
 				'vssv_auth_error',
 				__( 'Authentication failed. Please check the API key (Volley Manager: Administration -> Club -> Webservice/API).', 'volleyball-schedules-for-swiss-volley' )
@@ -127,11 +127,11 @@ class VSSV_API {
 		}
 
 		if ( $code < 200 || $code >= 300 ) {
-			VSSV_Logger::log( $path, $code, 'Unerwarteter HTTP-Status.', 'error' );
+			VSSV_Logger::log( $path, $code, 'Unexpected HTTP status.', 'error' );
 			return new WP_Error(
 				'vssv_bad_status',
 				sprintf(
-					/* translators: %d: HTTP-Statuscode */
+					/* translators: %d: HTTP status code */
 					__( 'The Swiss Volley API returned an unexpected status (HTTP %d).', 'volleyball-schedules-for-swiss-volley' ),
 					$code
 				)
@@ -140,14 +140,14 @@ class VSSV_API {
 
 		$data = json_decode( $body, true );
 		if ( ! is_array( $data ) ) {
-			VSSV_Logger::log( $path, $code, 'Antwort war kein gültiges JSON-Array.', 'error' );
+			VSSV_Logger::log( $path, $code, 'Response was not a valid JSON array.', 'error' );
 			return new WP_Error(
 				'vssv_bad_json',
 				__( 'The response from the Swiss Volley API could not be processed.', 'volleyball-schedules-for-swiss-volley' )
 			);
 		}
 
-		VSSV_Logger::log( $path, $code, 'OK (' . count( $data ) . ' Einträge).' );
+		VSSV_Logger::log( $path, $code, 'OK (' . count( $data ) . ' entries).' );
 
 		return $data;
 	}
@@ -190,7 +190,7 @@ class VSSV_API {
 			'ok'         => true,
 			'game_count' => count( $games ),
 			'message'    => sprintf(
-				/* translators: %d: Anzahl Spiele */
+				/* translators: %d: number of games */
 				__( 'Connection successful. The API returned %d games.', 'volleyball-schedules-for-swiss-volley' ),
 				count( $games )
 			),

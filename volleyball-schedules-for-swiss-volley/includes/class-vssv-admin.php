@@ -439,7 +439,7 @@ class VSSV_Admin {
 				<h2>
 					<?php
 					if ( '' !== (string) $settings['club_name'] ) {
-						/* translators: %s: Vereinsname */
+						/* translators: %s: club name */
 						printf( esc_html__( 'Teams of %s', 'volleyball-schedules-for-swiss-volley' ), esc_html( (string) $settings['club_name'] ) );
 					} else {
 						esc_html_e( 'Teams', 'volleyball-schedules-for-swiss-volley' );
@@ -648,7 +648,7 @@ class VSSV_Admin {
 		$message = $result['message'];
 		if ( ! empty( $result['club_name'] ) ) {
 			$message .= ' ' . sprintf(
-				/* translators: 1: Vereinsname, 2: Club-ID */
+				/* translators: 1: club name, 2: club ID */
 				__( 'Detected club: %1$s (club ID %2$s).', 'volleyball-schedules-for-swiss-volley' ),
 				$result['club_name'],
 				$result['club_id']
@@ -694,7 +694,7 @@ class VSSV_Admin {
 		wp_send_json_success(
 			array(
 				'message' => sprintf(
-					/* translators: 1: Vereinsname, 2: Anzahl Teams, 3: verfügbare Saisons */
+					/* translators: 1: club name, 2: number of teams, 3: available seasons */
 					__( 'Club "%1$s" detected, %2$d teams loaded. Available seasons: %3$s. Reloading the page...', 'volleyball-schedules-for-swiss-volley' ),
 					$club['name'],
 					count( $teams ),

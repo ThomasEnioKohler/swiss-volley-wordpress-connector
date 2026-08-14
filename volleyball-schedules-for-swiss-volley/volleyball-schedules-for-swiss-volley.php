@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Volleyball Schedules for Swiss Volley
  * Plugin URI:        https://www.volleypizol.org
- * Description:       Zeigt Spielpläne, Resultate und Ranglisten automatisch aus der offiziellen Swiss-Volley-API (Volley Manager) an.
+ * Description:       Displays match schedules, results and standings automatically from the official Swiss Volley API (Volley Manager).
  * Version:           1.0.0
  * Requires at least: 6.2
  * Requires PHP:      8.1
