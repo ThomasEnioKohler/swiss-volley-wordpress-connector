@@ -39,6 +39,11 @@ jobs:
         with:
           php-version: '8.3'
 
+      # msgfmt und msgcmp sind auf ubuntu-latest nicht vorinstalliert;
+      # tests/test-i18n.sh und bin/build.sh brauchen beide.
+      - name: gettext einrichten
+        run: sudo apt-get update && sudo apt-get install -y gettext
+
       - name: Versionskonsistenz
         run: bash bin/version.sh
 
