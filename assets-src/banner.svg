@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1544 500" width="1544" height="500">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f7a78"/>
+      <stop offset="100%" stop-color="#123a52"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="18%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1544" height="500" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1544" height="500" fill="url(#glow)"/>
+
+  <!-- Faint court-line arcs for texture; kept subtle so the banner stays uncluttered -->
+  <g stroke="#ffffff" stroke-opacity="0.08" stroke-width="3" fill="none">
+    <path d="M-40,500 A620,620 0 0,1 560,-40"/>
+    <path d="M1584,0 A620,620 0 0,1 984,540"/>
+  </g>
+
+  <!-- Ball motif, left third -->
+  <g transform="translate(255,250)">
+    <circle r="164" fill="#12384a"/>
+    <circle r="155" fill="#f6f8f6"/>
+    <g stroke="#12384a" stroke-width="30" stroke-linecap="round" fill="none">
+      <path d="M0,0 Q41,-70 0,-140"/>
+      <path d="M0,0 Q-97,3 -158,64"/>
+      <path d="M0,0 Q58,63 137,72"/>
+    </g>
+    <circle r="18" fill="#12384a"/>
+  </g>
+
+  <!-- Plugin name + tagline, right two-thirds, well clear of all edges -->
+  <g font-family="Arial, Helvetica, sans-serif" fill="#f6f8f6">
+    <text x="520" y="222" font-size="82" font-weight="800">Volleyball Schedules</text>
+    <text x="520" y="290" font-size="50" font-weight="400" fill="#d7e4e2">for Swiss Volley</text>
+    <text x="520" y="358" font-size="30" font-weight="700" letter-spacing="3" fill="#f2a93c">FIXTURES &#8226; RESULTS &#8226; STANDINGS</text>
+  </g>
+</svg>
