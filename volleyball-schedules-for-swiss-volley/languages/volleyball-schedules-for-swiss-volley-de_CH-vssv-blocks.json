@@ -1,6 +1,6 @@
 {
- "translation-revision-date": "2026-08-13",
- "generator": "manual",
+ "translation-revision-date": "2026-08-14",
+ "generator": "make-blocks-json.py",
  "domain": "messages",
  "locale_data": {
   "messages": {
