@@ -83,10 +83,10 @@ English, plus German for Switzerland (de_CH) and Germany (de_DE). Further transl
 
 == Screenshots ==
 
-1. Game list with results and standings on a team page
-2. Settings screen with API key and cache duration
-3. Teams screen with aliases, custom names and league labels
-4. Block editor with the team selector
+1. Upcoming games for a team, with date, venue and competition
+2. Official standings, with your own team highlighted
+3. Settings screen with the API key and automatic club detection
+4. Teams screen with aliases, custom team names and custom league names
 
 == Requirements ==
 
