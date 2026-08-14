@@ -11,6 +11,7 @@ date_default_timezone_set( 'Europe/Zurich' );
 define( 'ABSPATH', '/tmp/' );
 define( 'VSSV_VERSION', '0.1.0' );
 define( 'VSSV_PLUGIN_DIR', dirname( __DIR__ ) . '/volleyball-schedules-for-swiss-volley/' );
+define( 'VSSV_PLUGIN_FILE', VSSV_PLUGIN_DIR . 'volleyball-schedules-for-swiss-volley.php' );
 define( 'VSSV_PLUGIN_URL', 'https://example.test/wp-content/plugins/volleyball-schedules-for-swiss-volley/' );
 define( 'MINUTE_IN_SECONDS', 60 );
 define( 'HOUR_IN_SECONDS', 3600 );
@@ -21,6 +22,12 @@ $GLOBALS['wp_options']    = array();
 $GLOBALS['wp_transients'] = array(); // key => [value, expires]
 $GLOBALS['http_mock']     = null;    // callable(url, args) => response|WP_Error
 $GLOBALS['http_calls']    = 0;
+
+// Anforderung 3: add_action muss aufgezeichnet werden, damit Tests die
+// tatsächlich verdrahteten Hooks prüfen und bei Bedarf auslösen können.
+$GLOBALS['wp_actions']           = array(); // hook => [callback, ...]
+$GLOBALS['registered_blocks']    = array(); // Blockname => Args
+$GLOBALS['script_translations'] = array(); // Handle => [domain, path]
 
 class WP_Error {
 	private $code; private $message;
@@ -53,7 +60,8 @@ function esc_attr( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
 function esc_attr__( $s, $d = null ) { return htmlspecialchars( $s, ENT_QUOTES ); }
 function wp_register_script( $h, $src, $deps = array(), $v = false, $footer = false ) {}
 function wp_enqueue_script( $h ) {}
-function wp_set_script_translations( $h, $d = null, $p = null ) {}
+function wp_set_script_translations( $h, $d = null, $p = null ) { $GLOBALS['script_translations'][ $h ] = array( $d, $p ); }
+function wp_localize_script( $h, $name, $data ) {}
 function wp_register_style( $h, $src, $deps = array(), $v = false ) {}
 function wp_enqueue_style( $h ) {}
 function wp_add_inline_style( $h, $css ) {}
@@ -67,8 +75,14 @@ function untrailingslashit( $s ) { return rtrim( (string) $s, '/' ); }
 function wp_parse_args( $args, $defaults ) { return array_merge( $defaults, (array) $args ); }
 function shortcode_atts( $defaults, $atts, $tag = '' ) { $atts = (array) $atts; $out = array(); foreach ( $defaults as $k => $v ) { $out[ $k ] = array_key_exists( $k, $atts ) ? $atts[ $k ] : $v; } return $out; }
 function add_shortcode( $tag, $cb ) {}
-function add_action( $h, $cb, $p = 10, $a = 1 ) {}
+// Anforderung 3: zeichnet die Callbacks pro Hook auf, statt sie zu verwerfen –
+// bisherige Szenarien riefen nie ::register()-Methoden auf und lösen daher
+// nie einen dieser Hooks aus; das neue Testszenario tut das gezielt.
+function add_action( $h, $cb, $p = 10, $a = 1 ) { $GLOBALS['wp_actions'][ $h ][] = $cb; }
 function add_filter( $h, $cb, $p = 10, $a = 1 ) {}
+// Real definiert (statt gänzlich zu fehlen): function_exists( 'register_block_type' )
+// in VSSV_Blocks::register_blocks() soll wie unter echtem Gutenberg true liefern.
+function register_block_type( $name, $args = array() ) { $GLOBALS['registered_blocks'][ $name ] = $args; return true; }
 function apply_filters( $h, $v ) { return $v; }
 function wp_date( $format, $ts ) { return date( $format, $ts ); } // Site-TZ = Europe/Zurich im Test.
 function current_user_can( $c ) { return false; }
@@ -94,6 +108,7 @@ require VSSV_PLUGIN_DIR . 'includes/class-vssv-api.php';
 require VSSV_PLUGIN_DIR . 'includes/class-vssv-teams.php';
 require VSSV_PLUGIN_DIR . 'includes/class-vssv-data.php';
 require VSSV_PLUGIN_DIR . 'includes/class-vssv-renderer.php';
+require VSSV_PLUGIN_DIR . 'includes/class-vssv-blocks.php';
 require VSSV_PLUGIN_DIR . 'includes/class-vssv-plugin.php';
 require VSSV_PLUGIN_DIR . 'includes/class-vssv-shortcodes.php';
 
@@ -207,9 +222,12 @@ function check( string $name, bool $cond, string $info = '' ): void {
 }
 
 function reset_state( array $settings = array() ): void {
-	$GLOBALS['wp_options']    = array();
-	$GLOBALS['wp_transients'] = array();
-	$GLOBALS['http_calls']    = 0;
+	$GLOBALS['wp_options']           = array();
+	$GLOBALS['wp_transients']        = array();
+	$GLOBALS['http_calls']           = 0;
+	$GLOBALS['wp_actions']           = array();
+	$GLOBALS['registered_blocks']    = array();
+	$GLOBALS['script_translations'] = array();
 	$GLOBALS['wp_options']['vssv_settings'] = array_merge( VSSV_Plugin::default_settings(), array( 'api_key' => 'TESTKEY' ), $settings );
 	// Runtime-Cache von VSSV_Data zurücksetzen.
 	$ref  = new ReflectionClass( 'VSSV_Data' );
@@ -589,6 +607,38 @@ check( 'W8 Nur-Liga-Umschalter bei einzelnem Team', str_contains( $html, 'data-v
 $html = VSSV_Shortcodes::results( array( 'team' => '201', 'switcher' => '1' ) );
 check( 'W9 Keine Dimension: kein Umschalter', ! str_contains( $html, 'vssv-switcher' ) );
 $GLOBALS['wp_options']['vssv_settings']['group_switcher'] = 0;
+
+// Hook-Verdrahtung (Anforderung 3): load_plugin_textdomain hängt an 'init'
+// (nicht früher – seit WP 6.7 löst ein früherer Aufruf _doing_it_wrong aus),
+// und wp_set_script_translations wird für den Block-Editor-Handle
+// 'vssv-blocks' aufgerufen. Beides waren bislang unverdrahtete Annahmen:
+// add_action war ein No-Op und VSSV_Blocks wurde in diesem Harness nie
+// geladen, wodurch wp_set_script_translations nie feuern konnte.
+reset_state();
+VSSV_Plugin::instance();
+
+$init_hooks           = $GLOBALS['wp_actions']['init'] ?? array();
+$has_load_textdomain = false;
+foreach ( $init_hooks as $cb ) {
+	if ( is_array( $cb ) && 'VSSV_Plugin' === $cb[0] && 'load_textdomain' === $cb[1] ) {
+		$has_load_textdomain = true;
+	}
+}
+check( 'I1 load_textdomain an init gehängt', $has_load_textdomain );
+
+foreach ( $init_hooks as $cb ) {
+	call_user_func( $cb );
+}
+
+check(
+	'I2 wp_set_script_translations für vssv-blocks beim init-Aufruf ausgelöst',
+	isset( $GLOBALS['script_translations']['vssv-blocks'] )
+		&& 'volleyball-schedules-for-swiss-volley' === $GLOBALS['script_translations']['vssv-blocks'][0]
+);
+check(
+	'I3 Blöcke tatsächlich registriert (register_block_type über init ausgelöst)',
+	isset( $GLOBALS['registered_blocks']['swiss-volley/games'] )
+);
 
 echo "\n" . ( $failures ? "$failures TEST(S) FEHLGESCHLAGEN" : 'ALLE TESTS BESTANDEN' ) . "\n";
 exit( $failures ? 1 : 0 );
