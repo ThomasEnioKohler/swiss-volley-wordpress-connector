@@ -76,4 +76,6 @@ jobs:
           composer global require --dev wp-coding-standards/wpcs:^3 dealerdirect/phpcodesniffer-composer-installer
 
       - name: PHPCS
-        run: ~/.composer/vendor/bin/phpcs --standard=phpcs.xml.dist --report=full
+        run: |
+          set -o pipefail
+          ~/.composer/vendor/bin/phpcs --standard=phpcs.xml.dist --report=checkstyle | cs2pr
