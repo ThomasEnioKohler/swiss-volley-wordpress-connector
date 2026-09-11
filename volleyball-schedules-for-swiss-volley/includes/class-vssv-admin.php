@@ -161,11 +161,6 @@ class VSSV_Admin {
 		$clean['group_switcher'] = empty( $input['group_switcher'] ) ? 0 : 1;
 		$clean['debug']          = empty( $input['debug'] ) ? 0 : 1;
 
-		if ( isset( $input['custom_css'] ) ) {
-			// Nur CSS-Text zulassen, kein Markup/Script.
-			$clean['custom_css'] = wp_strip_all_tags( (string) $input['custom_css'] );
-		}
-
 		// Bei geänderten Kern-Einstellungen Cache invalidieren.
 		if ( ( $clean['api_key'] ?? '' ) !== ( $current['api_key'] ?? '' )
 			|| ( $clean['api_base_url'] ?? '' ) !== ( $current['api_base_url'] ?? '' )
@@ -385,15 +380,6 @@ class VSSV_Admin {
 						<p class="description">
 							<?php esc_html_e( 'Only appears if a list contains multiple leagues or teams. Can be overridden per shortcode with switcher="1" or switcher="0". A default set via group_by remains the starting view.', 'volleyball-schedules-for-swiss-volley' ); ?>
 						</p>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row">
-						<label for="vssv_custom_css"><?php esc_html_e( 'Custom CSS', 'volleyball-schedules-for-swiss-volley' ); ?></label>
-					</th>
-					<td>
-						<textarea id="vssv_custom_css" name="vssv_settings[custom_css]" rows="8" class="large-text code" spellcheck="false"><?php echo esc_textarea( (string) $settings['custom_css'] ); ?></textarea>
-						<p class="description"><?php esc_html_e( 'Loaded after the default stylesheet of this plugin. Example: .vssv-own-team { font-weight: 700; }', 'volleyball-schedules-for-swiss-volley' ); ?></p>
 					</td>
 				</tr>
 			</table>

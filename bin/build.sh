@@ -64,7 +64,7 @@ mkdir -p "$BUILD_DIR"
 	--exclude='.DS_Store' \
 	--exclude='README.md' \
 	--exclude='docs' \
-	--exclude='*.po' \
+	--exclude='languages' \
 	. ) | ( cd "$BUILD_DIR" && tar -xf - )
 echo "OK  $BUILD_DIR"
 

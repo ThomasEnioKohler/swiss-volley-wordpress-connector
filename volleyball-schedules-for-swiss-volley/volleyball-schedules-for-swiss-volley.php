@@ -3,7 +3,7 @@
  * Plugin Name:       Volleyball Schedules for Swiss Volley
  * Plugin URI:        https://www.volleypizol.org
  * Description:       Displays match schedules, results and standings automatically from the official Swiss Volley API (Volley Manager).
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.2
  * Requires PHP:      8.1
  * Author:            Volley Pizol
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'VSSV_VERSION', '1.0.0' );
+define( 'VSSV_VERSION', '1.0.1' );
 define( 'VSSV_PLUGIN_FILE', __FILE__ );
 define( 'VSSV_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VSSV_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

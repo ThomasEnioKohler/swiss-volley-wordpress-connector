@@ -44,8 +44,6 @@ class VSSV_Plugin {
 	 * Constructor: Hooks registrieren.
 	 */
 	private function __construct() {
-		add_action( 'init', array( __CLASS__, 'load_textdomain' ) );
-
 		VSSV_Shortcodes::register();
 		VSSV_Blocks::register();
 
@@ -55,31 +53,6 @@ class VSSV_Plugin {
 		if ( is_admin() && class_exists( 'VSSV_Admin' ) ) {
 			VSSV_Admin::register();
 		}
-	}
-
-	/**
-	 * Übersetzungen laden.
-	 *
-	 * Muss an 'init' hängen: Seit WordPress 6.7 gilt ein früherer Aufruf
-	 * als zu früh und löst _doing_it_wrong aus.
-	 *
-	 * Dieser Aufruf bleibt nötig, solange "Requires at least" unter 6.8 liegt:
-	 * Erst seit WordPress 6.8.0 liest wp-settings.php beim Laden der aktiven
-	 * Plugins deren "Text Domain"/"Domain Path"-Header selbst aus und trägt
-	 * den Pfad automatisch in die WP_Textdomain_Registry ein (Core-Commit
-	 * c344148315, "I18N: Load translations just-in-time for custom themes
-	 * and plugins", Fixes #62244). Auf 6.2–6.7 findet ohne diesen Aufruf
-	 * keine automatische Registrierung des eigenen languages/-Ordners statt,
-	 * und die gebündelten de_CH-/de_DE-Übersetzungen würden nicht geladen.
-	 * Erst wenn die Mindestversion auf 6.8+ angehoben wird, kann diese
-	 * Methode inklusive des 'init'-Hooks entfernt werden.
-	 */
-	public static function load_textdomain(): void {
-		load_plugin_textdomain(
-			'volleyball-schedules-for-swiss-volley',
-			false,
-			dirname( plugin_basename( VSSV_PLUGIN_FILE ) ) . '/languages'
-		);
 	}
 
 	/**
@@ -103,7 +76,6 @@ class VSSV_Plugin {
 			// Interaktiver Gruppierungs-Umschalter für Besucher (0/1).
 			'group_switcher' => 0,
 			'debug'          => 0,
-			'custom_css'     => '',
 		);
 	}
 
@@ -163,13 +135,6 @@ class VSSV_Plugin {
 
 		if ( ! is_admin() ) {
 			wp_enqueue_style( 'vssv-frontend' );
-
-			// Eigenes CSS des Administrators anhängen (sanitisiert).
-			$settings   = get_option( 'vssv_settings', array() );
-			$custom_css = isset( $settings['custom_css'] ) ? trim( (string) $settings['custom_css'] ) : '';
-			if ( '' !== $custom_css ) {
-				wp_add_inline_style( 'vssv-frontend', wp_strip_all_tags( $custom_css ) );
-			}
 		}
 	}
 }

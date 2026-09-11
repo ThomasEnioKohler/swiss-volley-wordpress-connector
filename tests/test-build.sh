@@ -136,27 +136,12 @@ test_build_verzeichnis_ist_sauber() {
 			"docs/ oder README.md im Build-Verzeichnis"
 		return
 	fi
-	if ! ls "$build"/languages/*.mo > /dev/null 2>&1; then
-		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
-			"keine .mo-Dateien im Build-Verzeichnis"
-		return
-	fi
 
-	# Array-Glob statt "[ ! -f .../*.po ]": Letzteres prueft bei mehreren
-	# Treffern nur den ersten Dateinamen woertlich und liefert dann ein
-	# falsches Ergebnis. Bei keinem Treffer bleibt der Glob unexpandiert
-	# ("*.po" als Literal) und "-e" ist dann korrekt false.
-	local po_files=("$build"/languages/*.po)
-	if [ -e "${po_files[0]}" ]; then
+	# WordPress.org verwaltet Uebersetzungen ueber translate.wordpress.org;
+	# .po/.mo/JSON-Sprachkataloge duerfen nicht mit ausgeliefert werden.
+	if [ -d "$build/languages" ]; then
 		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
-			".po-Dateien im Build-Verzeichnis: ${po_files[*]}"
-		return
-	fi
-
-	local json_files=("$build"/languages/*-vssv-blocks.json)
-	if [ ! -e "${json_files[0]}" ] || [ "${#json_files[@]}" -lt 2 ]; then
-		fail "build.sh erzeugt ein sauberes Build-Verzeichnis" \
-			"weniger als zwei JSON-Sprachkataloge im Build-Verzeichnis: ${json_files[*]}"
+			"languages/ im Build-Verzeichnis"
 		return
 	fi
 

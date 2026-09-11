@@ -1,8 +1,8 @@
 # Volleyball Schedules for Swiss Volley.
 msgid ""
 msgstr ""
-"Project-Id-Version: Volleyball Schedules for Swiss Volley 1.0.0\n"
-"POT-Creation-Date: 2026-08-14\n"
+"Project-Id-Version: Volleyball Schedules for Swiss Volley 1.0.1\n"
+"POT-Creation-Date: 2026-09-11\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -110,9 +110,6 @@ msgstr ""
 msgid "Current season"
 msgstr ""
 
-msgid "Custom CSS"
-msgstr ""
-
 msgid "Custom league name"
 msgstr ""
 
@@ -184,9 +181,6 @@ msgid "Load club and teams now"
 msgstr ""
 
 msgid "Load teams from Swiss Volley"
-msgstr ""
-
-msgid "Loaded after the default stylesheet of this plugin. Example: .vssv-own-team { font-weight: 700; }"
 msgstr ""
 
 msgid "Loading teams..."

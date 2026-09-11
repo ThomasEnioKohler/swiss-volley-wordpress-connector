@@ -9,6 +9,12 @@ Diese Datei ist die gepflegte Quelle. Die Sektion `== Changelog ==` in
 `volleyball-schedules-for-swiss-volley/readme.txt` wird daraus erzeugt — dort nichts von Hand
 ändern, sondern `bin/sync-readme-changelog.sh` laufen lassen.
 
+## [1.0.1] - 2026-09-11
+
+- Removed the Custom CSS setting. Styling belongs in the theme or a child theme, and the plugin no longer stores or injects stylesheet text entered in the admin.
+- Translations are no longer bundled with the plugin. German for Switzerland and Germany now comes from translate.wordpress.org as a language pack, which is how the plugin directory distributes translations.
+- Corrected the links to Swiss Volley's legal notice and privacy policy in the external services section; the previous URLs no longer resolved.
+
 ## [1.0.0] - 2026-08-13
 
 - Initial release.

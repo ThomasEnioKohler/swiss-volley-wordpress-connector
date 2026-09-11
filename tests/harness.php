@@ -608,23 +608,16 @@ $html = VSSV_Shortcodes::results( array( 'team' => '201', 'switcher' => '1' ) );
 check( 'W9 Keine Dimension: kein Umschalter', ! str_contains( $html, 'vssv-switcher' ) );
 $GLOBALS['wp_options']['vssv_settings']['group_switcher'] = 0;
 
-// Hook-Verdrahtung (Anforderung 3): load_plugin_textdomain hängt an 'init'
-// (nicht früher – seit WP 6.7 löst ein früherer Aufruf _doing_it_wrong aus),
-// und wp_set_script_translations wird für den Block-Editor-Handle
-// 'vssv-blocks' aufgerufen. Beides waren bislang unverdrahtete Annahmen:
-// add_action war ein No-Op und VSSV_Blocks wurde in diesem Harness nie
-// geladen, wodurch wp_set_script_translations nie feuern konnte.
+// Hook-Verdrahtung (Anforderung 3): wp_set_script_translations wird für den
+// Block-Editor-Handle 'vssv-blocks' aufgerufen. Das war bislang eine
+// unverdrahtete Annahme: VSSV_Blocks wurde in diesem Harness nie geladen,
+// wodurch wp_set_script_translations nie feuern konnte.
+// load_plugin_textdomain() entfaellt: seit WP 4.6 laedt Core die
+// Uebersetzungen von org-gehosteten Plugins automatisch.
 reset_state();
 VSSV_Plugin::instance();
 
-$init_hooks           = $GLOBALS['wp_actions']['init'] ?? array();
-$has_load_textdomain = false;
-foreach ( $init_hooks as $cb ) {
-	if ( is_array( $cb ) && 'VSSV_Plugin' === $cb[0] && 'load_textdomain' === $cb[1] ) {
-		$has_load_textdomain = true;
-	}
-}
-check( 'I1 load_textdomain an init gehängt', $has_load_textdomain );
+$init_hooks = $GLOBALS['wp_actions']['init'] ?? array();
 
 foreach ( $init_hooks as $cb ) {
 	call_user_func( $cb );

@@ -2,9 +2,9 @@
 Contributors: volleypizol
 Tags: volleyball, sports, schedule, results, standings
 Requires at least: 6.2
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,7 +57,7 @@ This plugin relies on the official Swiss Volley API to display game data.
 * When: whenever a page containing one of this plugin's shortcodes or blocks is rendered and the cached data has expired (default 30 minutes, configurable between 5 minutes and 24 hours).
 * By whom: your web server. Requests are made server-side through the WordPress HTTP API. Visitors never contact Swiss Volley, so no visitor IP addresses or other personal data are transmitted.
 * API documentation: https://swissvolley.docs.apiary.io/#reference/indoor
-* Swiss Volley terms of use and privacy policy: https://www.volleyball.ch/de/footer/impressum/ and https://www.volleyball.ch/de/footer/datenschutz/
+* Swiss Volley terms of use and privacy policy: https://www.volleyball.ch/de/impressum and https://www.volleyball.ch/de/datenschutzerklaerung
 
 The plugin uses no tracking services, no CDNs, no advertising, and sends no telemetry.
 
@@ -96,6 +96,11 @@ English, plus German for Switzerland (de_CH) and Germany (de_DE). Further transl
 * A Swiss Volley API key from Volley Manager
 
 == Changelog ==
+
+= 1.0.1 =
+* Removed the Custom CSS setting. Styling belongs in the theme or a child theme, and the plugin no longer stores or injects stylesheet text entered in the admin.
+* Translations are no longer bundled with the plugin. German for Switzerland and Germany now comes from translate.wordpress.org as a language pack, which is how the plugin directory distributes translations.
+* Corrected the links to Swiss Volley's legal notice and privacy policy in the external services section; the previous URLs no longer resolved.
 
 = 1.0.0 =
 * Initial release.
